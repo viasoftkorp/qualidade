@@ -1,0 +1,62 @@
+<vs-layout>
+  <vs-label title label="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.Title"></vs-label>
+  <div actions>
+    <vs-button [icon]="'times'" (clickEvent)="fechar()"></vs-button>
+  </div>
+  <div content>
+    <vs-form *ngIf="loaded">
+      <form [formGroup]="form" group-1>
+        <vs-textarea
+          [required]="true"
+          [formControlName]="formControls.descricao"
+          placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.Descricao"
+          rows="5"
+        ></vs-textarea>
+        <admin-user-autocomplete-select
+          [formControlName]="formControls.idResponsavel"
+          placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.Responsavel"
+        >
+        </admin-user-autocomplete-select>
+        <admin-user-autocomplete-select
+          [formControlName]="formControls.idAuditor"
+          placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.Auditor"
+        >
+        </admin-user-autocomplete-select>
+        <vs-datepicker
+          [controlName]="formControls.dataAnalise"
+          placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.DataAnalise"
+        >
+        </vs-datepicker>
+        <vs-datepicker
+          [controlName]="formControls.dataPrevistaImplantacao"
+          placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.DataPrevista"
+        >
+        </vs-datepicker>
+        <vs-datepicker
+          [controlName]="formControls.dataVerificacao"
+          placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.DataVerificacao"
+        >
+        </vs-datepicker>
+        <vs-datepicker
+        [controlName]="formControls.novaData"
+        placeholder="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.NovaData">
+        </vs-datepicker>
+        <vs-checkbox
+          [formControlName]="formControls.acaoImplementada"
+          label="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.AcaoImplementada"
+        ></vs-checkbox>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="NaoConformidade.ImplementacaoEvitarReincidenciaEditorModal.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-layout>

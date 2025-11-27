@@ -1,0 +1,29 @@
+<vs-tabs-view-template>
+  <vs-layout>
+    <div content>
+      <vs-form>
+        <form [formGroup]="form" *ngIf="loaded">
+          <br group-2>
+          <vs-input
+            readonly
+            [formControlName]="formControls.numeroOperacaoARetrabalhar"
+            placeholder="NaoConformidades.NaoConformidadesEditor.Retrabalho.OperacaoRetrabalho.NumeroOperacaoARetrabalhar"
+          ></vs-input>
+          <vs-input
+            readonly
+            [formControlName]="formControls.quantidade"
+            type="number"
+            placeholder="NaoConformidades.NaoConformidadesEditor.Retrabalho.OperacaoRetrabalho.Quantidade"
+          ></vs-input>
+          <vs-layout>
+            <vs-label title model="title" label="NaoConformidades.NaoConformidadesEditor.Retrabalho.OperacaoRetrabalho.Operacoes"></vs-label>
+            <div content>
+              <vs-grid [options]="gridOptions"></vs-grid>
+            </div>
+          </vs-layout>
+        </form>
+      </vs-form>
+    </div>
+  </vs-layout>
+</vs-tabs-view-template>
+

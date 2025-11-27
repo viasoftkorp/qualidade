@@ -1,0 +1,26 @@
+:host ::ng-deep {
+  width: 100%;
+
+  vs-input.input-informative {
+    input {
+      color: #2680eb;
+    }
+  }
+
+  vs-input.input-positive {
+    input {
+      color: #2d9d78;
+    }
+  }
+
+  vs-input.input-negative {
+    input {
+      color: #e34850;
+    }
+  }
+  vs-input.input-notice {
+    input {
+      color: #E68619;
+    }
+  }
+}

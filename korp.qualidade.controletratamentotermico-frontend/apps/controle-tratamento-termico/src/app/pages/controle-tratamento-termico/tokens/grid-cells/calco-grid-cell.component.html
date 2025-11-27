@@ -1,0 +1,8 @@
+@if (!isInEditMode) {
+<vs-label>{{ field }}</vs-label>
+}
+@else {
+<vs-autocomplete-select [(ngModel)]="data[fieldName]" [get]="getOptions"
+    [getName]="getName" [cleanable]="false" (optionSelected)="onOptionSelected($event)">
+</vs-autocomplete-select>
+}
