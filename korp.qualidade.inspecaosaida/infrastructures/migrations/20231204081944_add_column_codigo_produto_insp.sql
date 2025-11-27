@@ -1,0 +1,11 @@
+-- +goose Up
+-- +goose StatementBegin
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'QA_INSPECAO_SAIDA' AND COLUMN_NAME='CODIGO_PRODUTO')
+BEGIN
+ALTER TABLE QA_INSPECAO_SAIDA ADD CODIGO_PRODUTO VARCHAR(36) NULL
+END
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+-- +goose StatementEnd

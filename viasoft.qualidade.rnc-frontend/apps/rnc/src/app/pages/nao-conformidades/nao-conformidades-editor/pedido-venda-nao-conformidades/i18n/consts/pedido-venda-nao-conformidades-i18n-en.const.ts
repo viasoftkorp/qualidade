@@ -1,4 +1,0 @@
-
-export const PEDIDO_VENDA_NAO_CONFORMIDADE_I18N_EN = {
-
-};
