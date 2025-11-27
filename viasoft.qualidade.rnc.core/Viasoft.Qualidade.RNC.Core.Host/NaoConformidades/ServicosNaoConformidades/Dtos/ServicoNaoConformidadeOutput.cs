@@ -16,7 +16,6 @@ public class ServicoNaoConformidadeOutput : ServicoNaoConformidadeModel
         Minutos = servico.Minutos;
         IdRecurso = servico.IdRecurso;
         OperacaoEngenharia = servico.OperacaoEngenharia;
-        ControlarApontamento = servico.ControlarApontamento;
     }
     
 }

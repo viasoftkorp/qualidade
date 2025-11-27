@@ -2064,10 +2064,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("companyid");
 
-                    b.Property<bool>("ControlarApontamento")
-                        .HasColumnType("boolean")
-                        .HasColumnName("controlarapontamento");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("creationtime");

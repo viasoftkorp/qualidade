@@ -11,5 +11,4 @@ export interface ServicosNaoConformidadesOutput{
   minutos?: number
   quantidade: number
   detalhamento: string
-  controlarApontamento: boolean
 }

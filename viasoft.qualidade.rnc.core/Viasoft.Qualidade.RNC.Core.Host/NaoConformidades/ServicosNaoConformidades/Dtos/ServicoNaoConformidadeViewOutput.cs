@@ -22,7 +22,6 @@ public class ServicoNaoConformidadeViewOutput
     public string Codigo { get; set; }
     public string Descricao { get; set; }
     public string DescricaoRecurso { get; set; }
-    public bool ControlarApontamento { get; set; }
 
     public ServicoNaoConformidadeViewOutput()
     {
@@ -39,9 +38,7 @@ public class ServicoNaoConformidadeViewOutput
         DescricaoRecurso = recurso.Descricao;
         OperacaoEngenharia = servico.OperacaoEngenharia;
         Detalhamento = servico.Detalhamento;
-        ControlarApontamento = servico.ControlarApontamento;
         Codigo = produto.Codigo;
         Descricao = produto.Descricao;
-        
     }
 }

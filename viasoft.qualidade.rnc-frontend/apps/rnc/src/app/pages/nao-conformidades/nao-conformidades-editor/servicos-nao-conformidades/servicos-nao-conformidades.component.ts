@@ -13,7 +13,7 @@ import {
   VsGridSimpleColumn,
   VsGridGetInput,
   VsGridGetResult,
-  VsDialog, VsGridCheckboxColumn
+  VsDialog
 } from '@viasoft/components';
 import { EditorAction } from '@viasoft/rnc/app/tokens/consts/editor-action.enum';
 import { EditorModalData } from '@viasoft/rnc/app/tokens/consts/editor-modal-data';
@@ -30,7 +30,7 @@ import { NaoConformidadesEditorService } from '../../nao-conformidades-editor/na
   styleUrls: ['./servicos-nao-conformidades.component.scss'],
   providers: [DecimalPipe],
 })
-export class ServicosNaoConformidadesComponent implements OnDestroy {
+export class ServicosNaoConformidadesComponent implements OnInit, OnDestroy {
   @Input() public idSolucaoNaoConformidade: string;
   private naoConformidadeId: string;
   private subscriptionManager = new VsSubscriptionManager();
@@ -57,6 +57,10 @@ export class ServicosNaoConformidadesComponent implements OnDestroy {
   }
   ngOnDestroy(): void {
     this.subscriptionManager.clear();
+  }
+
+  ngOnInit(): void {
+    // vazio
   }
 
   public novo(): void {
@@ -96,11 +100,6 @@ export class ServicosNaoConformidadesComponent implements OnDestroy {
       new VsGridSimpleColumn({
         headerName: 'NaoConformidade.ServicosSolucoes.Detalhamento',
         field: 'detalhamento'
-      }),
-      new VsGridCheckboxColumn({
-        headerName: 'NaoConformidade.ServicosSolucoes.ControlarApontamento',
-        field: 'controlarApontamento',
-        disabled: true
       }),
     ];
     this.gridOptions.actions = [

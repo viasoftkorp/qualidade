@@ -212,7 +212,7 @@ public class OrdemRetrabalhoAclService : IOrdemRetrabalhoAclService, ITransientD
                 Nivel = 0,
                 Posicao = "",
                 ConfirmarMateriais = "N",
-                ControlarApontamento = e.ControlarApontamento ? "S" : "N"
+                ControlarApontamento = "N"
             };
         }).ToList();
         return maquinas;

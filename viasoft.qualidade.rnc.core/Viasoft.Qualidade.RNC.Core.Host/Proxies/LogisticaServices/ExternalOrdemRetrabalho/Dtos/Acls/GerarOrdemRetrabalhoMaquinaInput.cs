@@ -12,6 +12,4 @@ public class GerarOrdemRetrabalhoMaquinaInput
     public int Minutos { get; set; }
 
     public decimal TempoTotal => Horas + (Minutos / 60m);
-
-    public bool ControlarApontamento { get; set; }
 }

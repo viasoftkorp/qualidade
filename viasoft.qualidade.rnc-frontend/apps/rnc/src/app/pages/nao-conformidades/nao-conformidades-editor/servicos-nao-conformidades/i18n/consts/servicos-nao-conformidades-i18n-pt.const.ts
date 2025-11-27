@@ -13,11 +13,9 @@ export const SERVICOS_NAO_CONFORMIDADE_I18N_PT: ServicosNaoConformidadeI18n = {
       HorasPrevistas: 'Horas Previstas',
       MinutosPrevistos: 'Minutos Previstos',
       Recurso: 'Recurso',
-      OpEngenharia: 'Operação Engenharia',
-      ControlarApontamento: 'Controlar Apontamento'
+      OpEngenharia: 'Operação Engenharia'
     },
     ServicosSolucoesModal: {
-      ControlarApontamento: 'Controlar Apontamento',
       Servicos: 'Serviço',
       HorasPrevistas: 'Horas Previstas',
       MinutosPrevistos: 'Minutos Previstos',

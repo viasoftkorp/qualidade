@@ -9,11 +9,9 @@ export const SERVICOS_NAO_CONFORMIDADE_I18N_EN = {
       Novo: 'New',
       Salvar: 'Save',
       Quantidade: 'Quantity',
-      Detalhamento: 'Details',
-      ControlarApontamento: 'Controlar Apontamento'
+      Detalhamento: 'Details'
     },
     ServicosSolucoesModal: {
-      ControlarApontamento: 'Controlar Apontamento',
       Servicos: 'Service',
       Horas: 'Hours',
       Minutos: 'Minutes',

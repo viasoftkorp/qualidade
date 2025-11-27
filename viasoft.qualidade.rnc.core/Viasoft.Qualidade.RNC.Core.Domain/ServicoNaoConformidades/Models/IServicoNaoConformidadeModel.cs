@@ -14,5 +14,5 @@ public interface IServicoNaoConformidadeModel
     string OperacaoEngenharia { get; }
     public string Detalhamento { get; }
     Guid CompanyId { get; set; }
-    bool ControlarApontamento { get; set; }
+
 }

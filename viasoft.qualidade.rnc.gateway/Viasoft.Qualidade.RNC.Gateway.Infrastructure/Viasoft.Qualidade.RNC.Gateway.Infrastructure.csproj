@@ -10,8 +10,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Viasoft.Core.EntityFrameworkCore" Version="4.12.52" />
-      <PackageReference Include="Viasoft.Core.EntityFrameworkCore.PostgreSQL" Version="4.12.52" />
+      <PackageReference Include="Viasoft.Core.EntityFrameworkCore" Version="4.12.34" />
+      <PackageReference Include="Viasoft.Core.EntityFrameworkCore.PostgreSQL" Version="4.12.34" />
     </ItemGroup>
 
     <ItemGroup>
