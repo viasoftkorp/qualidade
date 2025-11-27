@@ -1,8 +1,6 @@
 package models
 
-import (
-	"github.com/shopspring/decimal"
-)
+import "github.com/shopspring/decimal"
 
 type OrdemProducao struct {
 	RecnoPpedlise          int
@@ -26,6 +24,4 @@ type OrdemProducao struct {
 	DataNegociada          string
 	DescricaoPlano         string
 	RecnoProcesso          int
-	DataFabricacao         string
-	DataValidade           string
 }

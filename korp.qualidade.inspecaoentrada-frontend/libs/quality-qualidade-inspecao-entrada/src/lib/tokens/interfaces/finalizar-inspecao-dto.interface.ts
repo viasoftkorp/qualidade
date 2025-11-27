@@ -5,5 +5,4 @@ export interface FinalizarInspecaoModalData {
   notaFiscal: NotaFiscalDTO;
   inspecaoEntrada: InspecaoEntradaDTO;
   codigoProduto: string;
-  codigoFornecedor: string;
 }

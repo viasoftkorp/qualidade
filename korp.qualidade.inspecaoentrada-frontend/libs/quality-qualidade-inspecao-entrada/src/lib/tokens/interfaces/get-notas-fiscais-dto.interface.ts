@@ -1,19 +1,14 @@
 export interface NotaFiscalDTO {
-  id: string;
-  recno: number;
   notaFiscal: number;
   lote: string;
-  plano: string;
+  plano: number;
   codigoProduto: string;
   descricaoProduto: string;
-  codigoForneced: string;
   descricaoForneced: string;
   quantidade: number;
   quantidadeInspecionada: number;
   quantidadeInspecionar: number;
   dataEntrada: Date;
-  serie: string;
-  observacao: string;
 }
 
 export interface GetNotasFiscaisDTO {

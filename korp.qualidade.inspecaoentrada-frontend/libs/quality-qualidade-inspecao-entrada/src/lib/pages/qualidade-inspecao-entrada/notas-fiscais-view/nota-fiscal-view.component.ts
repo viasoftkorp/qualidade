@@ -1,13 +1,12 @@
 import {
-  Component,
+  Component, Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  JQQB_OP_EQUAL,
-  VsSubscriptionManager
-} from '@viasoft/common';
+import { VsStorageService, VsSubscriptionManager } from '@viasoft/common';
 import {
   VsDialog,
   VsGridDateColumn,
@@ -21,12 +20,17 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { QualidadeInspecaoEntradaService } from '../../../services/qualidade-inspecao-entrada.service';
 import {
-  GetNotasFiscaisDTO,
+  GetNotasFiscaisDTO, HistoricoInspecaoEntradaFilters,
   InspecaoDetailsDTO,
-  NotaFiscalDadosAdicionaisDTO,
-  NotaFiscalDTO
+  NotaFiscalDTO,
+  NotaFiscalFilters
 } from '../../../tokens';
 import { InspecaoDetailsComponent } from '../inspecao-details/inspecao-details.component';
+import { NotaFiscalViewFilterComponent } from './nota-fiscal-view-filter/nota-fiscal-view-filter.component';
+import {
+  HistoricoInspecaoViewFilterComponent
+} from "../../historico/inspecao-historico-view/historico-inspecao-view-filter/historico-inspecao-view-filter.component";
+import {HistoricoInspecaoViewService} from "../../historico/inspecao-historico-view/historico-inspecao-view.service";
 
 @Component({
   selector: 'qa-nota-fiscal-view',
@@ -34,21 +38,44 @@ import { InspecaoDetailsComponent } from '../inspecao-details/inspecao-details.c
   styleUrls: ['./nota-fiscal-view.component.scss'],
 })
 export class NotaFiscalViewComponent implements OnInit, OnDestroy {
+  @Input() private tab: string;
+  @ViewChild('actions') private actionsTemplate: TemplateRef<any>;
+  private filtros: NotaFiscalFilters = {};
+  private filtrosHistorico: HistoricoInspecaoEntradaFilters = {};
+  private subs = new VsSubscriptionManager();
   public gridOptions = new VsGridOptions();
   public pesquisa: string;
-  private colunasEditaveis = ['observacao'];
-  private subs = new VsSubscriptionManager();
+
+  private readonly NOTA_FISCAL_FILTRO_KEY = 'NotaFiscalInspecaoEntradaFiltros';
+
+  public get possuiFiltros(): boolean {
+    return Boolean(this.filtros) && (
+      Boolean(this.filtros.lote)
+      || Boolean(this.filtros.notaFiscal)
+      || Boolean(this.filtros.codigoProduto)
+      || Boolean(this.filtros.dataEntrada));
+  }
 
   constructor(
     private vsDialog: VsDialog,
     private matDialog: MatDialog,
-    private inspecaoEntradaService: QualidadeInspecaoEntradaService
+    private inspecaoEntradaService: QualidadeInspecaoEntradaService,
+    private storageService: VsStorageService,
+    private historicoInspecaoViewService: HistoricoInspecaoViewService
   ) {
   }
 
   ngOnInit(): void {
     this.initGrid();
-    this.subs.add('refresh-nota-fiscal-grid', this.inspecaoEntradaService
+
+    this.subs.add('pesquisa-alterada', this.inspecaoEntradaService
+      .pesquisaAlterada
+      .subscribe((pesquisa: string) => {
+        this.pesquisa = pesquisa;
+        this.gridOptions.refresh();
+      }));
+
+    this.subs.add('refresh-nota-grid', this.inspecaoEntradaService
       .refreshNotaFiscalGrid
       .subscribe(() => {
         this.gridOptions.refresh();
@@ -59,145 +86,110 @@ export class NotaFiscalViewComponent implements OnInit, OnDestroy {
     this.subs.clear();
   }
 
+  ngAfterViewInit(): void {
+    this.inspecaoEntradaService.actionsTemplate.next(this.actionsTemplate);
+  }
+
+  public limparFiltros(): void {
+    this.filtros = {};
+    this.storageService.set(this.NOTA_FISCAL_FILTRO_KEY, JSON.stringify(this.filtros));
+    this.gridOptions.refresh();
+  }
+
+  public abrirFiltros(): void {
+    if (this.tab == 'Historico') {
+      this.subs.add('open-filter-modal', this.vsDialog.open(
+        NotaFiscalViewFilterComponent,
+        this.filtros,
+        {maxWidth: '30vw'}
+      ).afterClosed().subscribe((filtros: HistoricoInspecaoEntradaFilters) => {
+        if (!filtros) {
+          return;
+        }
+
+        this.filtrosHistorico = filtros;
+        this.historicoInspecaoViewService.refreshGrid.next(this.filtrosHistorico);
+      }));
+    } else {
+      this.subs.add('open-filter-modal', this.vsDialog.open(
+        HistoricoInspecaoViewFilterComponent,
+        this.filtros,
+        { maxWidth: '30vw' }
+      ).afterClosed().subscribe((filtros: NotaFiscalFilters) => {
+        if (!filtros) {
+          return;
+        }
+
+        this.filtros = filtros;
+        this.storageService.set(this.NOTA_FISCAL_FILTRO_KEY, JSON.stringify(filtros));
+        this.gridOptions.refresh();
+      }));
+    }
+  }
+
   private initGrid(): void {
-    this.gridOptions.id = 'FA1B85C0-493B-4F5A-A498-C4AADCC853C9';
+    this.gridOptions.id = '0a39beb1-bfbf-4bda-afcd-2764a3925f37';
+    this.gridOptions.enableFilter = false;
+    this.gridOptions.enableQuickFilter = false;
+    this.gridOptions.enableSorting = false;
     this.gridOptions.sizeColumnsToFit = false;
 
     this.gridOptions.columns = [
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.Plano',
         field: 'plano',
-        width: 110,
-        filterOptions: {
-          useField: 'ESTOQUE.PLAINS'
-        },
-        sorting: {
-          useField:  'ESTOQUE.PLAINS'
-        }
+        width: 110
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.DescricaoPlano',
         field: 'descricaoPlano',
-        width: 180,
-        filterOptions: {
-          useField: 'PLANOINS_CABECALHO.DESCRICAO'
-        },
-        sorting: {
-          useField:  'PLANOINS_CABECALHO.DESCRICAO'
-        }
+        width: 180
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscal',
         field: 'notaFiscal',
         width: 80,
-        filterOptions: {
-          useField: 'HISTLISE.NFISCAL',
-          defaultOperator: JQQB_OP_EQUAL
-        },
-        sorting: {
-          useField:  'HISTLISE.NFISCAL'
-        }
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.Lote',
         field: 'lote',
         width: 100,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
       }),
-      new VsGridSimpleColumn({
-        headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.Observacao',
-        field: 'observacao',
-        width: 250,
-        filterOptions: {
-          useField: 'QA_INSPECAO_ENTRADA_NOTA_FISCAL_DADOS_ADICIONAIS.OBSERVACAO'
-        },
-        sorting: {
-          useField:  'QA_INSPECAO_ENTRADA_NOTA_FISCAL_DADOS_ADICIONAIS.OBSERVACAO'
-        },
-        tooltip: (data: NotaFiscalDTO) => data.observacao
-      }),
-      new VsGridSimpleColumn({
+      new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.CodigoProduto',
         field: 'codigoProduto',
         width: 100,
-        filterOptions: {
-          useField: 'HISTLISE.ITEM'
-        },
-        sorting: {
-          useField:  'HISTLISE.ITEM'
-        }
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.DescricaoProduto',
         field: 'descricaoProduto',
         width: 300,
-        filterOptions: {
-          useField: 'HISTLISE.DESCRI'
-        },
-        sorting: {
-          useField:  'HISTLISE.DESCRI'
-        }
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.DescricaoForneced',
         field: 'descricaoForneced',
         width: 250,
-        filterOptions: {
-          useField: 'FORNECED.RASSOC'
-        },
-        sorting: {
-          useField:  'DescricaoForneced'
-        }
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.Quantidade',
         field: 'quantidade',
         width: 110,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.QuantidadeInspecionada',
         field: 'quantidadeInspecionada',
         width: 120,
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.QuantidadeInspecionar',
         field: 'quantidadeInspecionar',
         width: 110,
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
       }),
       new VsGridDateColumn({
         headerName: 'QualidadeInspecaoEntrada.NotaFiscalGrid.DataEntrada',
         field: 'dataEntrada',
         width: 110,
-        filterOptions: {
-          useField: 'HISTLISE.DTENT'
-        },
-        sorting: {
-          useField:  'HISTLISE.DTENT'
-        }
-      })
+      }),
     ];
 
     this.gridOptions.get = (i: VsGridGetInput) => this.getGridData(i);
@@ -206,52 +198,27 @@ export class NotaFiscalViewComponent implements OnInit, OnDestroy {
       icon: 'plus',
       tooltip: 'QualidadeInspecaoEntrada.InspecaoDetails.NovaInspecao',
       callback: (rowIndex: number, data: NotaFiscalDTO) => {
-        this.notaSelecionada(data);
         const dialogOptions = this.vsDialog.generateDialogConfig(
           {
             notaFiscal: data,
             novaInspecao: true,
-            codigoProduto: data.codigoProduto,
-            codigoFornecedor: data.codigoForneced,
+            codigoProduto: data.codigoProduto
           } as InspecaoDetailsDTO,
           {
             hasBackdrop: true
           }
         );
         const openedDialog = this.matDialog.open(InspecaoDetailsComponent, dialogOptions);
-        return openedDialog.afterClosed().subscribe(() => {
-          this.gridOptions.refresh();
-        });
+        return openedDialog.afterClosed();
       }
     }];
-
-    this.gridOptions.editRowOptions = {
-      editOnSingleClick: false,
-      isAutoEditable: true,
-      fullEditMode: true,
-      shouldShowAction: () => false,
-      isCellEditable: (_rowIndex, fieldName, _data: NotaFiscalDTO) =>
-        this.colunasEditaveis.includes(fieldName),
-      onRowEdit: (_index, _currentData: NotaFiscalDTO, newData: NotaFiscalDTO) => {
-        const input = {
-          idNotaFiscal: newData.id,
-          observacao: newData.observacao
-        } as NotaFiscalDadosAdicionaisDTO;
-
-        return this.inspecaoEntradaService.updateNotaFiscalDadosAdicionais(input.idNotaFiscal, input)
-          .pipe(map(() => {
-            return { success: true }
-          }))
-      }
-    }
   }
 
   private getGridData(input: VsGridGetInput): Observable<VsGridGetResult> {
     input.filter = this.pesquisa;
-    const filtros = this.inspecaoEntradaService.getFiltros();
 
     return this.inspecaoEntradaService
-      .getNotasFiscais(input, filtros)
+      .getNotasFiscais(input, this.filtros)
       .pipe(
         map((r: GetNotasFiscaisDTO) => new VsGridGetResult(r.items, r.totalCount)),
       );
@@ -259,6 +226,5 @@ export class NotaFiscalViewComponent implements OnInit, OnDestroy {
 
   private notaSelecionada(nota: NotaFiscalDTO): void {
     this.inspecaoEntradaService.notaFiscalSelecionada.next(nota);
-    this.inspecaoEntradaService.refreshInspecoesNotaFiscalGrid.next();
   }
 }

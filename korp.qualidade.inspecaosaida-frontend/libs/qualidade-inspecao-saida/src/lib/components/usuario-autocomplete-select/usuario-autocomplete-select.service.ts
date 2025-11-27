@@ -12,6 +12,8 @@ import { UsuarioOutput } from './usuario-autocomplete-select.component';
 
 @Injectable()
 export class UsuarioAutocompleteSelectService {
+  private readonly headers = this.sessionService.defaultHttpHeaders;
+
   constructor(protected httpClient: HttpClient, @Inject(VS_BACKEND_URL) private apiBaseUrl: string,
               @Inject(VS_API_PREFIX) private apiPrefix: string, private sessionService: SessionService) {
   }
@@ -33,12 +35,12 @@ export class UsuarioAutocompleteSelectService {
 
     return this.httpClient.get<IPagedResultOutputDto<UsuarioOutput>>(`${this.basePath()}`, {
       params: queryParameters,
-      headers: this.sessionService.defaultHttpHeaders
+      headers: this.headers
     });
   }
 
   public get(id: string): Observable<UsuarioOutput> {
-    return this.httpClient.get<UsuarioOutput>(`${this.basePath()}/${id}`, { headers: this.sessionService.defaultHttpHeaders });
+    return this.httpClient.get<UsuarioOutput>(`${this.basePath()}/${id}`, { headers: this.headers });
   }
 
   private basePath(): string {

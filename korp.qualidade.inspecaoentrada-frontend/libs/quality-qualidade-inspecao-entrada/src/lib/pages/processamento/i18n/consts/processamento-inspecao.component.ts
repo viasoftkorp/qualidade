@@ -28,12 +28,6 @@ export const PROCESSAMENTO_INSPECAO_I18N_PT: ProcessamentoInspecaoI18N = {
       Falha: 'Falha',
       Sucesso: 'Sucesso',
     },
-    Resultados: {
-      Aprovado: 'Aprovado',
-      NaoAplicavel: 'Não aplicável',
-      NaoConforme: 'Não conforme',
-      ParcialmenteAprovado: 'Parcialmente Aprov.'
-    },
     Reprocessar: 'Reprocessar',
     Inspecionados: 'Inspecionados',
     Estornados: 'Estornados',
@@ -48,8 +42,6 @@ export const PROCESSAMENTO_INSPECAO_I18N_PT: ProcessamentoInspecaoI18N = {
       NumeroPedido: 'Pedido',
       DescricaoLocalOrigem: 'Local Origem',
       DescricaoLocalDestino: 'Local Destino',
-      LoteOrigem: 'Lote Origem',
-      LoteDestino: 'Lote Destino'
     }
   }
 };

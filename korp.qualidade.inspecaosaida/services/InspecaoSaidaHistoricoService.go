@@ -4,7 +4,6 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
 )
 
@@ -41,14 +40,19 @@ func (service *InspecaoSaidaHistoricoService) GetAllInspecaoSaidaHistoricoCabeca
 		return nil, err
 	}
 
+	count, err := service.InspecaoSaidaHistoricoRepository.CountInspecaoSaidaHistoricoCabecalho(baseFilters, filters)
+	if err != nil {
+		return nil, err
+	}
+
 	return &dto.GetAllInspecaoSaidaHistoricoCabecalhoDTO{
 		Items:      items,
-		TotalCount: int64(0),
+		TotalCount: count,
 	}, nil
 }
 
-func (service *InspecaoSaidaHistoricoService) GetAllInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters, odf int, codigoInspecao int) (*dto.GetAllInspecaoSaidaHistoricoItemsDTO, error) {
-	items, err := service.InspecaoSaidaHistoricoRepository.GetAllInspecaoSaidaHistoricoItems(baseFilters, filters, odf, codigoInspecao)
+func (service *InspecaoSaidaHistoricoService) GetAllInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, odf int) (*dto.GetAllInspecaoSaidaHistoricoItemsDTO, error) {
+	items, err := service.InspecaoSaidaHistoricoRepository.GetAllInspecaoSaidaHistoricoItems(baseFilters, odf)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +62,7 @@ func (service *InspecaoSaidaHistoricoService) GetAllInspecaoSaidaHistoricoItems(
 		return nil, err
 	}
 
-	count, err := service.InspecaoSaidaHistoricoRepository.CountInspecaoSaidaHistoricoItems(baseFilters, filters, odf, codigoInspecao)
+	count, err := service.InspecaoSaidaHistoricoRepository.CountInspecaoSaidaHistoricoItems(baseFilters, odf)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +114,6 @@ func (service *InspecaoSaidaHistoricoService) GetItemsDto(items []dto.InspecaoSa
 
 			transferencias = append(transferencias, dto.HistoricoInspecaoSaidaTransferenciaOutput{
 				OrdemFabricacao:       item.OrdemFabricacao,
-				OdfApontada:           item.OdfApontada,
 				Quantidade:            transferencia.Quantidade,
 				NumeroPedido:          transferencia.NumeroPedido,
 				LocalOrigem:           transferencia.LocalOrigem,
@@ -122,7 +125,6 @@ func (service *InspecaoSaidaHistoricoService) GetItemsDto(items []dto.InspecaoSa
 		}
 
 		itemHistorico := dto.InspecaoSaidaHistoricoItemsDTO{
-			IdInspecao:             item.IdInspecao,
 			CodigoInspecao:         item.CodigoInspecao,
 			OdfApontada:            item.OdfApontada,
 			RecnoInspecao:          item.RecnoInspecao,
@@ -136,7 +138,7 @@ func (service *InspecaoSaidaHistoricoService) GetItemsDto(items []dto.InspecaoSa
 			Inspetor:               item.Inspetor,
 			TipoInspecao:           item.TipoInspecao,
 			Resultado:              item.Resultado,
-			DataInspecao:           utils.StringToTime(item.DataInspecao),
+			DataInspecao:           item.DataInspecao,
 			NumeroPedido:           item.NumeroPedido,
 			Cliente:                item.Cliente,
 			Transferencias:         transferencias,

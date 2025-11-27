@@ -83,9 +83,9 @@ func (mr *MockIInspecaoEntradaServiceMockRecorder) BuscarInspecaoEntradaPeloCodi
 }
 
 // BuscarInspecoesEntrada mocks base method.
-func (m *MockIInspecaoEntradaService) BuscarInspecoesEntrada(arg0 int, arg1 string, arg2 *models.BaseFilter, arg3 *dto.InspecaoEntradaFilters) (*dto.GetInspecaoEntradaDTO, *dto.ValidacaoDTO, error) {
+func (m *MockIInspecaoEntradaService) BuscarInspecoesEntrada(arg0 int, arg1 string, arg2 *models.BaseFilter) (*dto.GetInspecaoEntradaDTO, *dto.ValidacaoDTO, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarInspecoesEntrada", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "BuscarInspecoesEntrada", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*dto.GetInspecaoEntradaDTO)
 	ret1, _ := ret[1].(*dto.ValidacaoDTO)
 	ret2, _ := ret[2].(error)
@@ -93,13 +93,13 @@ func (m *MockIInspecaoEntradaService) BuscarInspecoesEntrada(arg0 int, arg1 stri
 }
 
 // BuscarInspecoesEntrada indicates an expected call of BuscarInspecoesEntrada.
-func (mr *MockIInspecaoEntradaServiceMockRecorder) BuscarInspecoesEntrada(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaServiceMockRecorder) BuscarInspecoesEntrada(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesEntrada", reflect.TypeOf((*MockIInspecaoEntradaService)(nil).BuscarInspecoesEntrada), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesEntrada", reflect.TypeOf((*MockIInspecaoEntradaService)(nil).BuscarInspecoesEntrada), arg0, arg1, arg2)
 }
 
 // BuscarPlanosNovaInspecao mocks base method.
-func (m *MockIInspecaoEntradaService) BuscarPlanosNovaInspecao(arg0, arg1 string, arg2 *models.BaseFilter) (*dto.GetPlanosInspecaoDTO, *dto.ValidacaoDTO, error) {
+func (m *MockIInspecaoEntradaService) BuscarPlanosNovaInspecao(arg0 int, arg1 string, arg2 *models.BaseFilter) (*dto.GetPlanosInspecaoDTO, *dto.ValidacaoDTO, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BuscarPlanosNovaInspecao", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*dto.GetPlanosInspecaoDTO)
@@ -159,21 +159,6 @@ func (m *MockIInspecaoEntradaService) CriarInspecao(arg0 *dto.NovaInspecaoInput)
 func (mr *MockIInspecaoEntradaServiceMockRecorder) CriarInspecao(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CriarInspecao", reflect.TypeOf((*MockIInspecaoEntradaService)(nil).CriarInspecao), arg0)
-}
-
-// ImprimirInspecaoEntrada mocks base method.
-func (m *MockIInspecaoEntradaService) ImprimirInspecaoEntrada(arg0 int) ([]byte, *dto.ValidacaoDTO) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImprimirInspecaoEntrada", arg0)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(*dto.ValidacaoDTO)
-	return ret0, ret1
-}
-
-// ImprimirInspecaoEntrada indicates an expected call of ImprimirInspecaoEntrada.
-func (mr *MockIInspecaoEntradaServiceMockRecorder) ImprimirInspecaoEntrada(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImprimirInspecaoEntrada", reflect.TypeOf((*MockIInspecaoEntradaService)(nil).ImprimirInspecaoEntrada), arg0)
 }
 
 // RemoverInspecaoEntradaPeloCodigo mocks base method.

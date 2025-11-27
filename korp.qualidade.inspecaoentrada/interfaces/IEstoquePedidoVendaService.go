@@ -10,6 +10,5 @@ import (
 type IEstoquePedidoVendaService interface {
 	BuscarEstoqueLocalPedidosVendas(filter *models.BaseFilter, recnoInspecao int, lote, codigoProduto string) (*dto.GetAllEstoqueLocalPedidoVendaAlocacaoDTO, error)
 	BuscarQuantidadeTotalAlocadaPedidoVenda(recnoInspecaoEntrada int) (*dto.EstoqueLocalPedidoVendoTotalizacaoDTO, error)
-	BuscarPedidoVendaLotes(idPedidoVenda uuid.UUID) (*dto.GetAllPedidoVendaLotes, error)
-	AtualizarDistribuicaoInspecaoEstoquePedidoVenda(id uuid.UUID, recnoInspecaoEntrada int, input dto.EstoqueLocalPedidoVendaAlocacaoInput) (*dto.ValidacaoDTO, error)
+	AtualizarDistribuicaoInspecaoEstoquePedidoVenda(id uuid.UUID, recnoInspecaoEntrada int, input dto.EstoqueLocalPedidoVendaAlocacaoDTO) (*dto.ValidacaoDTO, error)
 }

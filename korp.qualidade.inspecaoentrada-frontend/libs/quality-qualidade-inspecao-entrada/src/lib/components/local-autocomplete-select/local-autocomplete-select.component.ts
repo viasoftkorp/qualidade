@@ -1,72 +1,94 @@
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { KeyValue } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
+
+import { map } from 'rxjs/operators';
+
 import { IPagedResultOutputDto } from '@viasoft/common';
 import {
   VsAutocompleteGetInput,
-  VsAutocompleteGetNameFn,
-  VsAutocompleteOutput,
-  VsFormManipulator
+  VsAutocompleteOptions,
+  VsAutocompleteValue
 } from '@viasoft/components';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { LocalAutocompleteSelectService } from './local-autocomplete-select.service';
 import { LocalOutput } from './local-output.class';
+import { LocalAutocompleteSelectService } from './local-autocomplete-select.service';
 
 @Component({
   selector: 'qa-local-autocomplete-select',
   templateUrl: './local-autocomplete-select.component.html',
   styleUrls: ['./local-autocomplete-select.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LocalAutocompleteSelectComponent),
-      multi: true
-    },
-    LocalAutocompleteSelectService
-  ]
+  providers: [LocalAutocompleteSelectService]
 })
-export class LocalAutocompleteSelectComponent extends VsFormManipulator<string> {
+export class LocalAutocompleteSelectComponent implements OnInit {
+  @Input() public controlName: string;
   @Input() public placeholder: string;
-  @Input() public required = false;
-  @Input() public disabled = false;
-  @Input() public autoFocusOnLoad = false;
-  @Input() public autoFocusFirstOption = true;
-  @Input() public cleanable = true;
-  @Output() public loaded = new EventEmitter<LocalOutput>();
-  @Output() public cleared = new EventEmitter();
-  @Output() public optionSelected = new EventEmitter<KeyValue<string, string>>();
-  @Output() public closed = new EventEmitter<KeyValue<string, string>>();
 
-  constructor(
-    private localAutocompleteSelectService: LocalAutocompleteSelectService,
-  ) {
-    super();
+  @Output() public localAlterado: EventEmitter<LocalOutput> = new EventEmitter<LocalOutput>();
+
+  public localAutocompleteOptions: VsAutocompleteOptions;
+  public localAutocompleteGetInput: VsAutocompleteGetInput;
+
+  private form: FormGroup;
+
+  constructor(private formGroupDirective: FormGroupDirective, private service: LocalAutocompleteSelectService) {
   }
 
-  public getNames: VsAutocompleteGetNameFn<string> = (value) =>
-    this.localAutocompleteSelectService.get(value)
-      .pipe(map((local: LocalOutput) => {
-        this.loaded.emit(local);
-        return `${local.codigo} ${local.descricao}`;
-      }));
+  ngOnInit(): void {
+    this.form = this.formGroupDirective.form;
 
-  public getAutocompleteItems = (input: VsAutocompleteGetInput): Observable<VsAutocompleteOutput<string>> =>
-    this.localAutocompleteSelectService.getList(input.valueToFilter, input.skipCount, input.maxDropSize)
-      .pipe(map((pagedResult: IPagedResultOutputDto<LocalOutput>) => {
-        if (!pagedResult.items || pagedResult.items.length === 0) {
-          return {
-            totalCount: 0,
-            items: []
+    this.buscarValorInicial();
+    this.configuraLocalAutocomplete();
+  }
+
+  public localChanged(event: KeyValue<string, any>): void {
+    if (event) {
+      const localAlterado: LocalOutput = event.value;
+      this.localAlterado.emit(localAlterado);
+    }
+  }
+
+  private buscarValorInicial(): void {
+    const codigoLocal = this.form.get(this.controlName).value?.value;
+    if (!codigoLocal) {
+      return;
+    }
+
+    this.service.get(codigoLocal).subscribe((local: LocalOutput) => {
+      this.form.get(this.controlName).setValue({
+        key: `${local.codigo} - ${local.descricao}`,
+        value: local.codigo
+      });
+    });
+  }
+
+  private configuraLocalAutocomplete(): void {
+    this.localAutocompleteGetInput = { maxDropSize: 6 };
+    this.localAutocompleteOptions = new VsAutocompleteOptions();
+    this.localAutocompleteOptions.get = (i: VsAutocompleteGetInput) => this.service.getList(i.valueToFilter, i.skipCount, i.maxDropSize)
+      .pipe(
+        map((pagedResult: IPagedResultOutputDto<LocalOutput>) => {
+          if (pagedResult && pagedResult.items) {
+            return {
+              items: pagedResult.items.map((local: LocalOutput) => ({
+                option: {
+                  key: `${local.codigo} - ${local.descricao}`,
+                  value: local.codigo
+                }
+              }) as VsAutocompleteValue),
+              totalCount: pagedResult.totalCount
+            } as any;
           }
-        }
-
-        return {
-          totalCount: pagedResult.totalCount,
-          items: pagedResult.items.map((local: LocalOutput) => ({
-            name: `${local.codigo} ${local.descricao}`,
-            value: local.codigo
-          }))
-        }
-      }));
+          return {
+            items: [],
+            totalCount: 0
+          } as any;
+        })
+      );
+  }
 }

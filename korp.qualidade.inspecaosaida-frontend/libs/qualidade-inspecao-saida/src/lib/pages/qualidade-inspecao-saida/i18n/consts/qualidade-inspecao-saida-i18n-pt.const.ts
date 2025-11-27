@@ -22,7 +22,6 @@ export const QUALIDADE_INSPECAO_SAIDA_I18N_PT: QualidadeInspecaoSaidaI18N = {
       QuantidadeReprovada: 'Qtd. Reprovada',
       EditarInspecao: 'Editar',
       ExcluirInspecao: 'Excluir',
-      ImprimirInspecao: 'Imprimir',
     },
     InspecaoDetails: {
       QuantidadePedidoVenda: 'Qtd. Pedido Venda',
@@ -44,14 +43,13 @@ export const QUALIDADE_INSPECAO_SAIDA_I18N_PT: QualidadeInspecaoSaidaI18N = {
       FinalizarInspecao: 'Finalizar Inspeção',
       Odf: 'ODF',
       PedidoVenda: 'Pedido de Venda',
-      QuantidadeInspecaoValidacao: 'Quantidade de inspeção tem que ser maior que zero e não pode ultrapassar a quantidade restante para inspecionar',
+      QuantidadeInspecaoValidacao: 'Quantidade de inspeção/lote não pode ultrapassar a quantidade restante para inspecionar',
       Observacao: 'Observação',
       AlterarDadosInspecaoModal: {
         Titulo: 'Alterar dados',
         Aprovado: 'Aprovado',
         NaoAplicavel: 'Não aplicável',
         NaoConforme: 'Não conforme',
-        ParcialmenteAprovado: 'Parcialmente Aprov.',
         Alterar: 'Alterar',
       },
       FinalizarInspecaoModal: {
@@ -102,12 +100,6 @@ export const QUALIDADE_INSPECAO_SAIDA_I18N_PT: QualidadeInspecaoSaidaI18N = {
       DataNegociada: 'Data Negociada',
       NovaInspecao: 'Nova Inspeção',
     },
-    Resultados: {
-      Aprovado: 'Aprovado',
-      NaoAplicavel: 'Não aplicável',
-      NaoConforme: 'Não conforme',
-      ParcialmenteAprovado: 'Parcialmente Aprov.'
-    }
   },
   HistoricoInspecao: {
     Metricas: 'Métricas',
@@ -166,12 +158,5 @@ export const QUALIDADE_INSPECAO_SAIDA_I18N_PT: QualidadeInspecaoSaidaI18N = {
       DescricaoLocalDestino: 'Local Destino',
       NumeroPedido: 'Número do Pedido'
     }
-  },
-  FiltrosInspecao: {
-    Filtrar: 'Filtrar',
-    Metricas: 'Métricas',
-    Observacao: 'Observação',
-    Aplicar: 'Aplicar',
-    Limpar: 'Limpar'
   }
 };

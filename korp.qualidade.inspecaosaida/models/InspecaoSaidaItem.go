@@ -6,19 +6,18 @@ import (
 )
 
 type InspecaoSaidaItem struct {
-	Id                     uuid.UUID
-	LegacyIdPlanoInspecao  int
-	Plano                  string
-	Odf                    int
-	Descricao              string
-	Metodo                 string
-	Sequencia              string
-	Resultado              string
-	MaiorValor             decimal.Decimal
-	MenorValor             decimal.Decimal
-	MaiorValorBase         decimal.Decimal
-	MenorValorBase         decimal.Decimal
-	CodigoInspecao         int
-	IdEmpresa              int
-	Observacao             string
+	Id             uuid.UUID
+	Plano          string
+	Odf            int
+	Descricao      string
+	Metodo         string
+	Sequencia      string
+	Resultado      string
+	MaiorValor     decimal.Decimal
+	MenorValor     decimal.Decimal
+	MaiorValorBase decimal.Decimal
+	MenorValorBase decimal.Decimal
+	CodigoInspecao int
+	IdEmpresa      int
+	Observacao     string
 }

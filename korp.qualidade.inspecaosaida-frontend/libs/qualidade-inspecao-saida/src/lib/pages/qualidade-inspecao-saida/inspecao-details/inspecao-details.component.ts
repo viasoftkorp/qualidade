@@ -5,27 +5,21 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   Router
 } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import {
-  JQQB_COND_OR,
-  JQQB_OP_EQUAL,
   MessageService,
   VsSubscriptionManager
 } from '@viasoft/common';
 import {
   VsDialog,
-  VsFilterOptions,
   VsGridGetInput,
   VsGridGetResult,
   VsGridNumberColumn,
@@ -33,7 +27,6 @@ import {
   VsGridSimpleColumn
 } from '@viasoft/components';
 import {
-  finalize,
   Observable,
   of
 } from 'rxjs';
@@ -57,7 +50,6 @@ import {
 } from '../../../tokens/interfaces/get-inspecao-saida-itens-dto.interface';
 import { AlterarDadosInspecaoModalComponent } from './alterar-dados-inspecao-modal/alterar-dados-inspecao-modal.component';
 import { FinalizarInspecaoModalComponent } from './finalizar-inspecao-modal/finalizar-inspecao-modal.component';
-import { IVsDialogBaseOptions } from '@viasoft/components/dialog/src/dialog.tokens';
 
 @Component({
   selector: 'qa-inspecao-details',
@@ -72,30 +64,20 @@ export class InspecaoDetailsComponent implements OnDestroy {
   public inspecaoDto: InspecaoSaidaDTO;
   public gridOptions = new VsGridOptions();
   public desabilitarFinalizar = true;
-  public salvando = false;
+  public desabilitarSalvar = true;
   public planosAlterados = new Map<string, PlanoInspecaoDTO>();
   public itensAlterados = new Map<string, InspecaoSaidaItemDTO>();
   public loadingGrid = true;
-  public selectedTab: number;
 
   public get finalizarDesabilitado(): boolean {
-    return this.desabilitarFinalizar || this.inspecaoDetalhes.novaInspecao || this.salvando;
+    return this.desabilitarFinalizar || this.inspecaoDetalhes.novaInspecao || !this.desabilitarSalvar;
   }
 
   public get salvarDesabilitado(): boolean {
     if (this.inspecaoDetalhes.novaInspecao) {
-      return this.salvando || this.form.invalid;
+      return !this.form.valid;
     }
-    return this.salvando || this.form.invalid || !this.itensAlterados.size;
-  }
-
-  public get quantidadeValida(): boolean {
-    return this.form.get('quantidadeInspecao').value <= this.form.get('quantidadeInspecionar').value
-    && this.form.get('quantidadeInspecao').value > 0;
-  }
-
-  public get mostrarErroQuantidadeInspecao(): boolean {
-    return this.form.get('quantidadeInspecao').dirty && !this.quantidadeValida;
+    return this.desabilitarSalvar;
   }
 
   constructor(
@@ -104,7 +86,6 @@ export class InspecaoDetailsComponent implements OnDestroy {
     private inspecaoSaidaService: QualidadeInspecaoSaidaService,
     private vsDialog: VsDialog,
     private matDialog: MatDialog,
-    private dialogRef: MatDialogRef<InspecaoDetailsComponent>,
     private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) data: InspecaoDetailsDTO,
     private decimalPipe: DecimalPipe
@@ -123,17 +104,7 @@ export class InspecaoDetailsComponent implements OnDestroy {
     this.subs.clear();
   }
 
-  public onSelectedTabIndexChanged(index: number): void {
-    this.selectedTab = index;
-  }
-
   public salvarInspecao(): void {
-    if (this.salvando) {
-      return;
-    }
-
-    this.salvando = true
-
     if (this.inspecaoDetalhes.novaInspecao) {
       const input: NovaInspecaoInput = {
         odf: this.inspecaoDetalhes.odf,
@@ -145,21 +116,30 @@ export class InspecaoDetailsComponent implements OnDestroy {
       };
 
       this.subs.add('nova-inspecao', this.inspecaoSaidaService.criarInspecao(input)
-        .subscribe((inspecao: InspecaoSaidaDTO) => {
-          if (inspecao.codigoInspecao) {
-            this.inspecaoDetalhes.id = inspecao.id;
-            this.inspecaoDetalhes.codInspecao = inspecao.codigoInspecao;
+        .subscribe((codigoInspecao: number) => {
+          if (codigoInspecao) {
+            this.inspecaoDetalhes.codInspecao = codigoInspecao;
             this.inspecaoDetalhes.novaInspecao = false;
-
-            const dialogConfig =  this.vsDialog.generateDialogConfig(this.inspecaoDetalhes,
-              { autoCloseWhenChangeRoute: true, hasBackdrop: true } as IVsDialogBaseOptions)
-
-            this.matDialog.open(InspecaoDetailsComponent, dialogConfig)
-              .afterOpened()
-              .subscribe(() => this.dialogRef.close());
+            this.vsDialog.open(
+              InspecaoDetailsComponent,
+              this.inspecaoDetalhes,
+              { autoCloseWhenChangeRoute: false, allowReOpenSameObject: true }
+            );
+            // TODO workaround
+            const positionTop = this.vsDialog['dialogTopPosition'] ?? 40;
+            const openedDialog = this.matDialog.open(InspecaoDetailsComponent, {
+              data: this.inspecaoDetalhes,
+              hasBackdrop: true,
+              closeOnNavigation: true,
+              height: `calc(100% - ${positionTop}px)`,
+              maxHeight: `calc(100% - ${positionTop}px)`,
+              maxWidth: '60vw',
+              position: { top: `${positionTop}px`, right: '0px', bottom: '0px' },
+              panelClass: 'vs-dialog-panel'
+            });
+            return openedDialog.afterClosed();
           }
         }, (err: HttpErrorResponse) => {
-          this.salvando = false;
           this.messageService.error(getErrorMessage(err));
         }));
     } else {
@@ -170,12 +150,9 @@ export class InspecaoDetailsComponent implements OnDestroy {
         lote: this.inspecaoDto.lote
       };
       this.subs.add('atualizar-inspecao', this.inspecaoSaidaService.atualizarInspecao(input)
-        .pipe(finalize(() => {
-          this.salvando = false;
-        }))
         .subscribe(() => {
           this.gridOptions.refresh(true);
-          this.itensAlterados.clear();
+          this.desabilitarSalvar = true;
           this.buscarInspecao(input.codInspecao, false);
         }, (err: HttpErrorResponse) => {
           this.messageService.error(getErrorMessage(err));
@@ -201,98 +178,58 @@ export class InspecaoDetailsComponent implements OnDestroy {
   private initForm(): void {
     this.form = this.formBuilder.group({
       odf: [{ value: this.inspecaoDetalhes.odf, disabled: true }],
-      odfApontada: [{ value: this.inspecaoDetalhes.odfApontada, disabled: true }],
       codProduto: [{ value: this.inspecaoDetalhes.codProduto, disabled: true }],
       quantidadeInspecionada: [{ value: this.inspecaoDetalhes.quantidadeInspecionada, disabled: true }],
       quantidadeInspecionar: [{ value: this.inspecaoDetalhes.quantidadeInspecionar, disabled: true }],
-      quantidadeInspecao: [{ value: this.inspecaoDto?.quantidadeInspecao, disabled: !this.inspecaoDetalhes.novaInspecao }, [Validators.required, greaterThanZeroValidator(),Validators.max(!this.inspecaoDetalhes.novaInspecao ? this.inspecaoDto?.quantidadeInspecao : this.inspecaoDetalhes.quantidadeInspecionar)]],
+      quantidadeInspecao: [{ value: this.inspecaoDto?.quantidadeInspecao, disabled: !this.inspecaoDetalhes.novaInspecao }, [Validators.required, Validators.max(!this.inspecaoDetalhes.novaInspecao ? this.inspecaoDto?.quantidadeInspecao : this.inspecaoDetalhes.quantidadeInspecionar)]],
     });
   }
 
   private initGrid(): void {
-    this.gridOptions.id = '4B8EC73D-4FF8-4563-9528-0603B8B65002';
+    this.gridOptions.id = 'bbe695f6-5607-47d8-9040-2f64b23cbd89';
+    this.gridOptions.enableFilter = false;
+    this.gridOptions.enableQuickFilter = false;
+    this.gridOptions.enableSorting = false;
 
     this.gridOptions.columns = [
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.Descricao',
         field: 'descricao',
         width: 100,
-        filterOptions: {
-          useField: 'QA_ITEM_INSPECAO_SAIDA.DESCRICAO'
-        },
-        sorting: {
-          useField: 'QA_ITEM_INSPECAO_SAIDA.DESCRICAO'
-        }
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.Resultado',
         field: 'resultado',
         width: 100,
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.MenorValor',
         field: 'menorValor',
         width: 50,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.MaiorValor',
         field: 'maiorValor',
         width: 50,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.MenorValorBase',
         field: 'menorValorBase',
         width: 70,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.MaiorValorBase',
         field: 'maiorValorBase',
         width: 70,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.InspecaoDetails.Observacao',
         field: 'observacao',
         width: 100,
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
       }),
     ];
 
@@ -381,6 +318,7 @@ export class InspecaoDetailsComponent implements OnDestroy {
       .subscribe((dtoAlterado: InspecaoSaidaItemDTO) => {
         if (dtoAlterado) {
           this.itensAlterados.set(dtoAlterado.id, dtoAlterado);
+          this.desabilitarSalvar = false;
           this.gridOptions.refresh();
         }
       }));
@@ -392,6 +330,11 @@ export class InspecaoDetailsComponent implements OnDestroy {
         this.inspecaoDto = inspecao;
         if (setarValores) {
           this.form.get('quantidadeInspecao').setValue(inspecao.quantidadeInspecao);
+          this.subs.add('formulario-alterado', this.form
+            .valueChanges
+            .subscribe(() => {
+              this.desabilitarSalvar = false;
+            }));
           this.initGrid();
         }
       }, (err: HttpErrorResponse) => {
@@ -401,46 +344,4 @@ export class InspecaoDetailsComponent implements OnDestroy {
           }));
       }));
   }
-
-  private get resultadoFilterOptions(): VsFilterOptions {
-    return {
-      operators: [JQQB_OP_EQUAL],
-      conditions: [JQQB_COND_OR],
-      blockInput: true,
-      useField: 'QA_ITEM_INSPECAO_SAIDA.RESULTADO',
-      mode: 'selection',
-      multiple: true,
-      getItems: () => of({
-        items: [
-          {
-            key: ResultadosInspecao.Aprovado.toString(),
-            value: `QualidadeInspecaoSaida.Resultados.Aprovado`,
-          },
-          {
-            key: ResultadosInspecao.ParcialmenteAprovado.toString(),
-            value: `QualidadeInspecaoSaida.Resultados.ParcialmenteAprovado`,
-          },
-          {
-            key: ResultadosInspecao.NaoAplicavel.toString(),
-            value: `QualidadeInspecaoSaida.Resultados.NaoAplicavel`,
-          },
-          {
-            key: ResultadosInspecao.NaoConforme.toString(),
-            value: `QualidadeInspecaoSaida.Resultados.NaoConforme`,
-          }
-        ],
-        totalCount: 4
-      })
-    };
-  }
-}
-
-export function greaterThanZeroValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-    if (value != null && value <= 0) {
-      return { greaterThanZero: true };
-    }
-    return null;
-  };
 }

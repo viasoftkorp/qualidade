@@ -37,7 +37,7 @@ func (m *MockIEstoquePedidoVendaService) EXPECT() *MockIEstoquePedidoVendaServic
 }
 
 // AtualizarDistribuicaoInspecaoEstoquePedidoVenda mocks base method.
-func (m *MockIEstoquePedidoVendaService) AtualizarDistribuicaoInspecaoEstoquePedidoVenda(arg0 uuid.UUID, arg1 int, arg2 dto.EstoqueLocalPedidoVendaAlocacaoInput) (*dto.ValidacaoDTO, error) {
+func (m *MockIEstoquePedidoVendaService) AtualizarDistribuicaoInspecaoEstoquePedidoVenda(arg0 uuid.UUID, arg1 int, arg2 dto.EstoqueLocalPedidoVendaAlocacaoDTO) (*dto.ValidacaoDTO, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtualizarDistribuicaoInspecaoEstoquePedidoVenda", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*dto.ValidacaoDTO)
@@ -64,21 +64,6 @@ func (m *MockIEstoquePedidoVendaService) BuscarEstoqueLocalPedidosVendas(arg0 *m
 func (mr *MockIEstoquePedidoVendaServiceMockRecorder) BuscarEstoqueLocalPedidosVendas(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarEstoqueLocalPedidosVendas", reflect.TypeOf((*MockIEstoquePedidoVendaService)(nil).BuscarEstoqueLocalPedidosVendas), arg0, arg1, arg2, arg3)
-}
-
-// BuscarPedidoVendaLotes mocks base method.
-func (m *MockIEstoquePedidoVendaService) BuscarPedidoVendaLotes(arg0 uuid.UUID) (*dto.GetAllPedidoVendaLotes, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarPedidoVendaLotes", arg0)
-	ret0, _ := ret[0].(*dto.GetAllPedidoVendaLotes)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BuscarPedidoVendaLotes indicates an expected call of BuscarPedidoVendaLotes.
-func (mr *MockIEstoquePedidoVendaServiceMockRecorder) BuscarPedidoVendaLotes(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarPedidoVendaLotes", reflect.TypeOf((*MockIEstoquePedidoVendaService)(nil).BuscarPedidoVendaLotes), arg0)
 }
 
 // BuscarQuantidadeTotalAlocadaPedidoVenda mocks base method.

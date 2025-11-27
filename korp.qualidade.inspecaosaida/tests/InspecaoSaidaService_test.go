@@ -1,12 +1,6 @@
 package tests
 
 import (
-	"errors"
-	"log"
-	"strconv"
-	"testing"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/mappers"
@@ -14,16 +8,21 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/services"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/utils"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"log"
+	"strconv"
+	"testing"
+	"time"
 )
 
 func InstanciarBaseparams() *models.BaseParams {
 	return &models.BaseParams{
-		UserLogin:       "",
-		LegacyCompanyId: 14793,
+		UserLogin:    "",
+		CompanyRecno: 14793,
 	}
 }
 
@@ -49,30 +48,28 @@ func InstanciarInput(odf int, qtd float64, id1 uuid.UUID, id2 uuid.UUID) *dto.No
 func InstanciarInspecaoSaidaItem(input dto.NovaInspecaoInput, baseParams models.BaseParams, plano *models.PlanoInspecao, id1 uuid.UUID, id2 uuid.UUID) []*models.InspecaoSaidaItem {
 	return []*models.InspecaoSaidaItem{
 		{
-			LegacyIdPlanoInspecao: plano.LegacyId,
-			Plano:                 input.Plano,
-			Odf:                   input.Odf,
-			Descricao:             plano.Descricao,
-			Metodo:                plano.Metodo,
-			Sequencia:             strconv.Itoa(1),
-			Resultado:             plano.Resultado,
-			MaiorValor:            decimal.NewFromFloat(plano.MaiorValor),
-			MenorValor:            decimal.NewFromFloat(plano.MenorValor),
-			CodigoInspecao:        14,
-			IdEmpresa:             baseParams.LegacyCompanyId,
+			Plano:          input.Plano,
+			Odf:            input.Odf,
+			Descricao:      plano.Descricao,
+			Metodo:         plano.Metodo,
+			Sequencia:      strconv.Itoa(1),
+			Resultado:      plano.Resultado,
+			MaiorValor:     decimal.NewFromFloat(plano.MaiorValor),
+			MenorValor:     decimal.NewFromFloat(plano.MenorValor),
+			CodigoInspecao: 14,
+			IdEmpresa:      baseParams.CompanyRecno,
 		},
 		{
-			LegacyIdPlanoInspecao: plano.LegacyId,
-			Plano:                 input.Plano,
-			Odf:                   input.Odf,
-			Descricao:             plano.Descricao,
-			Metodo:                plano.Metodo,
-			Sequencia:             strconv.Itoa(2),
-			Resultado:             "Parcialmente Aprov.",
-			MaiorValor:            decimal.NewFromFloat(plano.MaiorValor),
-			MenorValor:            decimal.NewFromFloat(plano.MenorValor),
-			CodigoInspecao:        14,
-			IdEmpresa:             baseParams.LegacyCompanyId,
+			Plano:          input.Plano,
+			Odf:            input.Odf,
+			Descricao:      plano.Descricao,
+			Metodo:         plano.Metodo,
+			Sequencia:      strconv.Itoa(2),
+			Resultado:      "Parcialmente Aprov.",
+			MaiorValor:     decimal.NewFromFloat(plano.MaiorValor),
+			MenorValor:     decimal.NewFromFloat(plano.MenorValor),
+			CodigoInspecao: 14,
+			IdEmpresa:      baseParams.CompanyRecno,
 		},
 	}
 }
@@ -167,24 +164,23 @@ func InstanciarAtualizarInspecaoInput(id uuid.UUID) *dto.AtualizarInspecaoInput 
 func TestBuscarInspecoesSaidas(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	mockInspecaoSaidaRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
-	service := services.NewInspecaoSaidaService(nil, mockInspecaoSaidaRepo, nil, nil, nil, nil, nil, nil)
+	service := services.NewInspecaoSaidaService(nil, mockInspecaoSaidaRepo, nil, nil, nil, nil)
 
 	odf := 14
-	baseFilters := &models.BaseFilter{
+	filter := &models.BaseFilter{
 		PageSize: 1,
 		Skip:     0,
 	}
-	filters := &dto.InspecaoSaidaFilters{}
-	inspecoesResult := []*models.InspecaoSaida{}
+	inspecoesResult := []*entities.InspecaoSaida{}
 	qtdInspecoes := int64(0)
 	t.Run("ErroBuscarInspecoesSaida", func(t1 *testing.T) {
 
 		mockInspecaoSaidaRepo.EXPECT().
-			BuscarInspecoesSaida(odf, baseFilters, filters).
+			BuscarInspecoesSaida(odf, filter).
 			Return(inspecoesResult, errors.New("Test 2")).
 			Times(1)
 
-		actualOutput, err := service.BuscarInspecoesSaida(odf, baseFilters, filters)
+		actualOutput, err := service.BuscarInspecoesSaida(odf, filter)
 		validacaoDTO := &dto.ValidacaoDTO{
 			Code:    3,
 			Message: "Test 2",
@@ -197,15 +193,15 @@ func TestBuscarInspecoesSaidas(t *testing.T) {
 	t.Run("BuscarQuantidadeInspecoesSaida", func(t2 *testing.T) {
 
 		mockInspecaoSaidaRepo.EXPECT().
-			BuscarInspecoesSaida(odf, baseFilters, filters).
+			BuscarInspecoesSaida(odf, filter).
 			Return(inspecoesResult, nil).
 			Times(1)
 
 		mockInspecaoSaidaRepo.EXPECT().
-			BuscarQuantidadeInspecoesSaida(odf, baseFilters, filters).
+			BuscarQuantidadeInspecoesSaida(odf).
 			Return(qtdInspecoes, errors.New("Test 2")).
 			Times(1)
-		actualOutput, err := service.BuscarInspecoesSaida(odf, baseFilters, filters)
+		actualOutput, err := service.BuscarInspecoesSaida(odf, filter)
 		validacaoDTO := &dto.ValidacaoDTO{
 			Code:    4,
 			Message: "Test 2",
@@ -216,20 +212,20 @@ func TestBuscarInspecoesSaidas(t *testing.T) {
 	})
 
 	mockInspecaoSaidaRepo.EXPECT().
-		BuscarInspecoesSaida(odf, baseFilters, filters).
+		BuscarInspecoesSaida(odf, filter).
 		Return(inspecoesResult, nil).
 		Times(1)
 
 	mockInspecaoSaidaRepo.EXPECT().
-		BuscarQuantidadeInspecoesSaida(odf, baseFilters, filters).
+		BuscarQuantidadeInspecoesSaida(odf).
 		Return(qtdInspecoes, nil).
 		Times(1)
 
 	expectedOutput := &dto.GetInspecaoSaidaDTO{
-		Items:      mappers.MapInspecaoSaidaDetalhesToDTOs(inspecoesResult),
+		Items:      mappers.MapInspecaoSaidaEntitiesToDTOs(inspecoesResult),
 		TotalCount: qtdInspecoes,
 	}
-	actualOutput, err := service.BuscarInspecoesSaida(odf, baseFilters, filters)
+	actualOutput, err := service.BuscarInspecoesSaida(odf, filter)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedOutput, actualOutput)
@@ -239,7 +235,7 @@ func TestBuscarInspecoesSaidas(t *testing.T) {
 func TestBuscarPlanosNovaInspecao(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	mockPlanoInspecaoRepo := mocks.NewMockIPlanosInspecaoRepository(mockCtrl)
-	service := services.NewInspecaoSaidaService(nil, nil, nil, nil, mockPlanoInspecaoRepo, nil, nil, nil)
+	service := services.NewInspecaoSaidaService(nil, nil, nil, nil, mockPlanoInspecaoRepo, nil)
 	odf := 14
 	plano := "Teste"
 	filter := &models.BaseFilter{
@@ -296,207 +292,207 @@ func TestBuscarPlanosNovaInspecao(t *testing.T) {
 	assert.Equal(t, expectedOutput, actualOuput)
 }
 
-// func TestCriarInspecao(t *testing.T) {
-// 	mockCtrl := gomock.NewController(t)
-// 	mockPlanoInspecaoRepo := mocks.NewMockIPlanosInspecaoRepository(mockCtrl)
-// 	mockInspecaoSaidaItemRepo := mocks.NewMockIInspecaoSaidaItemRepository(mockCtrl)
-// 	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
-// 	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
-// 	baseParams := InstanciarBaseparams()
-// 	uow := mocks.NewMockUnitOfWork(mockCtrl)
-// 	id1 := GetUUIDWithoutError()
-// 	id2 := GetUUIDWithoutError()
-// 	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
-// 	odf := 1231
-// 	qtdProduzida := decimal.NewFromInt(14)
-// 	input := InstanciarInput(odf, 10, id1, id2)
-// 	inputErro := InstanciarInput(odf, 20, id1, id2)
-// 	ordemProducao := InstanciarOrdemProducao(qtdProduzida)
-// 	ordemProducaoErro := InstanciarOrdemProducao(qtdProduzida)
-// 	inspecaoModel := InstanciarInspecaoSaida(ordemProducao, 10)
-// 	planosInspecaoNaoAlterados := InstanciarPlanosInspecaoNaoAlterados(id1, id2)
-// 	itensInspecao := InstanciarInspecaoSaidaItem(*input, *baseParams, planosInspecaoNaoAlterados[0], id1, id2)
-// 	t.Run("ErroBuscarOrdem", func(t1 *testing.T) {
-// 		mockOrdemProducaoRepo.EXPECT().
-// 			BuscarOrdem(input.Odf).
-// 			Return(nil).
-// 			Times(1)
-// 		actualOutput, err := service.CriarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    7,
-// 			Message: "Ordem de produção não encontrada.",
-// 		}
+func TestCriarInspecao(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	mockPlanoInspecaoRepo := mocks.NewMockIPlanosInspecaoRepository(mockCtrl)
+	mockInspecaoSaidaItemRepo := mocks.NewMockIInspecaoSaidaItemRepository(mockCtrl)
+	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
+	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
+	baseParams := InstanciarBaseparams()
+	uow := mocks.NewMockUnitOfWork(mockCtrl)
+	id1 := GetUUIDWithoutError()
+	id2 := GetUUIDWithoutError()
+	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
+	odf := 1231
+	qtdProduzida := decimal.NewFromInt(14)
+	input := InstanciarInput(odf, 10, id1, id2)
+	inputErro := InstanciarInput(odf, 20, id1, id2)
+	ordemProducao := InstanciarOrdemProducao(qtdProduzida)
+	ordemProducaoErro := InstanciarOrdemProducao(qtdProduzida)
+	inspecaoModel := InstanciarInspecaoSaida(ordemProducao, 10)
+	planosInspecaoNaoAlterados := InstanciarPlanosInspecaoNaoAlterados(id1, id2)
+	itensInspecao := InstanciarInspecaoSaidaItem(*input, *baseParams, planosInspecaoNaoAlterados[0], id1, id2)
+	t.Run("ErroBuscarOrdem", func(t1 *testing.T) {
+		mockOrdemProducaoRepo.EXPECT().
+			BuscarOrdem(input.Odf).
+			Return(nil).
+			Times(1)
+		actualOutput, err := service.CriarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    7,
+			Message: "Ordem de produção não encontrada.",
+		}
 
-// 		assert.Equal(t1, 0, actualOutput)
-// 		assert.Equal(t1, validacaoDTO, err)
-// 	})
+		assert.Equal(t1, 0, actualOutput)
+		assert.Equal(t1, validacaoDTO, err)
+	})
 
-// 	t.Run("ErroBuscarOrdemCompareInputToOrdem", func(t2 *testing.T) {
-// 		mockOrdemProducaoRepo.EXPECT().
-// 			BuscarOrdem(inputErro.Odf).
-// 			Return(ordemProducaoErro).
-// 			Times(1)
+	t.Run("ErroBuscarOrdemCompareInputToOrdem", func(t2 *testing.T) {
+		mockOrdemProducaoRepo.EXPECT().
+			BuscarOrdem(inputErro.Odf).
+			Return(ordemProducaoErro).
+			Times(1)
 
-// 		actualOutput, err := service.CriarInspecao(inputErro)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    28,
-// 			Message: "Atenção a quantidade da inspeção não pode ser maior que a quantidade restante para inspecionar!",
-// 		}
+		actualOutput, err := service.CriarInspecao(inputErro)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    28,
+			Message: "Atenção a quantidade da inspeção não pode ser maior que a quantidade restante para inspecionar!",
+		}
 
-// 		assert.Equal(t2, 0, actualOutput)
-// 		assert.Equal(t2, validacaoDTO, err)
-// 	})
+		assert.Equal(t2, 0, actualOutput)
+		assert.Equal(t2, validacaoDTO, err)
+	})
 
-// 	t.Run("ErroCriarInspecao", func(t3 *testing.T) {
-// 		mockOrdemProducaoRepo.EXPECT().
-// 			BuscarOrdem(inputErro.Odf).
-// 			Return(ordemProducaoErro).
-// 			Times(1)
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarNovoCodigoInspecao().
-// 			Return(14).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Begin().
-// 			Times(1)
-// 		mockInspecaoRepo.EXPECT().
-// 			CriarInspecao(inspecaoModel).
-// 			Return(errors.New("Test 3")).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Rollback().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			UnitOfWorkGuard().
-// 			Times(1)
-// 		actualOutput, err := service.CriarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    8,
-// 			Message: "Test 3",
-// 		}
-// 		assert.Equal(t3, 0, actualOutput)
-// 		assert.Equal(t3, validacaoDTO, err)
+	t.Run("ErroCriarInspecao", func(t3 *testing.T) {
+		mockOrdemProducaoRepo.EXPECT().
+			BuscarOrdem(inputErro.Odf).
+			Return(ordemProducaoErro).
+			Times(1)
+		mockInspecaoRepo.EXPECT().
+			BuscarNovoCodigoInspecao().
+			Return(14).
+			Times(1)
+		uow.EXPECT().
+			Begin().
+			Times(1)
+		mockInspecaoRepo.EXPECT().
+			CriarInspecao(inspecaoModel).
+			Return(errors.New("Test 3")).
+			Times(1)
+		uow.EXPECT().
+			Rollback().
+			Times(1)
+		uow.EXPECT().
+			UnitOfWorkGuard().
+			Times(1)
+		actualOutput, err := service.CriarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    8,
+			Message: "Test 3",
+		}
+		assert.Equal(t3, 0, actualOutput)
+		assert.Equal(t3, validacaoDTO, err)
 
-// 	})
+	})
 
-// 	t.Run("ErroCriarInspecao", func(t4 *testing.T) {
-// 		mockOrdemProducaoRepo.EXPECT().
-// 			BuscarOrdem(inputErro.Odf).
-// 			Return(ordemProducaoErro).
-// 			Times(1)
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarNovoCodigoInspecao().
-// 			Return(14).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Begin().
-// 			Times(1)
-// 		mockInspecaoRepo.EXPECT().
-// 			CriarInspecao(inspecaoModel).
-// 			Return(nil).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Rollback().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			UnitOfWorkGuard().
-// 			Times(1)
-// 		mockPlanoInspecaoRepo.EXPECT().
-// 			BuscarTodosPlanosOdfProduto(ordemProducaoErro.RecnoProcesso, input.Plano).
-// 			Return(planosInspecaoNaoAlterados, errors.New("Test 4")).
-// 			Times(1)
-// 		actualOutput, err := service.CriarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    9,
-// 			Message: "Test 4",
-// 		}
-// 		assert.Equal(t4, 0, actualOutput)
-// 		assert.Equal(t4, validacaoDTO, err)
+	t.Run("ErroCriarInspecao", func(t4 *testing.T) {
+		mockOrdemProducaoRepo.EXPECT().
+			BuscarOrdem(inputErro.Odf).
+			Return(ordemProducaoErro).
+			Times(1)
+		mockInspecaoRepo.EXPECT().
+			BuscarNovoCodigoInspecao().
+			Return(14).
+			Times(1)
+		uow.EXPECT().
+			Begin().
+			Times(1)
+		mockInspecaoRepo.EXPECT().
+			CriarInspecao(inspecaoModel).
+			Return(nil).
+			Times(1)
+		uow.EXPECT().
+			Rollback().
+			Times(1)
+		uow.EXPECT().
+			UnitOfWorkGuard().
+			Times(1)
+		mockPlanoInspecaoRepo.EXPECT().
+			BuscarTodosPlanosOdfProduto(ordemProducaoErro.RecnoProcesso, input.Plano).
+			Return(planosInspecaoNaoAlterados, errors.New("Test 4")).
+			Times(1)
+		actualOutput, err := service.CriarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    9,
+			Message: "Test 4",
+		}
+		assert.Equal(t4, 0, actualOutput)
+		assert.Equal(t4, validacaoDTO, err)
 
-// 	})
+	})
 
-// 	t.Run("ErroCriarInspecao", func(t5 *testing.T) {
-// 		mockOrdemProducaoRepo.EXPECT().
-// 			BuscarOrdem(inputErro.Odf).
-// 			Return(ordemProducaoErro).
-// 			Times(1)
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarNovoCodigoInspecao().
-// 			Return(14).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Begin().
-// 			Times(1)
-// 		mockInspecaoRepo.EXPECT().
-// 			CriarInspecao(inspecaoModel).
-// 			Return(nil).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			UnitOfWorkGuard().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Rollback().
-// 			Times(1)
-// 		mockPlanoInspecaoRepo.EXPECT().
-// 			BuscarTodosPlanosOdfProduto(ordemProducaoErro.RecnoProcesso, input.Plano).
-// 			Return(planosInspecaoNaoAlterados, nil).
-// 			Times(1)
-// 		mockInspecaoSaidaItemRepo.EXPECT().
-// 			RemoverInspecaoSaidaItensPeloCodigo(inspecaoModel.CodigoInspecao).
-// 			Return(nil).
-// 			Times(1)
-// 		mockInspecaoSaidaItemRepo.EXPECT().
-// 			CriarItensInspecao(itensInspecao).
-// 			Return(errors.New("Test 5")).
-// 			Times(1)
-// 		actualOutput, err := service.CriarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    10,
-// 			Message: "Test 5",
-// 		}
-// 		assert.Equal(t5, 0, actualOutput)
-// 		assert.Equal(t5, validacaoDTO, err)
+	t.Run("ErroCriarInspecao", func(t5 *testing.T) {
+		mockOrdemProducaoRepo.EXPECT().
+			BuscarOrdem(inputErro.Odf).
+			Return(ordemProducaoErro).
+			Times(1)
+		mockInspecaoRepo.EXPECT().
+			BuscarNovoCodigoInspecao().
+			Return(14).
+			Times(1)
+		uow.EXPECT().
+			Begin().
+			Times(1)
+		mockInspecaoRepo.EXPECT().
+			CriarInspecao(inspecaoModel).
+			Return(nil).
+			Times(1)
+		uow.EXPECT().
+			UnitOfWorkGuard().
+			Times(1)
+		uow.EXPECT().
+			Rollback().
+			Times(1)
+		mockPlanoInspecaoRepo.EXPECT().
+			BuscarTodosPlanosOdfProduto(ordemProducaoErro.RecnoProcesso, input.Plano).
+			Return(planosInspecaoNaoAlterados, nil).
+			Times(1)
+		mockInspecaoSaidaItemRepo.EXPECT().
+			RemoverInspecaoSaidaItensPeloCodigo(inspecaoModel.CodigoInspecao).
+			Return(nil).
+			Times(1)
+		mockInspecaoSaidaItemRepo.EXPECT().
+			CriarItensInspecao(itensInspecao).
+			Return(errors.New("Test 5")).
+			Times(1)
+		actualOutput, err := service.CriarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    10,
+			Message: "Test 5",
+		}
+		assert.Equal(t5, 0, actualOutput)
+		assert.Equal(t5, validacaoDTO, err)
 
-// 	})
-// 	mockOrdemProducaoRepo.EXPECT().
-// 		BuscarOrdem(inputErro.Odf).
-// 		Return(ordemProducaoErro).
-// 		Times(1)
-// 	mockInspecaoRepo.EXPECT().
-// 		BuscarNovoCodigoInspecao().
-// 		Return(14).
-// 		Times(1)
-// 	uow.EXPECT().
-// 		Begin().
-// 		Times(1)
-// 	mockInspecaoRepo.EXPECT().
-// 		CriarInspecao(inspecaoModel).
-// 		Return(nil).
-// 		Times(1)
-// 	uow.EXPECT().
-// 		UnitOfWorkGuard().
-// 		Times(1)
-// 	uow.EXPECT().
-// 		Complete().
-// 		Times(1)
-// 	mockPlanoInspecaoRepo.EXPECT().
-// 		BuscarTodosPlanosOdfProduto(ordemProducaoErro.RecnoProcesso, input.Plano).
-// 		Return(planosInspecaoNaoAlterados, nil).
-// 		Times(1)
-// 	mockInspecaoSaidaItemRepo.EXPECT().
-// 		RemoverInspecaoSaidaItensPeloCodigo(inspecaoModel.CodigoInspecao).
-// 		Return(nil).
-// 		Times(1)
-// 	mockInspecaoSaidaItemRepo.EXPECT().
-// 		CriarItensInspecao(itensInspecao).
-// 		Return(nil).
-// 		Times(1)
-// 	actualOutput, err := service.CriarInspecao(input)
-// 	expectedErr := (*dto.ValidacaoDTO)(nil)
-// 	expectedOutput := 14
-// 	assert.Equal(t, expectedOutput, actualOutput)
-// 	assert.Equal(t, expectedErr, err)
-// }
+	})
+	mockOrdemProducaoRepo.EXPECT().
+		BuscarOrdem(inputErro.Odf).
+		Return(ordemProducaoErro).
+		Times(1)
+	mockInspecaoRepo.EXPECT().
+		BuscarNovoCodigoInspecao().
+		Return(14).
+		Times(1)
+	uow.EXPECT().
+		Begin().
+		Times(1)
+	mockInspecaoRepo.EXPECT().
+		CriarInspecao(inspecaoModel).
+		Return(nil).
+		Times(1)
+	uow.EXPECT().
+		UnitOfWorkGuard().
+		Times(1)
+	uow.EXPECT().
+		Complete().
+		Times(1)
+	mockPlanoInspecaoRepo.EXPECT().
+		BuscarTodosPlanosOdfProduto(ordemProducaoErro.RecnoProcesso, input.Plano).
+		Return(planosInspecaoNaoAlterados, nil).
+		Times(1)
+	mockInspecaoSaidaItemRepo.EXPECT().
+		RemoverInspecaoSaidaItensPeloCodigo(inspecaoModel.CodigoInspecao).
+		Return(nil).
+		Times(1)
+	mockInspecaoSaidaItemRepo.EXPECT().
+		CriarItensInspecao(itensInspecao).
+		Return(nil).
+		Times(1)
+	actualOutput, err := service.CriarInspecao(input)
+	expectedErr := (*dto.ValidacaoDTO)(nil)
+	expectedOutput := 14
+	assert.Equal(t, expectedOutput, actualOutput)
+	assert.Equal(t, expectedErr, err)
+}
 
 func TestBuscarInspecaoSaidaPeloCodigo(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
@@ -504,11 +500,9 @@ func TestBuscarInspecaoSaidaPeloCodigo(t *testing.T) {
 	mockInspecaoSaidaItemRepo := mocks.NewMockIInspecaoSaidaItemRepository(mockCtrl)
 	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
 	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
-	mockImpressaoService := mocks.NewMockIImpressaoService(mockCtrl)
-	mockEmpresaRepo := mocks.NewMockIEmpresaRepository(mockCtrl)
 	baseParams := InstanciarBaseparams()
 	uow := mocks.NewMockUnitOfWork(mockCtrl)
-	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams, mockImpressaoService, mockEmpresaRepo)
+	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
 	codInspecao := 14
 	ordemProducao := InstanciarOrdemProducao(decimal.NewFromInt(14))
 	inspecaoSaida := InstanciarInspecaoSaida(ordemProducao, 14)
@@ -565,10 +559,8 @@ func TestBuscarInspecaoSaidaItensPeloCodigo(t *testing.T) {
 	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
 	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
 	baseParams := InstanciarBaseparams()
-	mockImpressaoService := mocks.NewMockIImpressaoService(mockCtrl)
-	mockEmpresaRepo := mocks.NewMockIEmpresaRepository(mockCtrl)
 	uow := mocks.NewMockUnitOfWork(mockCtrl)
-	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams, mockImpressaoService, mockEmpresaRepo)
+	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
 	itens := InstanciarSimpleInspecaoSaidaItens()
 	codInspecao := 22
 	filter := InstanciarFilters()
@@ -629,10 +621,8 @@ func TestRemoverInspecaoSaidaPeloCodigo(t *testing.T) {
 	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
 	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
 	baseParams := InstanciarBaseparams()
-	mockImpressaoService := mocks.NewMockIImpressaoService(mockCtrl)
-	mockEmpresaRepo := mocks.NewMockIEmpresaRepository(mockCtrl)
 	uow := mocks.NewMockUnitOfWork(mockCtrl)
-	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams, mockImpressaoService, mockEmpresaRepo)
+	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
 	codInspecao := 575788
 	inspecao := InstanciarSimpleInspecaoSaida()
 	t.Run("ErroBuscarInspecaoSaidaPeloCodigo", func(t1 *testing.T) {
@@ -721,178 +711,174 @@ func TestRemoverInspecaoSaidaPeloCodigo(t *testing.T) {
 
 }
 
-// func TestAtualizarInspecao(t *testing.T) {
-// 	mockCtrl := gomock.NewController(t)
-// 	mockPlanoInspecaoRepo := mocks.NewMockIPlanosInspecaoRepository(mockCtrl)
-// 	mockInspecaoSaidaItemRepo := mocks.NewMockIInspecaoSaidaItemRepository(mockCtrl)
-// 	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
-// 	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
-// 	baseParams := InstanciarBaseparams()
-// 	uow := mocks.NewMockUnitOfWork(mockCtrl)
-// 	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
-// 	codInspecao := 58763
-// 	inspecao := InstanciarSimpleInspecaoSaida()
-// 	id := GetUUIDWithoutError()
-// 	input := InstanciarAtualizarInspecaoInput(id)
-// 	itens := InstanciarSimpleEntitiesInspecaoSaidaItens(id)
-// 	t.Run("ErroBuscarInspecaoSaidaPeloCodigo", func(t1 *testing.T) {
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarInspecaoSaidaPeloCodigo(codInspecao).
-// 			Return(inspecao, errors.New("Test 1")).
-// 			Times(1)
-// 		err := service.AtualizarInspecao(input)
+func TestAtualizarInspecao(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	mockPlanoInspecaoRepo := mocks.NewMockIPlanosInspecaoRepository(mockCtrl)
+	mockInspecaoSaidaItemRepo := mocks.NewMockIInspecaoSaidaItemRepository(mockCtrl)
+	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
+	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
+	baseParams := InstanciarBaseparams()
+	uow := mocks.NewMockUnitOfWork(mockCtrl)
+	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
+	codInspecao := 58763
+	inspecao := InstanciarSimpleInspecaoSaida()
+	id := GetUUIDWithoutError()
+	input := InstanciarAtualizarInspecaoInput(id)
+	itens := InstanciarSimpleEntitiesInspecaoSaidaItens(id)
+	t.Run("ErroBuscarInspecaoSaidaPeloCodigo", func(t1 *testing.T) {
+		mockInspecaoRepo.EXPECT().
+			BuscarInspecaoSaidaPeloCodigo(codInspecao).
+			Return(inspecao, errors.New("Test 1")).
+			Times(1)
+		err := service.AtualizarInspecao(input)
 
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    17,
-// 			Message: "Test 1",
-// 		}
-// 		assert.Equal(t1, validacaoDTO, err)
-// 	})
-// 	t.Run("IfResultNull", func(t2 *testing.T) {
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarInspecaoSaidaPeloCodigo(codInspecao).
-// 			Return(inspecao, nil).
-// 			Times(1)
-// 		inspecao.Resultado = "Finalizada"
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    17,
+			Message: "Test 1",
+		}
+		assert.Equal(t1, validacaoDTO, err)
+	})
+	t.Run("IfResultNull", func(t2 *testing.T) {
+		mockInspecaoRepo.EXPECT().
+			BuscarInspecaoSaidaPeloCodigo(codInspecao).
+			Return(inspecao, nil).
+			Times(1)
+		inspecao.Resultado = "Finalizada"
 
-// 		err := service.AtualizarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    18,
-// 			Message: "A inspeção informada já foi finalizada, portanto não é possível alterá-la.",
-// 		}
-// 		assert.Equal(t2, validacaoDTO, err)
-// 	})
+		err := service.AtualizarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    18,
+			Message: "A inspeção informada já foi finalizada, portanto não é possível alterá-la.",
+		}
+		assert.Equal(t2, validacaoDTO, err)
+	})
 
-// 	t.Run("ErroAtualizarQuantidadeInspecaoPeloCodigo", func(t3 *testing.T) {
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarInspecaoSaidaPeloCodigo(codInspecao).
-// 			Return(inspecao, nil).
-// 			Times(1)
-// 		mockInspecaoSaidaItemRepo.EXPECT().
-// 			BuscarInspecaoSaidaItensEntitiesPeloCodigo(codInspecao).
-// 			Return(itens, nil).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Begin().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			UnitOfWorkGuard().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Rollback().
-// 			Times(1)
-// 		inspecao.Resultado = ""
-// 		mockInspecaoRepo.EXPECT().
-// 			AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
-// 			Return(errors.New("Test 3")).
-// 			Times(1)
+	t.Run("ErroAtualizarQuantidadeInspecaoPeloCodigo", func(t3 *testing.T) {
+		mockInspecaoRepo.EXPECT().
+			BuscarInspecaoSaidaPeloCodigo(codInspecao).
+			Return(inspecao, nil).
+			Times(1)
+		uow.EXPECT().
+			Begin().
+			Times(1)
+		uow.EXPECT().
+			UnitOfWorkGuard().
+			Times(1)
+		uow.EXPECT().
+			Rollback().
+			Times(1)
+		inspecao.Resultado = ""
+		mockInspecaoRepo.EXPECT().
+			AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
+			Return(errors.New("Test 3")).
+			Times(1)
 
-// 		err := service.AtualizarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    19,
-// 			Message: "Test 3",
-// 		}
-// 		assert.Equal(t3, validacaoDTO, err)
-// 	})
+		err := service.AtualizarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    19,
+			Message: "Test 3",
+		}
+		assert.Equal(t3, validacaoDTO, err)
+	})
 
-// 	t.Run("ErroBuscarInspecaoSaidaItensEntitiesPeloCodigo", func(t4 *testing.T) {
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarInspecaoSaidaPeloCodigo(codInspecao).
-// 			Return(inspecao, nil).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Begin().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			UnitOfWorkGuard().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Rollback().
-// 			Times(1)
-// 		inspecao.Resultado = ""
-// 		mockInspecaoRepo.EXPECT().
-// 			AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
-// 			Return(nil).
-// 			Times(1)
-// 		mockInspecaoSaidaItemRepo.EXPECT().
-// 			BuscarInspecaoSaidaItensEntitiesPeloCodigo(input.CodInspecao).
-// 			Return(itens, errors.New("Test 4")).
-// 			Times(1)
+	t.Run("ErroBuscarInspecaoSaidaItensEntitiesPeloCodigo", func(t4 *testing.T) {
+		mockInspecaoRepo.EXPECT().
+			BuscarInspecaoSaidaPeloCodigo(codInspecao).
+			Return(inspecao, nil).
+			Times(1)
+		uow.EXPECT().
+			Begin().
+			Times(1)
+		uow.EXPECT().
+			UnitOfWorkGuard().
+			Times(1)
+		uow.EXPECT().
+			Rollback().
+			Times(1)
+		inspecao.Resultado = ""
+		mockInspecaoRepo.EXPECT().
+			AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
+			Return(nil).
+			Times(1)
+		mockInspecaoSaidaItemRepo.EXPECT().
+			BuscarInspecaoSaidaItensEntitiesPeloCodigo(input.CodInspecao).
+			Return(itens, errors.New("Test 4")).
+			Times(1)
 
-// 		err := service.AtualizarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    20,
-// 			Message: "Test 4",
-// 		}
-// 		assert.Equal(t4, validacaoDTO, err)
-// 	})
+		err := service.AtualizarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    20,
+			Message: "Test 4",
+		}
+		assert.Equal(t4, validacaoDTO, err)
+	})
 
-// 	t.Run("ErroAtualizarInspecaoSaidaItens", func(t5 *testing.T) {
-// 		mockInspecaoRepo.EXPECT().
-// 			BuscarInspecaoSaidaPeloCodigo(codInspecao).
-// 			Return(inspecao, nil).
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Begin().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			UnitOfWorkGuard().
-// 			Times(1)
-// 		uow.EXPECT().
-// 			Rollback().
-// 			Times(1)
-// 		inspecao.Resultado = ""
-// 		mockInspecaoRepo.EXPECT().
-// 			AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
-// 			Return(nil).
-// 			Times(1)
-// 		mockInspecaoSaidaItemRepo.EXPECT().
-// 			BuscarInspecaoSaidaItensEntitiesPeloCodigo(input.CodInspecao).
-// 			Return(itens, nil).
-// 			Times(1)
-// 		mockInspecaoSaidaItemRepo.EXPECT().
-// 			AtualizarInspecaoSaidaItens(itens).
-// 			Return(errors.New("Test 5")).
-// 			Times(1)
+	t.Run("ErroAtualizarInspecaoSaidaItens", func(t5 *testing.T) {
+		mockInspecaoRepo.EXPECT().
+			BuscarInspecaoSaidaPeloCodigo(codInspecao).
+			Return(inspecao, nil).
+			Times(1)
+		uow.EXPECT().
+			Begin().
+			Times(1)
+		uow.EXPECT().
+			UnitOfWorkGuard().
+			Times(1)
+		uow.EXPECT().
+			Rollback().
+			Times(1)
+		inspecao.Resultado = ""
+		mockInspecaoRepo.EXPECT().
+			AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
+			Return(nil).
+			Times(1)
+		mockInspecaoSaidaItemRepo.EXPECT().
+			BuscarInspecaoSaidaItensEntitiesPeloCodigo(input.CodInspecao).
+			Return(itens, nil).
+			Times(1)
+		mockInspecaoSaidaItemRepo.EXPECT().
+			AtualizarInspecaoSaidaItens(itens).
+			Return(errors.New("Test 5")).
+			Times(1)
 
-// 		err := service.AtualizarInspecao(input)
-// 		validacaoDTO := &dto.ValidacaoDTO{
-// 			Code:    21,
-// 			Message: "Test 5",
-// 		}
-// 		assert.Equal(t5, validacaoDTO, err)
-// 	})
+		err := service.AtualizarInspecao(input)
+		validacaoDTO := &dto.ValidacaoDTO{
+			Code:    21,
+			Message: "Test 5",
+		}
+		assert.Equal(t5, validacaoDTO, err)
+	})
 
-// 	mockInspecaoRepo.EXPECT().
-// 		BuscarInspecaoSaidaPeloCodigo(codInspecao).
-// 		Return(inspecao, nil).
-// 		Times(1)
-// 	uow.EXPECT().
-// 		Begin().
-// 		Times(1)
-// 	uow.EXPECT().
-// 		UnitOfWorkGuard().
-// 		Times(1)
-// 	uow.EXPECT().
-// 		Complete().
-// 		Times(1)
-// 	inspecao.Resultado = ""
-// 	mockInspecaoRepo.EXPECT().
-// 		AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
-// 		Return(nil).
-// 		Times(1)
-// 	mockInspecaoSaidaItemRepo.EXPECT().
-// 		BuscarInspecaoSaidaItensEntitiesPeloCodigo(input.CodInspecao).
-// 		Return(itens, nil).
-// 		Times(1)
-// 	mockInspecaoSaidaItemRepo.EXPECT().
-// 		AtualizarInspecaoSaidaItens(itens).
-// 		Return(nil).
-// 		Times(1)
+	mockInspecaoRepo.EXPECT().
+		BuscarInspecaoSaidaPeloCodigo(codInspecao).
+		Return(inspecao, nil).
+		Times(1)
+	uow.EXPECT().
+		Begin().
+		Times(1)
+	uow.EXPECT().
+		UnitOfWorkGuard().
+		Times(1)
+	uow.EXPECT().
+		Complete().
+		Times(1)
+	inspecao.Resultado = ""
+	mockInspecaoRepo.EXPECT().
+		AtualizarQuantidadeInspecaoPeloCodigo(input.CodInspecao, input.QuantidadeInspecao).
+		Return(nil).
+		Times(1)
+	mockInspecaoSaidaItemRepo.EXPECT().
+		BuscarInspecaoSaidaItensEntitiesPeloCodigo(input.CodInspecao).
+		Return(itens, nil).
+		Times(1)
+	mockInspecaoSaidaItemRepo.EXPECT().
+		AtualizarInspecaoSaidaItens(itens).
+		Return(nil).
+		Times(1)
 
-// 	err := service.AtualizarInspecao(input)
-// 	assert.Nil(t, err)
-// }
+	err := service.AtualizarInspecao(input)
+	assert.Nil(t, err)
+}
 
 func TestBuscarResultadoInspecao(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
@@ -901,10 +887,8 @@ func TestBuscarResultadoInspecao(t *testing.T) {
 	mockOrdemProducaoRepo := mocks.NewMockIOrdemProducaoRepository(mockCtrl)
 	mockInspecaoRepo := mocks.NewMockIInspecaoSaidaRepository(mockCtrl)
 	baseParams := InstanciarBaseparams()
-	mockImpressaoService := mocks.NewMockIImpressaoService(mockCtrl)
-	mockEmpresaRepo := mocks.NewMockIEmpresaRepository(mockCtrl)
 	uow := mocks.NewMockUnitOfWork(mockCtrl)
-	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams, mockImpressaoService, mockEmpresaRepo)
+	service := services.NewInspecaoSaidaService(uow, mockInspecaoRepo, mockInspecaoSaidaItemRepo, mockOrdemProducaoRepo, mockPlanoInspecaoRepo, baseParams)
 	codInspecao := 98019
 	id := GetUUIDWithoutError()
 	itens := InstanciarSimpleEntitiesInspecaoSaidaItens(id)

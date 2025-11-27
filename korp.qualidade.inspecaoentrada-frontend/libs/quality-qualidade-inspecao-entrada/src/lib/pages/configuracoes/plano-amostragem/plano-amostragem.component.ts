@@ -4,7 +4,6 @@ import { ConfiguracoesService } from '../configuracoes.service';
 import { map } from 'rxjs/operators';
 import { GetAllPlanoAmostragem } from '../../../tokens/interfaces/planos-amostragem-dto.interface';
 import { PlanoAmostragemEditorComponent } from './plano-amostragem-editor/plano-amostragem-editor.component';
-import { JQQB_NUMBER_OPERATORS, JQQB_OP_GREATER_OR_EQUAL } from '@viasoft/common';
 
 @Component({
   selector: 'inspecao-entrada-plano-amostragem',
@@ -22,48 +21,24 @@ export class PlanoAmostragemComponent implements OnInit {
   }
 
   private iniciarGrid(): void {
-    this.gridOptions.id = '08A53CD1-07F8-4264-B50C-7226474F6FC9';
+    this.gridOptions.id = '2C22A3DE-66F9-4AD0-A793-FXAEF5A48D81';
+    this.gridOptions.enableSorting = false;
+    this.gridOptions.enableQuickFilter = false;
+    this.gridOptions.enableFilter = false;
     this.gridOptions.sizeColumnsToFit = false;
 
     this.gridOptions.columns = [
       new VsGridSimpleColumn({
         headerName: 'Configuracoes.PlanoAmostragem.QuantidadeMinima',
         field: 'quantidadeMinima',
-        kind: 'number',
-        filterOptions: {
-          operators: JQQB_NUMBER_OPERATORS,
-          defaultOperator: JQQB_OP_GREATER_OR_EQUAL,
-          useField: 'QTD_MIN'
-        },
-        sorting: {
-          useField:  'QTD_MIN'
-        }
       }),
       new VsGridSimpleColumn({
         headerName: 'Configuracoes.PlanoAmostragem.QuantidadeMaxima',
         field: 'quantidadeMaxima',
-        kind: 'number',
-        filterOptions: {
-          operators: JQQB_NUMBER_OPERATORS,
-          defaultOperator: JQQB_OP_GREATER_OR_EQUAL,
-          useField: 'QTD_MAX'
-        },
-        sorting: {
-          useField:  'QTD_MAX'
-        }
       }),
       new VsGridSimpleColumn({
         headerName: 'Configuracoes.PlanoAmostragem.QuantidadeInspecionar',
         field: 'quantidadeInspecionar',
-        kind: 'number',
-        filterOptions: {
-          operators: JQQB_NUMBER_OPERATORS,
-          defaultOperator: JQQB_OP_GREATER_OR_EQUAL,
-          useField: 'QTD_INSPEC'
-        },
-        sorting: {
-          useField:  'QTD_INSPEC'
-        }
       }),
     ];
 

@@ -2,15 +2,11 @@ package dto
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type InspecaoSaidaDTO struct {
-	Id                     uuid.UUID  `json:"id,omitempty"`
 	CodigoInspecao         int        `json:"codigoInspecao,omitempty"`
 	ODF                    int        `json:"odf,omitempty"`
-	OdfApontada            int        `json:"odfApontada,omitempty"`
 	DataInspecao           *time.Time `json:"dataInspecao,omitempty"`
 	Inspetor               string     `json:"inspetor,omitempty"`
 	Resultado              string     `json:"resultado,omitempty"`
@@ -32,8 +28,4 @@ type InspecaoSaidaDTO struct {
 type GetInspecaoSaidaDTO struct {
 	Items      []*InspecaoSaidaDTO `json:"items"`
 	TotalCount int64               `json:"totalCount"`
-}
-
-type InspecaoSaidaFilters struct {
-	ObservacoesMetricas []string `json:"observacoesMetricas"`
 }

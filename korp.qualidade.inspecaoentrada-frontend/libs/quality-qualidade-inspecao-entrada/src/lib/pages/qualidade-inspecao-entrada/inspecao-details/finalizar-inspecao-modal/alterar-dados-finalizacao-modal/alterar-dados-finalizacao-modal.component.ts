@@ -9,10 +9,6 @@ import {
   PlanoInspecaoDTO
 } from 'libs/quality-qualidade-inspecao-entrada/src/lib/tokens';
 import { TIPO_LOCAL_APROVADO, TIPO_LOCAL_REPROVADO } from 'libs/quality-qualidade-inspecao-entrada/src/lib/tokens/consts';
-import { QuebraLoteService } from '../quebra-lotes-grid/quebra-lote.service';
-import { UltraMath } from '../../../../../tokens/functions/UltraMath';
-import { PedidoVendaLoteDto } from '../../../../../tokens/interfaces/pedido-venda-lote-interface-dto';
-import { MessageService } from '@viasoft/common';
 
 @Component({
   selector: 'inspecao-entrada-alterar-dados-finalizacao-modal',
@@ -20,24 +16,25 @@ import { MessageService } from '@viasoft/common';
   styleUrls: ['./alterar-dados-finalizacao-modal.component.scss']
 })
 export class AlterarDadosFinalizacaoModalComponent implements OnInit {
-  public inspecaoDto: EstoqueLocalPedidoVendaAlocacaoDTO;
-  public recnoInspecao: number;
-  public codigoProduto: string;
+  private inspecaoDto: EstoqueLocalPedidoVendaAlocacaoDTO;
+  private recnoInspecao: number;
+  private quantidadeTotalAlocadaPedido: number;
+  private quantidadeLote: number;
   public formCustomValidatorMessage = '';
   public form: FormGroup;
   public dto: PlanoInspecaoDTO;
   public selectAprovadosOptions: VsSelectOption[] = []
   public selectReprovadosOptions: VsSelectOption[] = []
-  private quantidadeInspecao: number;
 
   quantiadeTotalAlocadaValidator() {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       const quantidadeTotalDistribuida = Number(control.get('quantidadeAprovada').value) + Number(control.get('quantidadeReprovada').value);
-      if (quantidadeTotalDistribuida > this.quantidadeInspecao) {
-        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.Error.AlocacaoQuantidadeSuperiorInspecao";
+      const quantidadeTotalAlocadaPedido = this.quantidadeTotalAlocadaPedido - (this.inspecaoDto.quantidadeAprovada + this.inspecaoDto.quantidadeReprovada);
+      if ((quantidadeTotalDistribuida + quantidadeTotalAlocadaPedido) > this.quantidadeLote) {
+        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.Error.AlocacaoQuantidadeInspecao";
         return { 'invalidValue': true };
-      } else if (quantidadeTotalDistribuida > this.inspecaoDto.quantidadeRestanteInspecionar) {
-        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.Error.AlocacaoQuantidadeRestante";
+      } else if (quantidadeTotalDistribuida > Number(control.get('quantidadeAlocadaPedido').value)) {
+        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.Error.AlocacaoNecessidadePedido";
         return { 'invalidValue': true };
       }
       this.formCustomValidatorMessage = "";
@@ -49,14 +46,11 @@ export class AlterarDadosFinalizacaoModalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private inspecaoEntradaService: QualidadeInspecaoEntradaService,
     private dialogRef: MatDialogRef<AlterarDadosFinalizacaoModalComponent>,
-    private quebraLoteService:QuebraLoteService,
-    private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) private data: AlterarDadosPedidoDTO
   ) {
     this.inspecaoDto = data.pedidoVenda;
     this.recnoInspecao = data.recnoInspecaoEntrada;
-    this.quantidadeInspecao = data.quantidadeInspecao;
-    this.codigoProduto = data.codigoProduto;
+    this.quantidadeLote = this.inspecaoDto.quantidadeAlocadaLoteLocal;
   }
 
   async ngOnInit() {
@@ -65,16 +59,7 @@ export class AlterarDadosFinalizacaoModalComponent implements OnInit {
     });
   }
 
-  public async salvar():Promise<void> {
-    const lotes = await this.quebraLoteService.getLotes(this.recnoInspecao, this.inspecaoDto.id).toPromise();
-
-    const somaQuantidadesLotes = UltraMath.Sum(lotes.items, (lote: PedidoVendaLoteDto) => lote.quantidade);
-    const quantidadeAprovada = this.form.get('quantidadeAprovada').value as number;
-    if(somaQuantidadesLotes > quantidadeAprovada) {
-      this.messageService.warn('QualidadeInspecaoEntrada.InspecaoDetails.SomaLoteInvalida', 'QualidadeInspecaoEntrada.Atencao')
-      return;
-    }
-    this.inspecaoDto.lotes = lotes.items;
+  public async salvar() {
     this.inspecaoDto.codigoLocalAprovado = Number(this.form.get('localPrincipal').value);
     this.inspecaoDto.codigoLocalReprovado = Number(this.form.get('localReprovado').value);
     this.inspecaoDto.quantidadeAprovada = Number(this.form.get('quantidadeAprovada').value);
@@ -116,13 +101,10 @@ export class AlterarDadosFinalizacaoModalComponent implements OnInit {
   private initForm(): void {
     this.form = this.formBuilder.group({
       pedido: [{ value: this.inspecaoDto.numeroPedido, disabled: true }],
-      numeroOdf: [{ value: this.inspecaoDto.numeroOdf, disabled: true }],
-      quantidadeInspecao: [{ value: this.quantidadeInspecao, disabled: true }],
       quantidadeAlocadaPedido: [{ value: this.inspecaoDto.quantidadeAlocadaLoteLocal, disabled: true }],
-      quantidadeRestanteInspecionar: [{ value: this.inspecaoDto.quantidadeRestanteInspecionar, disabled: true }],
       quantidadeNecessidadePedido: [{ value: this.inspecaoDto.quantidadeAlocadaLoteLocal, disabled: true }],
-      localPrincipal: [this.inspecaoDto.codigoLocalAprovado.toString()],
-      localReprovado: [this.inspecaoDto.codigoLocalReprovado.toString()],
+      localPrincipal: [{ value: this.inspecaoDto.codigoLocalAprovado, disabled: !this.inspecaoDto.codigoLocalAprovado }],
+      localReprovado: [{ value: this.inspecaoDto.codigoLocalReprovado, disabled: !this.inspecaoDto.codigoLocalReprovado }],
       quantidadeAprovada: [{ value: this.inspecaoDto.quantidadeAprovada, disabled: !this.inspecaoDto.codigoLocalAprovado }],
       quantidadeReprovada: [{ value: this.inspecaoDto.quantidadeReprovada, disabled: !this.inspecaoDto.codigoLocalReprovado }],
     }, { validators: [this.quantiadeTotalAlocadaValidator()] });

@@ -9,6 +9,6 @@ import (
 type IInspecaoSaidaHistoricoRepository interface {
 	GetAllInspecaoSaidaHistoricoCabecalho(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters) ([]dto.InspecaoSaidaHistoricoCabecalhoDTO, error)
 	CountInspecaoSaidaHistoricoCabecalho(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters) (int64, error)
-	GetAllInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters, odf int, codigoInspecao int) ([]dto.InspecaoSaidaHistoricoItems, error)
-	CountInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters, odf int, codigoInspecao int) (int64, error)
+	GetAllInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, odf int) ([]dto.InspecaoSaidaHistoricoItems, error)
+	CountInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, odf int) (int64, error)
 }

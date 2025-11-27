@@ -28,12 +28,6 @@ export interface ProcessamentoInspecaoI18N extends IKeyTranslate {
       Falha: string;
       Sucesso: string;
     }
-    Resultados: {
-      Aprovado: string;
-      NaoAplicavel: string;
-      NaoConforme: string;
-      ParcialmenteAprovado: string;
-    }
     Reprocessar: string;
     Inspecionados: string;
     Estornados: string;
@@ -48,8 +42,6 @@ export interface ProcessamentoInspecaoI18N extends IKeyTranslate {
       NumeroPedido: string;
       DescricaoLocalOrigem: string;
       DescricaoLocalDestino: string;
-      LoteOrigem:string;
-      LoteDestino:string;
     }
   };
 }

@@ -24,7 +24,7 @@ func (service *NotaFiscalService) BuscarNotasFiscais(filter *models.BaseFilter, 
 		return nil, nil, err
 	}
 
-	totalCount, err := service.NotaFiscalRepository.BuscarNotasFiscaisTotalCount(filter, filters)
+	totalCount, err := service.NotaFiscalRepository.BuscarNotasFiscaisTotalCount(filters)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -37,8 +37,4 @@ func (service *NotaFiscalService) BuscarNotasFiscais(filter *models.BaseFilter, 
 	}
 
 	return output, nil, nil
-}
-
-func (service *NotaFiscalService) UpdateNotaFiscalDadosAdicionais(idNotaFiscal string, input *dto.NotaFiscalDadosAdicionaisDTO) error {
-	return service.NotaFiscalRepository.UpdateNotaFiscalDadosAdicionais(idNotaFiscal, input)
 }

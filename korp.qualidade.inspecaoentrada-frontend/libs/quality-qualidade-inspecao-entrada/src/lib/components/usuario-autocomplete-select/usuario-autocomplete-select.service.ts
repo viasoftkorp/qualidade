@@ -8,6 +8,8 @@ import { UsuarioOutput } from './usuario-output.class';
 
 @Injectable()
 export class UsuarioAutocompleteSelectService {
+  private readonly headers = this.sessionService.defaultHttpHeaders;
+
   constructor(
     protected httpClient: HttpClient,
     private sessionService: SessionService) {
@@ -30,12 +32,12 @@ export class UsuarioAutocompleteSelectService {
 
     return this.httpClient.get<IPagedResultOutputDto<UsuarioOutput>>(`${this.basePath}`, {
       params: queryParameters,
-      headers: this.sessionService.defaultHttpHeaders
+      headers: this.headers
     });
   }
 
   public get(id: string): Observable<UsuarioOutput> {
-    return this.httpClient.get<UsuarioOutput>(`${this.basePath}/${id}`, { headers: this.sessionService.defaultHttpHeaders });
+    return this.httpClient.get<UsuarioOutput>(`${this.basePath}/${id}`, { headers: this.headers });
   }
 
   private get basePath(): string {

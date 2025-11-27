@@ -1,14 +1,7 @@
-<vs-autocomplete-select
-  [autoFocusFirstOption]="autoFocusFirstOption"
-  [autofocusOnLoad]="autoFocusOnLoad"
-  [(ngModel)]="value"
-  [get]="getAutocompleteItems"
-  [getName]="getNames"
+<vs-autocomplete-select-legacy
+  [controlName]="controlName"
   [placeholder]="placeholder"
-  [required]="required"
-  [disabled]="disabled"
-  [cleanable]="cleanable"
-  (cleared)="cleared.emit()"
-  (optionSelected)="optionSelected.emit($event)"
-  (closed)="closed.emit()"
-></vs-autocomplete-select>
+  [options]="usuarioAutocompleteOptions"
+  [autocompleteGetInput]="usuarioAutocompleteGetInput"
+  (selectionChangeEvent)="usuarioChanged($event)"
+></vs-autocomplete-select-legacy>

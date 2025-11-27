@@ -33,11 +33,10 @@ type GetOrdemProducaoDTO struct {
 }
 
 type OrdemProducaoFilters struct {
-	Odf                 *int       `json:"odf"`
-	Lote                *string    `json:"lote"`
-	CodigoProduto       *string    `json:"codigoProduto"`
-	DataInicio          *time.Time `json:"dataInicio"`
-	DataEntrega         *time.Time `json:"dataEntrega"`
-	DataEmissao         *time.Time `json:"dataEmissao"`
-	ObservacoesMetricas []string   `json:"observacoesMetricas"`
+	Odf           *int       `json:"odf"`
+	Lote          *string    `json:"lote"`
+	CodigoProduto *string    `json:"codigoProduto"`
+	DataInicio    *time.Time `json:"dataInicio"`
+	DataEntrega   *time.Time `json:"dataEntrega"`
+	DataEmissao   *time.Time `json:"dataEmissao"`
 }

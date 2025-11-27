@@ -1,0 +1,54 @@
+<vs-dialog>
+  <vs-icon
+    icon="filter">
+  </vs-icon>
+  <vs-label
+    title
+    label="QualidadeInspecaoSaida.Filtros">
+  </vs-label>
+
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <vs-input
+          formControlName="lote"
+          placeholder="QualidadeInspecaoSaida.Lote">
+        </vs-input>
+
+        <vs-input
+          formControlName="odf"
+          placeholder="QualidadeInspecaoSaida.Odf"
+          type="number">
+        </vs-input>
+
+        <qa-produto-autocomplete-select
+          controlName="codigoProduto"
+          placeholder="QualidadeInspecaoSaida.Produto">
+        </qa-produto-autocomplete-select>
+
+        <vs-datepicker
+          controlName="dataInicio"
+          placeholder="QualidadeInspecaoSaida.OrdemProducaoGrid.DataInicio">
+        </vs-datepicker>
+
+        <vs-datepicker
+          controlName="dataEntrega"
+          placeholder="QualidadeInspecaoSaida.OrdemProducaoGrid.DataEntrega">
+        </vs-datepicker>
+
+        <vs-datepicker
+          controlName="dataEmissao"
+          placeholder="QualidadeInspecaoSaida.OrdemProducaoGrid.DataEmissao">
+        </vs-datepicker>
+      </form>
+    </vs-form>
+  </div>
+
+  <div footer>
+    <vs-button
+      type="save"
+      label="QualidadeInspecaoSaida.Filtrar"
+      (click)="filtrar()"
+    ></vs-button>
+  </div>
+</vs-dialog>

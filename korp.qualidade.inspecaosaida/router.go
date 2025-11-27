@@ -20,24 +20,15 @@ const GetPlanosNovaInspecaoRoute = utils.ApiPrefix + "/planos"
 const GetInspecaoSaidaItensRoute = utils.ApiPrefix + "/inspecoes/:codInspecao/itens"
 const GetResultadoInspecaoRoute = utils.ApiPrefix + "/inspecoes/:codInspecao/resultado"
 const FinalizarInspecaoSaidaRoute = utils.ApiPrefix + "/inspecoes/:codInspecao/finalizar"
-const ImprimirInspecaoSaidaRoute = utils.ApiPrefix + "/inspecoes/:codInspecao/imprimir"
-const GetNotasRoute = utils.ApiPrefix + "/inspecoes/:codInspecao/notas"
 const EstornarInspecaoSaidaRoute = utils.ApiPrefix + "/inspecoes/historico/:recnoInspecao/estornar"
 const BuscarProcessamentoInspecaoSaidaRoute = utils.ApiPrefix + "/processamentos"
 const ReprocessarProcessamentoInspecaoSaidaRoute = utils.ApiPrefix + "/processamentos/:id/reprocessar"
 const RemoverProcessamentoInspecaoSaidaRoute = utils.ApiPrefix + "/processamentos/:id"
 const GetProdutosRoute = utils.ApiPrefix + "/produtos"
 const GetProdutoRoute = utils.ApiPrefix + "/produtos/:codigo"
-const GetProcessoEngenhariaRoute = utils.ApiPrefix + "/produtos/:codigoProduto/processo"
 const GetAllLocaisRoute = utils.ApiPrefix + "/locais"
 const GetLocalRoute = utils.ApiPrefix + "/locais/codigo/:codigo"
 const GetInspecaoSaidaRncRoute = utils.ApiPrefix + "/inspecoes/:recnoInspecao/rnc"
-const FileProviderProxyUploadFileWithSubDomainRoute = utils.ApiPrefix + "/file-provider/app/:appid/domain/:domain/subdomain/:subdomain/file"
-const FileProviderProxyDeleteFileRoute = utils.ApiPrefix + "/file-provider/file/:id"
-const FileProviderProxyDownloadFileRoute = utils.ApiPrefix + "/file-provider/file/:id/download"
-const FileProviderProxyGetFilesByDomainWithFiltersRoute = utils.ApiPrefix + "/file-provider/app/:appid/domains"
-const GetConfiguracaoRoute = utils.ApiPrefix + "/configuracoes"
-const UpdateConfiguracaoRoute = utils.ApiPrefix + "/configuracoes/:id"
 
 func initRoutes(app *fiber.App) {
 	// REGION PROTECTED ROUTES
@@ -80,12 +71,6 @@ func RoutesVersion(routerGroup fiber.Router) {
 	routerGroup.Post(FinalizarInspecaoSaidaRoute, func(ctx *fiber.Ctx) error {
 		return controllers.PublicarFinalizarInspecaoSaida(ctx)
 	})
-	routerGroup.Get(ImprimirInspecaoSaidaRoute, func(ctx *fiber.Ctx) error {
-		return controllers.ImprimirInspecaoSaida(ctx)
-	})
-	routerGroup.Get(GetNotasRoute, func(ctx *fiber.Ctx) error {
-		return controllers.BuscarNotasRelatorio(ctx)
-	})
 	routerGroup.Put(EstornarInspecaoSaidaRoute, func(ctx *fiber.Ctx) error {
 		return controllers.PublicarEstornarInspecaoSaida(ctx)
 	})
@@ -110,9 +95,6 @@ func RoutesVersion(routerGroup fiber.Router) {
 	routerGroup.Get(GetProdutoRoute, func(ctx *fiber.Ctx) error {
 		return controllers.BuscarProduto(ctx)
 	})
-	routerGroup.Get(GetProcessoEngenhariaRoute, func(ctx *fiber.Ctx) error {
-		return controllers.BuscarProcessoEngenharia(ctx)
-	})
 	routerGroup.Get(GetAllLocaisRoute, func(ctx *fiber.Ctx) error {
 		return controllers.BuscarLocais(ctx)
 	})
@@ -124,23 +106,5 @@ func RoutesVersion(routerGroup fiber.Router) {
 	})
 	routerGroup.Get(GetInspecaoSaidaRncRoute, func(ctx *fiber.Ctx) error {
 		return controllers.GetRncDetails(ctx)
-	})
-	routerGroup.Post(FileProviderProxyUploadFileWithSubDomainRoute, func(ctx *fiber.Ctx) error {
-		return controllers.UploadFiles(ctx)
-	})
-	routerGroup.Post(FileProviderProxyGetFilesByDomainWithFiltersRoute, func(ctx *fiber.Ctx) error {
-		return controllers.GetFilesByDomainWithFilters(ctx)
-	})
-	routerGroup.Delete(FileProviderProxyDeleteFileRoute, func(ctx *fiber.Ctx) error {
-		return controllers.DeleteFile(ctx)
-	})
-	routerGroup.Get(FileProviderProxyDownloadFileRoute, func(ctx *fiber.Ctx) error {
-		return controllers.DownloadFile(ctx)
-	})
-	routerGroup.Get(GetConfiguracaoRoute, func(ctx *fiber.Ctx) error {
-		return controllers.GetConfiguracao(ctx)
-	})
-	routerGroup.Put(UpdateConfiguracaoRoute, func(ctx *fiber.Ctx) error {
-		return controllers.UpdateConfiguracao(ctx)
 	})
 }

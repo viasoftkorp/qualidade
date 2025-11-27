@@ -14,7 +14,7 @@ type IEstoquePedidoVendaRepository interface {
 	BuscarTotalCountEstoqueLocalPedidosVendas(recnoInspecao int, lote, codigoProduto string) (int64, error)
 	BuscarEstoqueLocalPedidosVendas(filter *models.BaseFilter, recnoInspecao int, lote, codigoProduto string) ([]dto.EstoqueLocalPedidoVendaAlocacaoDTO, error)
 	BuscarQuantidadeTotalAlocadaPedidoVenda(recnoInspecaoEntrada int) (*dto.EstoqueLocalPedidoVendoTotalizacaoDTO, error)
-	AtualizarDistribuicaoInspecaoEstoquePedidoVenda(id uuid.UUID, input dto.EstoqueLocalPedidoVendaAlocacaoInput) error
+	AtualizarDistribuicaoInspecaoEstoquePedidoVenda(id uuid.UUID, input dto.EstoqueLocalPedidoVendaAlocacaoDTO) error
 	BuscarAlocacaoEstoquePedidoVenda(id uuid.UUID) (entities.InspecaoEntradaPedidoVenda, error)
 	BuscarEstoqueLocalValoresPorProduto(codigoProduto string, lote string, codigoLocal int) (*models.EstoqueLocalValores, error)
 	BuscarPacotes(recnoEstoqueLocal int) ([]models.Pacote, error)

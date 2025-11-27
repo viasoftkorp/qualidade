@@ -48,7 +48,7 @@ func (service *ExternalInspecaoSaidaSagaService) getExternalServicePath() (strin
 func (service *ExternalInspecaoSaidaSagaService) setDefaultHeaders(request *http.Request) error {
 	request.Header.Set("TenantId", service.Params.TenantId)
 	request.Header.Set("EnvironmentId", service.Params.EnvironmentId)
-	request.Header.Set("LegacyCompanyId", strconv.Itoa(service.Params.LegacyCompanyId))
+	request.Header.Set("LegacyCompanyId", strconv.Itoa(service.Params.CompanyRecno))
 	request.Header.Set("CompanyId", service.Params.CompanyId)
 	request.Header.Set("UserId", service.Params.UserId)
 	request.Header.Set("Content-Type", fiber.MIMEApplicationJSON)
@@ -227,7 +227,7 @@ func (service *ExternalInspecaoSaidaSagaService) BuscarSaga(id string) (*dto.Sag
 	return &output, nil
 }
 
-func (service *ExternalInspecaoSaidaSagaService) BuscarSagas(baseFilters *models.BaseFilter, filters *dto.ProcessamentoInspecaoSaidaFilters, estorno bool) (*dto.GetAllSagaInspecaoSaidaOutput, error) {
+func (service *ExternalInspecaoSaidaSagaService) BuscarSagas(skip, pageSize int, filters *dto.ProcessamentoInspecaoSaidaFilters, estorno bool) (*dto.GetAllSagaInspecaoSaidaOutput, error) {
 	path, err := service.getExternalServicePath()
 	if err != nil {
 		return nil, err
@@ -244,10 +244,12 @@ func (service *ExternalInspecaoSaidaSagaService) BuscarSagas(baseFilters *models
 	}
 
 	query := make(url.Values)
-	query.Add("MaxResultCount", strconv.Itoa(baseFilters.PageSize))
-	query.Add("SkipCount", strconv.Itoa(baseFilters.Skip))
-	query.Add("Sorting", baseFilters.Sorting)
-	query.Add("AdvancedFilter", service.GetAdvancedFilter(baseFilters, filters, estorno))
+	query.Add("MaxResultCount", strconv.Itoa(pageSize))
+	query.Add("SkipCount", strconv.Itoa(skip))
+
+	if filters != nil {
+		query.Add("AdvancedFilter", service.GetAdvancedFilter(filters, estorno))
+	}
 
 	request.URL.RawQuery = query.Encode()
 
@@ -281,56 +283,51 @@ func (service *ExternalInspecaoSaidaSagaService) BuscarSagas(baseFilters *models
 	return &output, nil
 }
 
-func (service *ExternalInspecaoSaidaSagaService) GetAdvancedFilter(baseFilters *models.BaseFilter, filters *dto.ProcessamentoInspecaoSaidaFilters, estorno bool) string {
-	if (baseFilters == nil || baseFilters.AdvancedFilter == "") && (filters == nil) {
-		return ""
+func (service *ExternalInspecaoSaidaSagaService) GetAdvancedFilter(filters *dto.ProcessamentoInspecaoSaidaFilters, estorno bool) string {
+	advancedFilter := `{"condition": "and", "rules": %s}`
+	rules := make([]string, 0)
+	advancedFilterRuleTemplate := `{"field": "%s", "operator": "%s", "type": "%s", "value": "%s"}`
+
+	if filters.Status != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "status", "equal", "integer", strconv.Itoa(*filters.Status)))
 	}
-
-	var deserializedAdvancedFilter models.AdvancedFilter
-	var serializedAdvancedFilter []byte
-
-	if baseFilters != nil && baseFilters.AdvancedFilter != "" {
-		serializedAdvancedFilter = []byte(baseFilters.AdvancedFilter)
-	} else {
-		serializedAdvancedFilter = []byte(`{"condition": "and", "rules": "[]"}`)
+	if filters.NumeroExecucoes != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "numeroExecucoes", "equal", "integer", strconv.Itoa(*filters.NumeroExecucoes)))
 	}
+	if filters.Erro != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "erro", "contains", "string", *filters.Erro))
+	}
+	if filters.Resultado != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "resultado", "contains", "string", *filters.Resultado))
+	}
+	if filters.QuantidadeTotal != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "quantidadeTotal", "equal", "double", fmt.Sprintf("%f", *filters.QuantidadeTotal)))
+	}
+	if filters.CodigoProduto != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "codigoProduto", "contains", "string", *filters.CodigoProduto))
+	}
+	if filters.Odf != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "ordemFabricacao", "equal", "integer", strconv.Itoa(*filters.Odf)))
+	}
+	if filters.IdUsuarioExecucao != nil {
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "idUsuarioExecucao", "equal", "string", *filters.IdUsuarioExecucao))
+	}
+	if filters.DataExecucao != nil {
+		data := *filters.DataExecucao
+		rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "dataExecucao", "equal", "date", data.Format("2006-01-02T15:04:05-0700")))
+	}
+	rules = append(rules, fmt.Sprintf(advancedFilterRuleTemplate, "estorno", "equal", "boolean", strconv.FormatBool(estorno)))
 
-	json.Unmarshal(serializedAdvancedFilter, &deserializedAdvancedFilter)
-
-	if filters != nil {
-		if filters.Status != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "status", Operator: "equal", Type: "integer", Value: strconv.Itoa(*filters.Status) })
-		}
-		if filters.NumeroExecucoes != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "numeroExecucoes", Operator: "equal", Type: "integer", Value: strconv.Itoa(*filters.NumeroExecucoes) })
-		}
-		if filters.Erro != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "erro", Operator: "contains", Type: "string", Value: *filters.Erro })
-		}
-		if filters.Resultado != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "resultado", Operator: "contains", Type: "string", Value: *filters.Resultado })
-		}
-		if filters.QuantidadeTotal != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "quantidadeTotal", Operator: "equal", Type: "double", Value: fmt.Sprintf("%f", *filters.QuantidadeTotal) })
-		}
-		if filters.CodigoProduto != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "codigoProduto", Operator: "contains", Type: "string", Value: *filters.CodigoProduto })
-		}
-		if filters.Odf != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "ordemFabricacao", Operator: "equal", Type: "integer", Value: strconv.Itoa(*filters.Odf) })
-		}
-		if filters.IdUsuarioExecucao != nil {
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "idUsuarioExecucao", Operator: "equal", Type: "string", Value: *filters.IdUsuarioExecucao })
-		}
-		if filters.DataExecucao != nil {
-			data := *filters.DataExecucao
-			deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "dataExecucao", Operator: "equal", Type: "date", Value: data.Format("2006-01-02T15:04:05-0700") })
+	advancedFilterRule := "["
+	for index, rule := range rules {
+		if index < (len(rules) - 1) {
+			advancedFilterRule += rule + ","
+		} else {
+			advancedFilterRule += rule
 		}
 	}
+	advancedFilterRule += "]"
 
-	deserializedAdvancedFilter.Rules = append(deserializedAdvancedFilter.Rules, models.Rules{ Field: "estorno", Operator: "equal", Type: "boolean", Value: strconv.FormatBool(estorno) })
-
-	serializedAdvancedFilter, _ = json.Marshal(deserializedAdvancedFilter)
-
-	return string(serializedAdvancedFilter)
+	fmt.Println(fmt.Sprintf(advancedFilter, advancedFilterRule))
+	return fmt.Sprintf(advancedFilter, advancedFilterRule)
 }

@@ -12,6 +12,4 @@ const (
 	NamedPageSize            = "PageSize"
 	NamedPlano               = "Plano"
 	NamedRecnoProcesso       = "RecnoProcesso"
-	NamedAdvancedFilter      = "AdvancedFilter"
-	NamedSorting             = "Sorting"
 )

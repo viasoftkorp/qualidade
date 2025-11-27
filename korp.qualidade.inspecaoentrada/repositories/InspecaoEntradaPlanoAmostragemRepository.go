@@ -1,17 +1,15 @@
 package repositories
 
 import (
-	"context"
-	"errors"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
+	"context"
+	"errors"
 	"gorm.io/gorm"
+	"time"
 )
 
 type InspecaoEntradaPlanoAmostragemRepository struct {
@@ -57,11 +55,7 @@ func (repo *InspecaoEntradaPlanoAmostragemRepository) GetAll(filter *models.Base
 	entitiesArray := make([]entities.InspecaoEntradaPlanoAmostragem, 0)
 	queryResult := repo.Uow.GetDb().WithContext(ctx).Table(entities.InspecaoEntradaPlanoAmostragem{}.TableName()).
 		Select("QTD_MIN AS QuantidadeMinima, QTD_MAX AS QuantidadeMaxima, QTD_INSPEC AS QuantidadeInspecionar, cast(ID as varchar(36)) AS Id").
-		Where(utils.ApplyAdvancedFilter(filter.AdvancedFilter)).
-		Order(filter.Sorting).
-		Limit(filter.PageSize).
-		Offset(filter.Skip).
-		Scan(&entitiesArray)
+		Limit(filter.PageSize).Offset(filter.Skip).Scan(&entitiesArray)
 	if queryResult.Error != nil {
 		return nil, queryResult.Error
 	}

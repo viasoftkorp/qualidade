@@ -4,12 +4,9 @@ import "github.com/shopspring/decimal"
 
 type InspecaoEntrada struct {
 	Recno               int
-	RecnoItemNotaFiscal int
 	CodigoInspecao      int
-	CodigoProduto       string
 	Fornecedor          string
 	NotaFiscal          int
-	SerieNotaFiscal     string
 	RecnoRateio         int
 	DataInspecao        string
 	Inspetor            string

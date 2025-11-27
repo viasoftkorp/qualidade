@@ -1,3 +1,9 @@
 <vs-tabs-view-template>
+  <ng-container actions>
+    <ng-container *ngIf="actionsTemplate">
+      <ng-template [ngTemplateOutlet]="actionsTemplate"></ng-template>
+    </ng-container>
+  </ng-container>
+
   <qa-processamento-inspecao-view></qa-processamento-inspecao-view>
 </vs-tabs-view-template>

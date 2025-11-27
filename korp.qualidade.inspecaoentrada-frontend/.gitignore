@@ -4,8 +4,6 @@
 /dist
 /tmp
 /out-tsc
-/.nx
-/.angular
 # Only exists if Bazel was run
 /bazel-out
 

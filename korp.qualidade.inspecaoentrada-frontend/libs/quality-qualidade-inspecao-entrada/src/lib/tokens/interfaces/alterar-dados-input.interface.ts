@@ -12,6 +12,5 @@ export interface AlterarDadosPedidoDTO {
   pedidoVenda: EstoqueLocalPedidoVendaAlocacaoDTO;
   recnoInspecaoEntrada: number;
   quantidadeLote: number;
-  quantidadeInspecao: number;
   codigoProduto: string;
 }

@@ -10,7 +10,6 @@ import (
 	dto "bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	models "bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
 	gomock "github.com/golang/mock/gomock"
-	"github.com/shopspring/decimal"
 )
 
 // MockINotaFiscalRepository is a mock of INotaFiscalRepository interface.
@@ -37,18 +36,18 @@ func (m *MockINotaFiscalRepository) EXPECT() *MockINotaFiscalRepositoryMockRecor
 }
 
 // BuscarNotaFiscal mocks base method.
-func (m *MockINotaFiscalRepository) BuscarNotaFiscal(arg0, arg1 int, arg2 string) (models.NotaFiscalModel, error) {
+func (m *MockINotaFiscalRepository) BuscarNotaFiscal(arg0 int, arg1 string) (models.NotaFiscalModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarNotaFiscal", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "BuscarNotaFiscal", arg0, arg1)
 	ret0, _ := ret[0].(models.NotaFiscalModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarNotaFiscal indicates an expected call of BuscarNotaFiscal.
-func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarNotaFiscal(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarNotaFiscal(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotaFiscal", reflect.TypeOf((*MockINotaFiscalRepository)(nil).BuscarNotaFiscal), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotaFiscal", reflect.TypeOf((*MockINotaFiscalRepository)(nil).BuscarNotaFiscal), arg0, arg1)
 }
 
 // BuscarNotasFiscais mocks base method.
@@ -67,18 +66,18 @@ func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarNotasFiscais(arg0, arg1 i
 }
 
 // BuscarNotasFiscaisTotalCount mocks base method.
-func (m *MockINotaFiscalRepository) BuscarNotasFiscaisTotalCount(arg0 *models.BaseFilter, arg1 *dto.NotaFiscalFilters) (int64, error) {
+func (m *MockINotaFiscalRepository) BuscarNotasFiscaisTotalCount(arg0 *dto.NotaFiscalFilters) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarNotasFiscaisTotalCount", arg0, arg1)
+	ret := m.ctrl.Call(m, "BuscarNotasFiscaisTotalCount", arg0)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarNotasFiscaisTotalCount indicates an expected call of BuscarNotasFiscaisTotalCount.
-func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarNotasFiscaisTotalCount(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarNotasFiscaisTotalCount(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotasFiscaisTotalCount", reflect.TypeOf((*MockINotaFiscalRepository)(nil).BuscarNotasFiscaisTotalCount), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotasFiscaisTotalCount", reflect.TypeOf((*MockINotaFiscalRepository)(nil).BuscarNotasFiscaisTotalCount), arg0)
 }
 
 // BuscarNumODFePedido mocks base method.
@@ -94,33 +93,4 @@ func (m *MockINotaFiscalRepository) BuscarNumODFePedido(arg0 int) (*dto.Informac
 func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarNumODFePedido(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNumODFePedido", reflect.TypeOf((*MockINotaFiscalRepository)(nil).BuscarNumODFePedido), arg0)
-}
-
-// UpdateNotaFiscalDadosAdicionais mocks base method.
-func (m *MockINotaFiscalRepository) UpdateNotaFiscalDadosAdicionais(arg0 string, arg1 *dto.NotaFiscalDadosAdicionaisDTO) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateNotaFiscalDadosAdicionais", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateNotaFiscalDadosAdicionais indicates an expected call of UpdateNotaFiscalDadosAdicionais.
-func (mr *MockINotaFiscalRepositoryMockRecorder) UpdateNotaFiscalDadosAdicionais(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateNotaFiscalDadosAdicionais", reflect.TypeOf((*MockINotaFiscalRepository)(nil).UpdateNotaFiscalDadosAdicionais), arg0, arg1)
-}
-
-// BuscarCaracteristicaItemNotaFiscal mocks base method.
-func (m *MockINotaFiscalRepository) BuscarCaracteristicaItemNotaFiscal(arg0 int, arg1 decimal.Decimal) (models.CaracteristicaItemNotaFiscalModel, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarCaracteristicaItemNotaFiscal", arg0, arg1)
-	ret0, _ := ret[0].(models.CaracteristicaItemNotaFiscalModel)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BuscarCaracteristicaItemNotaFiscal indicates an expected call of BuscarCaracteristicaItemNotaFiscal.
-func (mr *MockINotaFiscalRepositoryMockRecorder) BuscarCaracteristicaItemNotaFiscal(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarCaracteristicaItemNotaFiscal", reflect.TypeOf((*MockINotaFiscalRepository)(nil).BuscarCaracteristicaItemNotaFiscal), arg0, arg1)
 }

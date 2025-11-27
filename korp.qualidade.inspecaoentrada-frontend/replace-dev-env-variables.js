@@ -4,15 +4,14 @@ const { glob } = require("glob");
 
 var environmentTsFile = "";
 var appsettingsFile = "";
-const dirname = __dirname.replace(/\\/g, '/');
 
-let files = glob.sync(dirname + '/apps/**/environment.dev-env.ts');
+let files = glob.sync(__dirname + '/**/environment.dev-env.ts');
 if(files.length == 0) {
     throw new Error("Unable to find 'environment.dev-env.ts'");
 }
 environmentTsFile = files[0];
 
-files = glob.sync(dirname + '/apps/**/appsettings.dev-env.json');
+files = glob.sync(__dirname + '/**/appsettings.dev-env.json');
 if(files.length == 0) {
     throw new Error("Unable to find 'appsettings.dev-env.json'");
 }

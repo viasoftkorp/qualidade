@@ -1,7 +1,5 @@
 export interface InspecaoDetailsDTO {
-  id: string;
   odf: number;
-  odfApontada: number;
   codInspecao: number;
   codProduto: string;
   novaInspecao: boolean;

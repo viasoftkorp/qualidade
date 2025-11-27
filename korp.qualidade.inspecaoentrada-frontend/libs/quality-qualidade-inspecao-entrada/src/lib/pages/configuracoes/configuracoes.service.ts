@@ -21,12 +21,6 @@ export class ConfiguracoesService {
         if (input.filter !== undefined && input.filter !== null && input.filter !== '') {
             params = params.set('filter', input.filter);
         }
-        if (input.advancedFilter !== undefined && input.advancedFilter !== null && input.advancedFilter !== '') {
-            params = params.set('advancedFilter', input.advancedFilter);
-        }
-        if (input.sorting !== undefined && input.sorting !== null && input.sorting !== '') {
-            params = params.set('sorting', input.sorting);
-        }
         if (input.skipCount !== undefined && input.skipCount !== null) {
             params = params.set('skip', input.skipCount.toString());
         }

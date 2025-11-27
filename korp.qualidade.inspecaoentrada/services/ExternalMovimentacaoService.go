@@ -83,7 +83,7 @@ func (service *ExternalMovimentacaoService) RealizarMovimentacao(inspecao *entit
 	}
 
 	req.Header.Set("Usuario", service.BaseParams.UserLogin)
-	req.Header.Set("IdEmpresa", strconv.Itoa(service.BaseParams.LegacyCompanyId))
+	req.Header.Set("IdEmpresa", strconv.Itoa(service.BaseParams.CompanyRecno))
 	req.Header.Set("Content-Type", "application/json")
 
 	/*utils.LogMessage(fmt.Sprintf("entrou na externalMovimentacaoService - RealizarMovimentacao passando o dto : " + string(postBody[:])))*/

@@ -50,17 +50,3 @@ func (mr *MockINotaFiscalServiceMockRecorder) BuscarNotasFiscais(arg0, arg1 inte
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotasFiscais", reflect.TypeOf((*MockINotaFiscalService)(nil).BuscarNotasFiscais), arg0, arg1)
 }
-
-// UpdateNotaFiscalDadosAdicionais mocks base method.
-func (m *MockINotaFiscalService) UpdateNotaFiscalDadosAdicionais(arg0 string, arg1 *dto.NotaFiscalDadosAdicionaisDTO) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateNotaFiscalDadosAdicionais", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateNotaFiscalDadosAdicionais indicates an expected call of UpdateNotaFiscalDadosAdicionais.
-func (mr *MockINotaFiscalServiceMockRecorder) UpdateNotaFiscalDadosAdicionais(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateNotaFiscalDadosAdicionais", reflect.TypeOf((*MockINotaFiscalService)(nil).UpdateNotaFiscalDadosAdicionais), arg0, arg1)
-}

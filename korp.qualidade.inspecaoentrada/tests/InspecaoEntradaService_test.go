@@ -1,10 +1,6 @@
 package tests
 
 import (
-	"errors"
-	"testing"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/consts"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/entities"
@@ -12,10 +8,13 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/mocks"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/services"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"testing"
+	"time"
 )
 
 func InstanciarMocksInspecaoEntrada(mockCtrl *gomock.Controller) (*mocks.MockUnitOfWork,
@@ -28,8 +27,6 @@ func InstanciarMocksInspecaoEntrada(mockCtrl *gomock.Controller) (*mocks.MockUni
 	*mocks.MockIEstoquePedidoVendaRepository,
 	*mocks.MockIExternalMovimentacaoService,
 	*models.BaseParams,
-	*mocks.MockIImpressaoService,
-	*mocks.MockIEmpresaRepository,
 ) {
 	mockUow := mocks.NewMockUnitOfWork(mockCtrl)
 	mockInspecaoEntradaRepository := mocks.NewMockIInspecaoEntradaRepository(mockCtrl)
@@ -40,21 +37,18 @@ func InstanciarMocksInspecaoEntrada(mockCtrl *gomock.Controller) (*mocks.MockUni
 	mockLocaisRepository := mocks.NewMockILocaisRepository(mockCtrl)
 	mockEstoquePedidoVendaRepository := mocks.NewMockIEstoquePedidoVendaRepository(mockCtrl)
 	mockExternalMovimentacaoService := mocks.NewMockIExternalMovimentacaoService(mockCtrl)
-	mockImpressaoService := mocks.NewMockIImpressaoService(mockCtrl)
-	mockEmpresaRepo := mocks.NewMockIEmpresaRepository(mockCtrl)
-
 	baseParams := &models.BaseParams{
-		TenantId:        "tenant",
-		EnvironmentId:   "environment",
-		CompanyId:       "company",
-		LegacyCompanyId: 1,
-		UserLogin:       "admin",
-		UserId:          "user",
-		AppId:           "1",
+		TenantId:      "tenant",
+		EnvironmentId: "environment",
+		CompanyId:     "company",
+		CompanyRecno:  1,
+		UserLogin:     "admin",
+		UserId:        "user",
+		AppId:         "1",
 	}
 
 	return mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams
 }
 
 func TestBuscarInspecoesEntrada(t *testing.T) {
@@ -62,21 +56,19 @@ func TestBuscarInspecoesEntrada(t *testing.T) {
 	defer mockContrl.Finish()
 
 	mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo := InstanciarMocksInspecaoEntrada(mockContrl)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams := InstanciarMocksInspecaoEntrada(mockContrl)
 
 	inspecaoEntradaService := services.NewInspecaoEntradaService(mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams)
 
 	notaFisc := 100
 	lote := "1234"
 
-	baseFilters := &models.BaseFilter{
+	filterInput := &models.BaseFilter{
 		Filter:   "",
 		Skip:     0,
 		PageSize: 25,
 	}
-
-	filters := &dto.InspecaoEntradaFilters{}
 
 	inspecoesEntities := []entities.InspecaoEntrada{
 		{
@@ -112,21 +104,21 @@ func TestBuscarInspecoesEntrada(t *testing.T) {
 	}
 
 	t.Run("ErroBuscarInspecoesEntrada", func(t2 *testing.T) {
-		mockInspecaoEntradaRepository.EXPECT().BuscarInspecoesEntrada(notaFisc, lote, baseFilters, filters).Return(nil, errors.New("error"))
+		mockInspecaoEntradaRepository.EXPECT().BuscarInspecoesEntrada(notaFisc, lote, filterInput).Return(nil, errors.New("error"))
 
-		actualOutput, validacaoDTO, err := inspecaoEntradaService.BuscarInspecoesEntrada(notaFisc, lote, baseFilters, filters)
+		actualOutput, validacaoDTO, err := inspecaoEntradaService.BuscarInspecoesEntrada(notaFisc, lote, filterInput)
 
 		assert.Equal(t, err, errors.New("error"))
 		assert.Nil(t, actualOutput)
 		assert.Nil(t, validacaoDTO)
 	})
 
-	mockInspecaoEntradaRepository.EXPECT().BuscarInspecoesEntrada(notaFisc, lote, baseFilters, filters).Return(inspecoesEntities, nil).Times(2)
+	mockInspecaoEntradaRepository.EXPECT().BuscarInspecoesEntrada(notaFisc, lote, filterInput).Return(inspecoesEntities, nil).Times(2)
 
 	t.Run("ErroBuscarQuantidadeInspecoesEntrada", func(t2 *testing.T) {
-		mockInspecaoEntradaRepository.EXPECT().BuscarQuantidadeInspecoesEntrada(notaFisc, lote, baseFilters, filters).Return(int64(0), errors.New("error"))
+		mockInspecaoEntradaRepository.EXPECT().BuscarQuantidadeInspecoesEntrada(notaFisc, lote).Return(int64(0), errors.New("error"))
 
-		actualOutput, validacaoDTO, err := inspecaoEntradaService.BuscarInspecoesEntrada(notaFisc, lote, baseFilters, filters)
+		actualOutput, validacaoDTO, err := inspecaoEntradaService.BuscarInspecoesEntrada(notaFisc, lote, filterInput)
 
 		assert.Equal(t, err, errors.New("error"))
 		assert.Nil(t, validacaoDTO)
@@ -138,9 +130,9 @@ func TestBuscarInspecoesEntrada(t *testing.T) {
 		TotalCount: int64(len(inspecoesEntities)),
 	}
 
-	mockInspecaoEntradaRepository.EXPECT().BuscarQuantidadeInspecoesEntrada(notaFisc, lote, baseFilters, filters).Return(int64(len(inspecoesEntities)), nil)
+	mockInspecaoEntradaRepository.EXPECT().BuscarQuantidadeInspecoesEntrada(notaFisc, lote).Return(int64(len(inspecoesEntities)), nil)
 
-	actualOutput, validacaoDTO, err := inspecaoEntradaService.BuscarInspecoesEntrada(notaFisc, lote, baseFilters, filters)
+	actualOutput, validacaoDTO, err := inspecaoEntradaService.BuscarInspecoesEntrada(notaFisc, lote, filterInput)
 
 	assert.Nil(t, validacaoDTO)
 	assert.Nil(t, err)
@@ -152,12 +144,12 @@ func TestBuscarPlanosNovaInspecao(t *testing.T) {
 	defer mockContrl.Finish()
 
 	mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo := InstanciarMocksInspecaoEntrada(mockContrl)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams := InstanciarMocksInspecaoEntrada(mockContrl)
 
 	inspecaoEntradaService := services.NewInspecaoEntradaService(mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams)
 
-	plano := "100"
+	plano := 100
 	codigoProduto := "21435"
 
 	filterInput := &models.BaseFilter{
@@ -235,15 +227,15 @@ func TestCriarInspecao(t *testing.T) {
 	defer mockContrl.Finish()
 
 	mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo := InstanciarMocksInspecaoEntrada(mockContrl)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams := InstanciarMocksInspecaoEntrada(mockContrl)
 
 	inspecaoEntradaService := services.NewInspecaoEntradaService(mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams)
 
 	input := &dto.NovaInspecaoInput{
 		Lote:       "A",
 		NotaFiscal: int(1234),
-		Plano:      "28918",
+		Plano:      28918,
 		Quantidade: 10,
 		PlanosInspecao: []*dto.PlanoInspecaoDTO{
 			{
@@ -261,7 +253,7 @@ func TestCriarInspecao(t *testing.T) {
 
 	notaModel := models.NotaFiscalModel{
 		Lote:             "A",
-		Recno:            1,
+		IdNotaFiscal:     1,
 		NotaFiscal:       1234,
 		CodigoProduto:    "29831",
 		DescricaoProduto: "PRODUTO TESTE",
@@ -269,16 +261,14 @@ func TestCriarInspecao(t *testing.T) {
 	}
 
 	inspecaoModel := &models.InspecaoEntrada{
-		CodigoInspecao:      540,
-		NotaFiscal:          int(1234),
-		Lote:                "A",
-		DataInspecao:        time.Now().Format("20060102"),
-		Inspetor:            baseParams.UserLogin,
-		QuantidadeInspecao:  decimal.NewFromFloat(input.Quantidade),
-		QuantidadeLote:      notaModel.Quantidade,
-		IdEmpresa:           1,
-		RecnoItemNotaFiscal: 1,
-		CodigoProduto:       "29831",
+		CodigoInspecao:     540,
+		NotaFiscal:         int(1234),
+		Lote:               "A",
+		DataInspecao:       time.Now().Format("20060102"),
+		Inspetor:           baseParams.UserLogin,
+		QuantidadeInspecao: decimal.NewFromFloat(input.Quantidade),
+		QuantidadeLote:     notaModel.Quantidade,
+		IdEmpresa:          1,
 	}
 
 	planosNaoAlterados := []models.PlanoInspecao{
@@ -328,7 +318,7 @@ func TestCriarInspecao(t *testing.T) {
 	}
 
 	t.Run("ErroBuscaNota", func(t2 *testing.T) {
-		mockNotaFiscalRepository.EXPECT().BuscarNotaFiscal(input.RecnoItemNotaFiscal, input.NotaFiscal, input.Lote).Return(models.NotaFiscalModel{}, nil)
+		mockNotaFiscalRepository.EXPECT().BuscarNotaFiscal(input.NotaFiscal, input.Lote).Return(models.NotaFiscalModel{}, nil)
 
 		expectedOutput := &dto.ValidacaoDTO{
 			Code:    1,
@@ -343,7 +333,7 @@ func TestCriarInspecao(t *testing.T) {
 	})
 
 	mockInspecaoEntradaRepository.EXPECT().BuscarNovoCodigoInspecao().Return(inspecaoModel.CodigoInspecao).Times(4)
-	mockNotaFiscalRepository.EXPECT().BuscarNotaFiscal(input.RecnoItemNotaFiscal, input.NotaFiscal, input.Lote).Return(notaModel, nil).Times(4)
+	mockNotaFiscalRepository.EXPECT().BuscarNotaFiscal(input.NotaFiscal, input.Lote).Return(notaModel, nil).Times(4)
 	mockUow.EXPECT().Begin().Return(nil).Times(4)
 	mockUow.EXPECT().UnitOfWorkGuard().Return().Times(4)
 	mockUow.EXPECT().Rollback().Return(nil).Times(3)
@@ -401,10 +391,10 @@ func TestAtualizarInspecao(t *testing.T) {
 	defer mockContrl.Finish()
 
 	mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo := InstanciarMocksInspecaoEntrada(mockContrl)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams := InstanciarMocksInspecaoEntrada(mockContrl)
 
 	inspecaoEntradaService := services.NewInspecaoEntradaService(mockUow, mockInspecaoEntradaRepository, mockInspecaoEntradaItemRepository, mockNotaFiscalRepository,
-		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams, mockImpressaoService, mockEmpresaRepo)
+		mockPlanosInspecaoRepository, mockParametrosRepository, mockLocaisRepository, mockEstoquePedidoVendaRepository, mockExternalMovimentacaoService, baseParams)
 
 	itensInspecao := []dto.InspecaoEntradaItemDTO{
 		{

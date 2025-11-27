@@ -4,15 +4,10 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/services"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/utils"
 	"github.com/gofiber/fiber/v2"
-	"strings"
 )
 
 func BuscarProduto(ctx *fiber.Ctx) error {
 	codigo := ctx.Params("codigo")
-	containsScape := strings.Contains(codigo, "%3A")
-	if containsScape {
-		codigo = strings.ReplaceAll(codigo, "%3A", "/")
-	}
 	if codigo == "" {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Empty parameter: codigo"})
 	}

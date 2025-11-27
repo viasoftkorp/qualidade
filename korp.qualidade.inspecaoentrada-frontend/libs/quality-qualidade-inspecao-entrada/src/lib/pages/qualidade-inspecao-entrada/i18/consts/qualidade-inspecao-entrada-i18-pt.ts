@@ -2,16 +2,12 @@ import { QualidadeInspecaoEntradaI18N } from '../interfaces/qualidade-inspecao-e
 
 export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = {
   QualidadeInspecaoEntrada: {
-    Atencao: 'Atenção',
     Filtrar: 'Filtrar',
     Filtros: 'Filtros',
     Limpar: 'Limpar',
     Lote: 'Lote',
     NotaFiscal: 'Nota Fiscal',
-    NumeroLote: 'Número Lote',
     Produto: 'Produto',
-    Quantidade: 'Quantidade',
-    QuebrarLote: 'Quebrar Lote',
     InspecaoEntradaGrid: {
       DataInspecao: 'Data Inspeção',
       Inspetor: 'Inspetor',
@@ -23,7 +19,6 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
       QuantidadeReprovada: 'Qtd. Reprovada',
       EditarInspecao: 'Editar',
       ExcluirInspecao: 'Excluir',
-      ImprimirInspecao: 'Imprimir',
     },
     InspecaoDetails: {
       NovaInspecao: 'Nova Inspeção',
@@ -34,7 +29,7 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
       QuantidadeInspecao: 'Qtd. Inspeção',
       QuantidadeInspecionada: 'Qtd. Inspecionada',
       QuantidadeInspecionar: 'Qtd. Inspecionar',
-      QuantidadeInspecaoValidacao: 'Quantidade de inspeção tem que ser maior que zero e não pode ultrapassar a quantidade restante para inspecionar',
+      QuantidadeInspecaoValidacao: 'Quantidade de inspeção/lote não pode ultrapassar a quantidade restante para inspecionar',
       Descricao: 'Descrição',
       Resultado: 'Resultado',
       MenorValor: 'Menor Valor',
@@ -42,14 +37,12 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
       MenorValorBase: 'Menor Valor Base',
       MaiorValorBase: 'Maior Valor Base',
       Salvar: 'Salvar',
-      SomaLoteInvalida: 'A quantidade quebrada em lotes não pode ser maior que a quantidade aprovada',
       Observacao: 'Observação',
       AlterarDadosInspecaoModal: {
         Titulo: 'Alterar dados',
         Aprovado: 'Aprovado',
         NaoAplicavel: 'Não aplicável',
         NaoConforme: 'Não conforme',
-        ParcialmenteAprovado: 'Parcialmente Aprov.',
         Alterar: 'Alterar',
       },
       AlterarDadosFinalizacaoModal: {
@@ -57,13 +50,9 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
         LocalPrincipal: 'Local Aprovados',
         LocalReprovado: 'Local Reprovados',
         NumeroPedido: 'Numero Pedido',
-        Odf: 'ODF',
         QuantidadeAprovada: 'Qtd. Aprovada',
         QuantidadeRejeitada: 'Qtd. Reprovada',
-        QuantidadePedido: 'Qtd. Pedido',
-        QuantidadeEntrada: 'Qtd. Entrada',
-        SaldoInspecionar: 'Saldo a Inspecionar',
-        QuantidadeInspecao: 'Qtd. Inspeção'
+        QuantidadeAlocadaPedido: 'Qtd. Alocada Pedido',
       },
       FinalizarInspecaoModal: {
         Titulo: 'Finalizar Inspeção',
@@ -75,18 +64,13 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
         NumODF: 'Número ODF',
         NumPedido: 'Número Pedido',
         Error: {
-          AlocacaoQuantidadeRestante: 'Atenção! A distribuição das quantidades é superior à quantidade restante para distribuição.',
-          AlocacaoQuantidadeSuperiorInspecao: 'Atenção! A distribuição das quantidades é superior à quantidade da inspeção.',
-          AlocacaoQuantidadeInferiorInspecao: 'Atenção! A distribuição das quantidades é inferior à quantidade da inspeção.',
-          AlocacaoQuantidadeEntrada: 'Atenção! A distribuição das quantidades é superior à quantidade de entrada.'
+          AlocacaoNecessidadePedido: 'Atenção distribuição das quantidades é superior as quantidades alocadas para o pedido',
+          AlocacaoQuantidadeInspecao: 'Atenção somatória da distribuição das quantidades nos pedidos é maior que a quantidade total do lote'
         },
         GridFinalizacao: {
           Pedido: 'Pedido',
-          Odf: 'ODF',
           QuantidadeLote: 'Qtd. Lote',
           QuantidadePedido: 'Qtd. Pedido',
-          QuantidadeEntrada: 'Qtd. Entrada',
-          SaldoInspecionar: 'Saldo a Inspecionar',
           QuantidadeAprovada: 'Qtd. Aprovada',
           QuantidadeReprovada: 'Qtd. Reprovada',
           LocalAprovado: 'Local Aprovados',
@@ -95,8 +79,8 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
         }
       },
       Error: {
-        AlocacaoSuperiorInspecao: "Atenção! A distribuição das quantidades é superior à quantidade da inspeção.",
-        AlocacaoInferiorInspecao: "Atenção! A distribuição das quantidades é inferior à quantidade da inspeção.",
+        AlocacaoSuperiorLote: "Atenção distribuição das quantidades é superior á quantidade do lote",
+        AlocacaoInferiorInspecao: "Atenção distribuição das quantidades é inferior á quantidade de inspeção",
       }
     },
     Titulo: 'Inspeção de Entrada',
@@ -114,14 +98,7 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
       DataEntrada: 'Data Entrada',
       Plano: 'Cód. Plano Insp.',
       DescricaoPlano: 'Desc. Plano Insp.',
-      Observacao: 'Observação'
     },
-    Resultados: {
-      Aprovado: 'Aprovado',
-      NaoAplicavel: 'Não aplicável',
-      NaoConforme: 'Não conforme',
-      ParcialmenteAprovado: 'Parcialmente Aprov.'
-    }
   },
   HistoricoInspecao: {
     Metricas: 'Métricas',
@@ -157,7 +134,7 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
     QuantidadeAprovada: 'Qtd. Aprovada',
     QuantidadeReprovada: 'Qtd. Reprovada',
     Lote: 'Lote',
-    Rnc: 'Relatório Não Conformidade',
+    Rnc: 'Relatório Rnc',
     MovimentarInspecaoStatus: {
       Inicio: 'Início',
       EmProcesso: 'Em Processo',
@@ -176,19 +153,6 @@ export const QUALIDADE_INSPECAO_ENTRADA_I18N_PT: QualidadeInspecaoEntradaI18N = 
       DescricaoLocalOrigem: 'Local Origem',
       DescricaoLocalDestino: 'Local Destino',
       NumeroPedido: 'Número Pedido'
-    },
-    Resultados: {
-      Aprovado: 'Aprovado',
-      NaoAplicavel: 'Não aplicável',
-      NaoConforme: 'Não conforme',
-      ParcialmenteAprovado: 'Parcialmente Aprov.'
     }
-  },
-  FiltrosInspecao: {
-    Filtrar: 'Filtrar',
-    Metricas: 'Métricas',
-    Observacao: 'Observação',
-    Aplicar: 'Aplicar',
-    Limpar: 'Limpar'
   }
 };

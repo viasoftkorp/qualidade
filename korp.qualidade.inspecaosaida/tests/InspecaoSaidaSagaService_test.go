@@ -1,10 +1,6 @@
 package tests
 
 import (
-	"errors"
-	"testing"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/enums"
@@ -12,9 +8,12 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/services"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/utils"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"testing"
+	"time"
 )
 
 func InstanciarGetAllProcessamentoInspecaoSaidaOutput() *dto.GetAllProcessamentoInspecaoSaidaOutput {
@@ -258,7 +257,7 @@ func TestBuscarSagasOk(t *testing.T) {
 
 	t.Run("ErroBuscarSagas", func(t2 *testing.T) {
 		mockInspecaoSaidaSagaService.EXPECT().
-			BuscarSagas(baseFilter, filter, false).
+			BuscarSagas(baseFilter.Skip, baseFilter.PageSize, filter, false).
 			Return(nil, errors.New("Test 1"))
 		actualOutput, err := service.BuscarSagas(baseFilter, filter, false)
 
@@ -267,7 +266,7 @@ func TestBuscarSagasOk(t *testing.T) {
 	})
 
 	mockInspecaoSaidaSagaService.EXPECT().
-		BuscarSagas(baseFilter, filter, false).
+		BuscarSagas(baseFilter.Skip, baseFilter.PageSize, filter, false).
 		Return(result, nil).
 		Times(4)
 
@@ -285,6 +284,11 @@ func TestBuscarSagasOk(t *testing.T) {
 	mockProdutoRepo.EXPECT().
 		BuscarProdutoDescricao(result.Items[0].CodigoProduto).
 		Return("Desc", nil).
+		Times(3)
+
+	mockOrdemProducaoRepo.EXPECT().
+		BuscarOrdemPaiHistoricoMovimentacao(result.Items[0].Lote, result.Items[0].CodigoProduto, 22).
+		Return(nil, nil).
 		Times(3)
 
 	t.Run("ErroBuscarLocalDescricao", func(t3 *testing.T) {
@@ -704,7 +708,6 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 	service := services.NewInspecaoSaidaSagaService(mockInspecaoSaidaRepo, mockWebRepo, sagaService, mockOrdemProducaoRepo, mockLocaisRepo, nil, mockEstoqueRepo, nil, mockUow)
 	localOrigem := 327
 	odf := 14
-	lote := "149889-7"
 	recno := 321321
 	idSaga := "1000"
 	quantidadeAprovada := decimal.NewFromInt(1)
@@ -727,13 +730,12 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 	}
 	ordemProducao := &models.OrdemProducao{
 		CodigoProduto: "43298324",
-		Lote:          lote,
+		Lote:          "149889-7",
 		ODF:           odf,
 	}
 	inspecaoSaida := &models.InspecaoSaida{
 		Recno:                  321321,
 		Odf:                    odf,
-		Lote:                   lote,
 		QuantidadeAprovada:     quantidadeAprovada,
 		QuantidadeReprovada:    quantidadeReprovada,
 		QuantidadeRetrabalhada: quantidadeRetrabalhada,
@@ -872,7 +874,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -899,7 +901,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -930,7 +932,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -965,7 +967,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -1005,7 +1007,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -1041,7 +1043,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -1081,7 +1083,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -1134,7 +1136,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -1196,7 +1198,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().
@@ -1251,7 +1253,7 @@ func TestPublicarSagaInspecaoSaida(t *testing.T) {
 			Return(inspecaoSaida, nil).
 			Times(1)
 		mockOrdemProducaoRepo.EXPECT().
-			BuscarOrdem(odf, lote).
+			BuscarOrdem(odf).
 			Return(ordemProducao).
 			Times(1)
 		mockEstoqueRepo.EXPECT().

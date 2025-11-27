@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"strconv"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/repositories"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 	"bitbucket.org/viasoftkorp/korp.sdk/ambient_data"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 )
 
 func GetRncDetails(ctx *fiber.Ctx) error {
@@ -36,7 +35,7 @@ func GetRncDetails(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	result, err := inspecaoSaidaRepository.BuscarInformacoesPreenchimentoRNC(recnoInspecao, baseParams.LegacyCompanyId, ctx.Query("codigoProduto"), ctx.Query("codigoFornecedor"))
+	result, err := inspecaoSaidaRepository.BuscarInformacoesPreenchimentoRNC(recnoInspecao, baseParams.CompanyRecno, ctx.Query("codigoProduto"))
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	} else {

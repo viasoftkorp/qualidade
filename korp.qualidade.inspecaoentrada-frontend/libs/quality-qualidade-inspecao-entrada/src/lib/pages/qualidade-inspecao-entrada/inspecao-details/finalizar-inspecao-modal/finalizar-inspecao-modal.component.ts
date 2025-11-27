@@ -14,7 +14,7 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   MessageService,
-  VsUserService,
+  UserService,
   VsSubscriptionManager
 } from '@viasoft/common';
 import {
@@ -49,9 +49,6 @@ import { map } from 'rxjs/operators';
 import {
   AlterarDadosFinalizacaoModalComponent
 } from './alterar-dados-finalizacao-modal/alterar-dados-finalizacao-modal.component';
-import { QuebraLoteService } from './quebra-lotes-grid/quebra-lote.service';
-import { UltraMath } from '../../../../tokens/functions/UltraMath';
-import { PedidoVendaLoteDto } from '../../../../tokens/interfaces/pedido-venda-lote-interface-dto';
 
 @Component({
   selector: 'qa-finalizar-inspecao-modal',
@@ -64,7 +61,6 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
   private inspecaoDto: InspecaoEntradaDTO;
   private notaFiscal: NotaFiscalDTO;
   private codigoProduto: string;
-  private codigoFornecedor: string;
   private subs = new VsSubscriptionManager();
   private quantidadeTotalAlocadaPedido: number;
   public gridOptions = new VsGridOptions();
@@ -80,8 +76,10 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
   public formCustomValidatorMessage = "";
 
   public get salvarDesabilitado(): boolean {
+    this.quantiadeTotalAlocadaValidator();
     if (this.utilizaReserva) {
-      return this.quantidadeTotalAlocadaPedido != this.inspecaoDto.quantidadeInspecao
+      return (this.quantidadeTotalAlocadaPedido < this.inspecaoDto.quantidadeInspecao)
+        || (this.quantidadeTotalAlocadaPedido > this.inspecaoDto.quantidadeLote)
         || this.desabilitarSalvar;
     }
     if (!this.formQuantidades) {
@@ -89,15 +87,14 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
     }
     const quantidadeAprovada = Number(this.formQuantidades.get('quantidadeAprovada').value ?? '0');
     const quantidadeRejeitada = Number(this.formQuantidades.get('quantidadeRejeitada').value ?? '0');
-    const total = UltraMath.RoundABNT((quantidadeAprovada + quantidadeRejeitada), 6);
-
-    return (total != this.inspecaoDto.quantidadeInspecao) || this.desabilitarSalvar;
+    const total = quantidadeAprovada + quantidadeRejeitada;
+    return (total < this.inspecaoDto.quantidadeInspecao) || this.desabilitarSalvar || (total > this.inspecaoDto.quantidadeLote);
   }
 
   quantiadeTotalAlocadaValidator() {
     if (this.utilizaReserva) {
-      if (this.quantidadeTotalAlocadaPedido > this.inspecaoDto.quantidadeInspecao) {
-        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.Error.AlocacaoSuperiorInspecao";
+      if (this.quantidadeTotalAlocadaPedido > this.inspecaoDto.quantidadeLote) {
+        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.Error.AlocacaoSuperiorLote";
         return;
       } else if (this.quantidadeTotalAlocadaPedido < this.inspecaoDto.quantidadeInspecao) {
         this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.Error.AlocacaoInferiorInspecao";
@@ -106,13 +103,13 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
     } else if (this.formQuantidades) {
       const quantidadeAprovada = Number(this.formQuantidades.get('quantidadeAprovada').value ?? '0');
       const quantidadeRejeitada = Number(this.formQuantidades.get('quantidadeRejeitada').value ?? '0');
-      const total = UltraMath.RoundABNT((quantidadeAprovada + quantidadeRejeitada), 6);
+      const total = quantidadeAprovada + quantidadeRejeitada;
 
       if (total < this.inspecaoDto.quantidadeInspecao) {
         this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.Error.AlocacaoInferiorInspecao";
         return;
-      } else if (total > this.inspecaoDto.quantidadeInspecao) {
-        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.Error.AlocacaoSuperiorInspecao";
+      } else if (total > this.inspecaoDto.quantidadeLote) {
+        this.formCustomValidatorMessage = "QualidadeInspecaoEntrada.InspecaoDetails.Error.AlocacaoSuperiorLote";
         return;
       }
     }
@@ -127,14 +124,12 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private router: Router,
     private rncEditorModalService: RncEditorModalService,
-    private userService: VsUserService,
-    private quebraLoteService: QuebraLoteService,
+    private userService: UserService,
     @Inject(MAT_DIALOG_DATA) data: FinalizarInspecaoModalData,
   ) {
     this.inspecaoDto = data.inspecaoEntrada;
     this.notaFiscal = data.notaFiscal;
     this.codigoProduto = data.codigoProduto;
-    this.codigoFornecedor = data.codigoFornecedor;
   }
 
   async ngOnInit(): Promise<void> {
@@ -145,8 +140,6 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
       await this.initSelectOptions();
       this.initFormsQuantidades();
     }
-
-    this.quantidadeValueChanges();
   }
 
   ngOnDestroy(): void {
@@ -163,7 +156,6 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
         quantidadeRejeitada: Number(this.formQuantidades.get('quantidadeRejeitada').value) ?? 0,
         codigoLocalPrincipal: this.formLocais.get('localPrincipal').value ? Number(this.formLocais.get('localPrincipal').value) : 0,
         codigoLocalReprovado: this.formLocais.get('localReprovado').value ? Number(this.formLocais.get('localReprovado').value) : 0,
-        lotes: []
       }
       : {
         codigoInspecao: this.inspecaoDto.codigoInspecao,
@@ -171,20 +163,7 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
         quantidadeRejeitada: 0,
         codigoLocalPrincipal: 0,
         codigoLocalReprovado: 0,
-        lotes: [],
       };
-      if(!this.utilizaReserva) {
-        const lotes = await this.quebraLoteService.getLotes(null, null).toPromise();
-
-        const somaQuantidadesLotes = UltraMath.Sum(lotes.items, (lote: PedidoVendaLoteDto) => lote.quantidade);
-        const quantidadeAprovada = this.formQuantidades.get('quantidadeAprovada').value as number;
-        if(somaQuantidadesLotes > quantidadeAprovada) {
-          this.messageService.warn('QualidadeInspecaoEntrada.InspecaoDetails.SomaLoteInvalida', 'QualidadeInspecaoEntrada.Atencao')
-          this.desabilitarSalvar = false;
-          return;
-        }
-        input.lotes = lotes.items;
-      }
 
     let possuiQuantidadesReprovadas = false;
     if (this.utilizaReserva) {
@@ -195,7 +174,7 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
     }
 
     if (possuiQuantidadesReprovadas) {
-      const informacoesRnc = await this.inspecaoEntradaService.getInformacoesRNC(this.inspecaoDto.recnoInspecao, this.codigoProduto, this.codigoFornecedor);
+      const informacoesRnc = await this.inspecaoEntradaService.getInformacoesRNC(this.inspecaoDto.recnoInspecao, this.codigoProduto);
       const rncGerada = await this.rncEditorModalService.openCreateRncModal(
         {
           origem: OrigemNaoConformidades.InspecaoEntrada,
@@ -209,12 +188,7 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
           idNotaFiscal: informacoesRnc.idNotaFiscal,
           idPessoa: informacoesRnc.idFornecedor
         }).toPromise();
-      if(rncGerada) {
-        input.idRnc = rncGerada.naoConformidade.id;
-      } else {
-        this.desabilitarSalvar = false;
-        return
-      }
+      input.idRnc = rncGerada.naoConformidade.id;
     }
 
     this.inspecaoEntradaService.finalizarInspecao(input).subscribe(() => {
@@ -273,19 +247,19 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
     });
 
     this.formQuantidades = this.formBuilder.group({
-      quantidadeAprovada: [this.form.get('resultado').value == "Aprovado" ? this.inspecaoDto.quantidadeInspecao : 0],
+      quantidadeAprovada: [this.form.get('resultado').value == "Aprovado" ? this.inspecaoDto.quantidadeLote : 0],
       quantidadeRejeitada: [0],
     });
 
     this.subs.add('resultado-inspecao-changes', this.form.get('resultado').valueChanges.subscribe((result: string) => {
       if (result == 'Aprovado') {
-        this.formQuantidades.get('quantidadeAprovada').setValue(this.inspecaoDto.quantidadeInspecao);
+        this.formQuantidades.get('quantidadeAprovada').setValue(this.inspecaoDto.quantidadeLote);
       }
     }));
   }
 
   private initGrid(): void {
-    this.gridOptions.id = '2FB88518-5638-4FE5-9DDF-901D57C7EF85';
+    this.gridOptions.id = '4503acdc-cfdd-4fc8-9a08-5fa48546a871';
     this.gridOptions.enableFilter = false;
     this.gridOptions.enableQuickFilter = false;
     this.gridOptions.enableSorting = false;
@@ -297,18 +271,8 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
         width: 50,
       }),
       new VsGridSimpleColumn({
-        headerName: 'QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.GridFinalizacao.Odf',
-        field: 'numeroOdf',
-        width: 50,
-      }),
-      new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.GridFinalizacao.QuantidadePedido',
         field: 'quantidadeAlocadaLoteLocal',
-        width: 50,
-      }),
-      new VsGridNumberColumn({
-        headerName: 'QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.GridFinalizacao.SaldoInspecionar',
-        field: 'quantidadeRestanteInspecionar',
         width: 50,
       }),
       new VsGridNumberColumn({
@@ -360,7 +324,6 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
         pedidoVenda: data,
         recnoInspecaoEntrada: this.inspecaoDto.recnoInspecao,
         quantidadeLote: this.inspecaoDto.quantidadeLote,
-        quantidadeInspecao: this.inspecaoDto.quantidadeInspecao,
         lote: this.notaFiscal.lote,
         codigoProduto: this.notaFiscal.codigoProduto
       } as AlterarDadosPedidoDTO, { hasBackdrop: true })).afterClosed().toPromise();
@@ -374,17 +337,5 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
       .subscribe((resultado: string) => {
         this.form.get('resultado').setValue(resultado);
       }));
-  }
-
-  private quantidadeValueChanges() {
-    this.subs.add('quantidade-aprovada-value-changes', this.formQuantidades.get('quantidadeAprovada').valueChanges
-      .subscribe(() => {
-        this.quantiadeTotalAlocadaValidator();
-      }))
-
-    this.subs.add('quantidade-rejeitada-value-changes', this.formQuantidades.get('quantidadeRejeitada').valueChanges
-      .subscribe(() => {
-        this.quantiadeTotalAlocadaValidator();
-      }))
   }
 }

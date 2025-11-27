@@ -86,21 +86,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "inspecao-saida:build"
+            "browserTarget": "inspecao-saida:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "inspecao-saida:build:production"
+              "browserTarget": "inspecao-saida:build:production"
             },
             "dev-env": {
-              "buildTarget": "inspecao-saida:build:dev-env"
-            }
+              "browserTarget": "inspecao-saida:build:dev-env"
+          }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "inspecao-saida:build"
+            "browserTarget": "inspecao-saida:build"
           }
         },
         "test": {
@@ -125,11 +125,15 @@
           }
         },
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/inspecao-saida/**/*.ts",
-              "apps/inspecao-saida/**/*.html"
+            "tsConfig": [
+              "apps/inspecao-saida/tsconfig.app.json",
+              "apps/inspecao-saida/tsconfig.spec.json",
+              "apps/inspecao-saida/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
             ]
           }
         },
@@ -222,18 +226,18 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "buildTarget": "inspecao-saida-portal:build"
+            "browserTarget": "inspecao-saida-portal:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "inspecao-saida-portal:build:production"
+              "browserTarget": "inspecao-saida-portal:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "inspecao-saida-portal:build"
+            "browserTarget": "inspecao-saida-portal:build"
           }
         },
         "test": {
@@ -258,11 +262,15 @@
           }
         },
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/inspecao-saida/**/*.ts",
-              "apps/inspecao-saida/**/*.html"
+            "tsConfig": [
+              "apps/inspecao-saida/tsconfig.app.json",
+              "apps/inspecao-saida/tsconfig.spec.json",
+              "apps/inspecao-saida/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
             ]
           }
         },

@@ -1,8 +1,2 @@
-@use '@angular/material' as mat;
-@use "@viasoft/theming/config" as config;
-@import "@viasoft/theming/use-theme";
-@import './angular-material';
-
+@import '~@viasoft/theming/use-theme';
 @include useTheme();
-@include mat.tabs-theme(config.$vs-theme);
-@include mat.chips-theme(config.$vs-theme);

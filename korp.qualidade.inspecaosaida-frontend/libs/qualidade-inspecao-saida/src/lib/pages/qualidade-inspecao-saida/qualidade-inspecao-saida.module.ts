@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { VsCommonModule } from '@viasoft/common';
 import {
   VsButtonModule,
-  VsCheckboxModule,
-  VsChipListModule,
-  VsDatepickerModule,
+  VsCheckboxModule, VsDatepickerModule,
   VsDialogModule,
   VsFormModule,
   VsGridModule,
@@ -12,12 +10,11 @@ import {
   VsInputModule,
   VsLabelModule,
   VsLayoutModule,
-  VsSelectModule,
-  VsTabGroupModule,
-  VsTextareaModule
+  VsSelectModule, VsTabGroupModule, VsTextareaModule
 } from '@viasoft/components';
 import { TabsViewTemplateModule } from '@viasoft/view-template';
 import { RncLibModule } from '@viasoft/rnc-lib';
+
 import { QualidadeInspecaoSaidaService } from '../../services/qualidade-inspecao-saida.service';
 import { QUALIDADE_INSPECAO_SAIDA_I18N_PT } from './i18n/consts/qualidade-inspecao-saida-i18n-pt.const';
 import {
@@ -31,19 +28,17 @@ import { InspecaoViewComponent } from './inspecao-view/inspecao-view.component';
 import {
   AlterarDadosInspecaoModalComponent
 } from './inspecao-details/alterar-dados-inspecao-modal/alterar-dados-inspecao-modal.component';
+import { OrdemProducaoViewFilterComponent } from './ordem-producao-view/ordem-producao-view-filter/ordem-producao-view-filter.component';
 import { ComponentsModule } from '../../components/components.module';
+import {
+  HistoricoInspecaoViewComponent
+} from "../historico-inspecao/historico-inspecao-view/historico-inspecao-view.component";
+import { HistoricoInspecaoService } from "../historico-inspecao/historico-inspecao.service";
+import {
+  HistoricoInspecaoViewService
+} from "../historico-inspecao/historico-inspecao-view/historico-inspecao-view.service";
 import { PersonLibStartupModule } from '@viasoft/person-lib';
 import { FileProviderTagStartupModule } from '@viasoft/custom-file-provider-tag';
-import { HistoricoInspecaoModule } from './historico/historico-inspecao.module';
-import { InspecoesAbertasComponent } from './inspecoes-abertas/inspecoes-abertas.component';
-import { ArquivosInspecaoSaidaModule } from './arquivos-inspecao-saida/arquivos-inspecao-saida.module';
-import { FormsModule } from '@angular/forms';
-import { HistoricoInspecaoService } from './historico/historico-inspecao.service';
-import { HistoricoInspecaoViewService } from './historico/historico-inspecao-view/historico-inspecao-view.service';
-import { FiltrosInspecaoComponent } from './filtros-inspecao/filtros-inspecao.component';
-import {
-  FiltrosInspecaoModalComponent
-} from './filtros-inspecao/filtros-inspecao-modal/filtros-inspecao-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,9 +48,8 @@ import {
     InspecaoDetailsComponent,
     AlterarDadosInspecaoModalComponent,
     FinalizarInspecaoModalComponent,
-    InspecoesAbertasComponent,
-    FiltrosInspecaoComponent,
-    FiltrosInspecaoModalComponent
+    OrdemProducaoViewFilterComponent,
+    HistoricoInspecaoViewComponent
   ],
   imports: [
     VsCommonModule.forChild({
@@ -81,11 +75,7 @@ import {
     RncLibModule,
     PersonLibStartupModule,
     FileProviderTagStartupModule,
-    VsTextareaModule,
-    HistoricoInspecaoModule,
-    ArquivosInspecaoSaidaModule,
-    FormsModule,
-    VsChipListModule
+    VsTextareaModule
   ],
   providers: [
     QualidadeInspecaoSaidaService,

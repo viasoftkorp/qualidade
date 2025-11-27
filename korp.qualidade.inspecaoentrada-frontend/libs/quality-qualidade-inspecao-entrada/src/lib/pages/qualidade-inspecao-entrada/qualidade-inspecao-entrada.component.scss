@@ -1,23 +1,11 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  ::ng-deep{
-    .actions-content {
-      place-content: end;
-    }
-
-    vs-grid{
-      width: 100%;
-      min-height: 300px
-    }
-    mat-tab-group.mat-tab-group > div.mat-tab-body-wrapper{
-      flex: auto
-    }
-  }
-}
-
 vs-layout {
   height: 100%;
+}
+
+qa-nota-fiscal-view {
+  height: 60%;
+}
+
+qa-inspecao-view {
+  height: 40%;
 }

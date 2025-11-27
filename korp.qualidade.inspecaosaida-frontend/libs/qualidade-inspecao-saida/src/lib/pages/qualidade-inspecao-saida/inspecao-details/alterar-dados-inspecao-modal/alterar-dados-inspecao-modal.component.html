@@ -10,7 +10,7 @@
       <form [formGroup]="form" group-2>
         <vs-input formControlName="descricao" placeholder="QualidadeInspecaoSaida.InspecaoDetails.Descricao"></vs-input>
         <vs-select formControlName="resultado" placeholder="QualidadeInspecaoSaida.InspecaoDetails.Resultado"
-          [options]="resultadoOptions"></vs-select>
+          [options]="resultadoOptions" [disabled]="listenFormResultadoValueChanges"></vs-select>
         <vs-input formControlName="menorValor" type="number"
           placeholder="QualidadeInspecaoSaida.InspecaoDetails.MenorValor"></vs-input>
         <vs-input formControlName="menorValorBase" type="number"

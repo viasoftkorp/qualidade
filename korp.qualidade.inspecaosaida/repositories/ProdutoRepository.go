@@ -1,17 +1,16 @@
 package repositories
 
 import (
-	"context"
-	"database/sql"
-	"strings"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/queries"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
+	"context"
+	"database/sql"
 	"gorm.io/gorm"
+	"strings"
+	"time"
 )
 
 type ProdutoRepository struct {
@@ -82,7 +81,7 @@ func (repo *ProdutoRepository) BuscarProdutos(filterInput *models.BaseFilter) ([
 		Raw(query,
 			sql.Named(queries.NamedPageSize, filterInput.PageSize),
 			sql.Named(queries.NamedSkip, filterInput.Skip),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 			sql.Named(queries.NamedFilter, "%"+filterInput.Filter+"%")).
 		Scan(&produtos)
 
@@ -108,7 +107,7 @@ func (repo *ProdutoRepository) BuscarProdutosTotalCount(filterInput *models.Base
 		Raw(query,
 			sql.Named(queries.NamedPageSize, filterInput.PageSize),
 			sql.Named(queries.NamedSkip, filterInput.Skip),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 			sql.Named(queries.NamedFilter, "%"+filterInput.Filter+"%")).
 		Count(&count)
 

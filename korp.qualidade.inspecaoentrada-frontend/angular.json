@@ -83,21 +83,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "inspecao-entrada:build"
+            "browserTarget": "inspecao-entrada:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "inspecao-entrada:build:production"
+              "browserTarget": "inspecao-entrada:build:production"
             },
             "dev-env": {
-              "buildTarget": "inspecao-entrada:build:dev-env"
+              "browserTarget": "inspecao-entrada:build:dev-env"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "inspecao-entrada:build"
+            "browserTarget": "inspecao-entrada:build"
           }
         },
         "test": {
@@ -122,11 +122,15 @@
           }
         },
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/inspecao-entrada/**/*.ts",
-              "apps/inspecao-entrada/**/*.html"
+            "tsConfig": [
+              "apps/inspecao-entrada/tsconfig.app.json",
+              "apps/inspecao-entrada/tsconfig.spec.json",
+              "apps/inspecao-entrada/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
             ]
           }
         },
@@ -165,19 +169,14 @@
             "tsConfig": "apps/inspecao-entrada/tsconfig.app.json",
             "assets": [
               "apps/inspecao-entrada/src/favicon.ico",
-              "apps/inspecao-entrada/src/assets",
-              {
-                "glob": "*",
-                "input": "node_modules/@viasoft/fontawesome-pro/webfonts",
-                "output": "webfonts"
-              }
+              "apps/inspecao-entrada/src/assets"
             ],
             "styles": [
               "apps/inspecao-entrada/src/styles.scss",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/all.prod.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/light.prod.min.css"
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
             ],
             "scripts": [],
             "vendorChunk": true,
@@ -224,18 +223,18 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "buildTarget": "inspecao-entrada-portal:build"
+            "browserTarget": "inspecao-entrada-portal:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "inspecao-entrada-portal:build:production"
+              "browserTarget": "inspecao-entrada-portal:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "inspecao-entrada-portal:build"
+            "browserTarget": "inspecao-entrada-portal:build"
           }
         },
         "test": {
@@ -247,19 +246,14 @@
             "karmaConfig": "apps/inspecao-entrada/karma.conf.js",
             "assets": [
               "apps/inspecao-entrada/src/favicon.ico",
-              "apps/inspecao-entrada/src/assets",
-              {
-                "glob": "*",
-                "input": "node_modules/@viasoft/fontawesome-pro/webfonts",
-                "output": "webfonts"
-              }
+              "apps/inspecao-entrada/src/assets"
             ],
             "styles": [
               "apps/inspecao-entrada/src/styles.scss",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/all.prod.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/light.prod.min.css"
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
             ],
             "scripts": []
           }
@@ -327,8 +321,5 @@
       }
     }
   },
-  "defaultProject": "inspecao-entrada",
-  "cli": {
-    "analytics": false
-  }
+  "defaultProject": "inspecao-entrada"
 }

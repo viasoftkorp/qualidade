@@ -1,16 +1,15 @@
 package tests
 
 import (
-	"errors"
-	"testing"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/mocks"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/services"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestBuscarNotasFiscais_Ok(t *testing.T) {
@@ -67,7 +66,7 @@ func TestBuscarNotasFiscais_Ok(t *testing.T) {
 	mockRepoNotaFiscal.EXPECT().BuscarNotasFiscais(baseFilter, filters).
 		Times(1).
 		Return(notasFiscais, nil)
-	mockRepoNotaFiscal.EXPECT().BuscarNotasFiscaisTotalCount(baseFilter, filters).
+	mockRepoNotaFiscal.EXPECT().BuscarNotasFiscaisTotalCount(filters).
 		Times(1).
 		Return(int64(2), nil)
 
@@ -155,7 +154,7 @@ func TestBuscarOrdensInspecao_Erro_BuscarNotasFiscaisTotalCount(t *testing.T) {
 	mockRepoNotaFiscal.EXPECT().BuscarNotasFiscais(baseFilter, filters).
 		Times(1).
 		Return(notasFiscais, nil)
-	mockRepoNotaFiscal.EXPECT().BuscarNotasFiscaisTotalCount(baseFilter, filters).
+	mockRepoNotaFiscal.EXPECT().BuscarNotasFiscaisTotalCount(filters).
 		Times(1).
 		Return(int64(2), errors.New("error"))
 

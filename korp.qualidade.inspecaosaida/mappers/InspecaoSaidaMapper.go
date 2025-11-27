@@ -19,7 +19,6 @@ func MapInspecaoSaidaEntitiesToDTOs(entities []*entities.InspecaoSaida) []*dto.I
 
 func MapInspecaoSaidaEntityToDTO(entity *entities.InspecaoSaida) *dto.InspecaoSaidaDTO {
 	return &dto.InspecaoSaidaDTO{
-		Id:                     entity.Id,
 		CodigoInspecao:         entity.CodigoInspecao,
 		ODF:                    entity.Odf,
 		DataInspecao:           utils.StringToTime(entity.DataInspecao),
@@ -37,22 +36,10 @@ func MapInspecaoSaidaEntityToDTO(entity *entities.InspecaoSaida) *dto.InspecaoSa
 	}
 }
 
-func MapInspecaoSaidaDetalhesToDTOs(models []*models.InspecaoSaida) []*dto.InspecaoSaidaDTO {
-	var dtos []*dto.InspecaoSaidaDTO
-
-	for _, model := range models {
-		dtos = append(dtos, MapInspecaoSaidaDetalhesToDTO(model))
-	}
-
-	return dtos
-}
-
 func MapInspecaoSaidaDetalhesToDTO(model *models.InspecaoSaida) *dto.InspecaoSaidaDTO {
 	return &dto.InspecaoSaidaDTO{
-		Id:                     model.Id,
 		CodigoInspecao:         model.CodigoInspecao,
 		ODF:                    model.Odf,
-		OdfApontada:            model.OdfApontada,
 		DataInspecao:           utils.StringToTime(model.DataInspecao),
 		Inspetor:               model.Inspetor,
 		Resultado:              model.Resultado,
@@ -67,7 +54,6 @@ func MapInspecaoSaidaDetalhesToDTO(model *models.InspecaoSaida) *dto.InspecaoSai
 		CodigoProduto:          model.CodigoProduto,
 		QuantidadeOrdem:        utils.DecimalToFloat64(model.QuantidadeOrdem),
 		NumeroPedido:           model.NumeroPedido,
-		Cliente:                model.Cliente,
 	}
 }
 
@@ -84,7 +70,6 @@ func MapPlanosInspecaoModelsToDTOs(models []*models.PlanoInspecao) []*dto.PlanoI
 func MapPlanoInspecaoModelToDTO(model *models.PlanoInspecao) *dto.PlanoInspecaoDTO {
 	return &dto.PlanoInspecaoDTO{
 		Id:             model.Id.String(),
-		LegacyId:       model.LegacyId,
 		Descricao:      model.Descricao,
 		Resultado:      model.Resultado,
 		MaiorValor:     model.MaiorValor,
@@ -107,18 +92,17 @@ func MapInspecaoSaidaItemModelsToDTOs(models []*models.InspecaoSaidaItem) []*dto
 
 func mapInspecaoSaidaItemModelToDTO(model *models.InspecaoSaidaItem) *dto.InspecaoSaidaItemDTO {
 	return &dto.InspecaoSaidaItemDTO{
-		Id:                    model.Id.String(),
-		LegacyIdPlanoInspecao: model.LegacyIdPlanoInspecao,
-		Plano:                 model.Plano,
-		Odf:                   model.Odf,
-		Descricao:             model.Descricao,
-		Metodo:                model.Metodo,
-		Sequencia:             model.Sequencia,
-		Resultado:             model.Resultado,
-		MaiorValor:            utils.DecimalToFloat64(model.MaiorValor),
-		MenorValor:            utils.DecimalToFloat64(model.MenorValor),
-		MaiorValorBase:        utils.DecimalToFloat64(model.MaiorValorBase),
-		MenorValorBase:        utils.DecimalToFloat64(model.MenorValorBase),
-		Observacao:            model.Observacao,
+		Id:             model.Id.String(),
+		Plano:          model.Plano,
+		Odf:            model.Odf,
+		Descricao:      model.Descricao,
+		Metodo:         model.Metodo,
+		Sequencia:      model.Sequencia,
+		Resultado:      model.Resultado,
+		MaiorValor:     utils.DecimalToFloat64(model.MaiorValor),
+		MenorValor:     utils.DecimalToFloat64(model.MenorValor),
+		MaiorValorBase: utils.DecimalToFloat64(model.MaiorValorBase),
+		MenorValorBase: utils.DecimalToFloat64(model.MenorValorBase),
+		Observacao:     model.Observacao,
 	}
 }

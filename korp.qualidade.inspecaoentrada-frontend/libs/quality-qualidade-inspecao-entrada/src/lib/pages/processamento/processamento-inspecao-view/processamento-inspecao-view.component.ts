@@ -1,5 +1,8 @@
 import {
-  Component
+  AfterViewInit,
+  Component,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
@@ -22,7 +25,9 @@ import { ProcessamentoInspecaoEntradaFilters } from '../../../tokens';
   styleUrls: ['./processamento-inspecao-view.component.scss'],
   providers: [ProcessamentoInspecaoViewService, DecimalPipe]
 })
-export class ProcessamentoInspecaoViewComponent {
+export class ProcessamentoInspecaoViewComponent implements AfterViewInit {
+  @ViewChild('actions') private actionsTemplate: TemplateRef<any>;
+
   private readonly PROCESSAMENTO_FILTRO_KEY = 'ProcessamentoInspecaoEntradaFiltros';
   private subs: VsSubscriptionManager = new VsSubscriptionManager();
   private filterDialogOpened: MatDialogRef<any, any>;
@@ -49,6 +54,10 @@ export class ProcessamentoInspecaoViewComponent {
               private storageService: VsStorageService) {
     const filtrosStr = this.storageService.get(this.PROCESSAMENTO_FILTRO_KEY);
     this.filtros = filtrosStr ? JSON.parse(filtrosStr) : {};
+  }
+
+  ngAfterViewInit(): void {
+    this.processamentoInspecaoService.actionsTemplate.next(this.actionsTemplate);
   }
 
   public limparFiltros(): void {

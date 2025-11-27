@@ -100,17 +100,7 @@ func GetInspecaoEntradaService(ctx *fiber.Ctx) (interfaces.IInspecaoEntradaServi
 		return nil, err
 	}
 
-	impressaoService, err := NewImpressaoService(baseParams)
-	if err != nil {
-		return nil, err
-	}
-
-	empresaRepository, err := repositories.NewEmpresaRepository(uow, baseParams)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewInspecaoEntradaService(uow, inspecaoEntradaRepository, inspecaoEntradaItemRepository, notaFiscalRepository, planosInspecaoRepository, parametrosInspecaoRepository, locaisRepository, localPedidoVendaRepository, externalMovimentacaoService, baseParams, impressaoService, empresaRepository)
+	service := NewInspecaoEntradaService(uow, inspecaoEntradaRepository, inspecaoEntradaItemRepository, notaFiscalRepository, planosInspecaoRepository, parametrosInspecaoRepository, locaisRepository, localPedidoVendaRepository, externalMovimentacaoService, baseParams)
 
 	return service, nil
 }
@@ -141,13 +131,7 @@ func GetEstoquePedidoVendaService(ctx *fiber.Ctx) (interfaces.IEstoquePedidoVend
 		return nil, err
 	}
 
-	inspecaoEntradaPedidoVendaLoteRepository, err := repositories.NewInspecaoEntradaPedidoVendaLoteRepository(uow)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewEstoqueLocalPedidoVendaService(estoqueLocalPedidoVendaRepository, locaisRepository,
-		inspecaoEntradaRepository, inspecaoEntradaPedidoVendaLoteRepository, uow)
+	service := NewEstoqueLocalPedidoVendaService(estoqueLocalPedidoVendaRepository, locaisRepository, inspecaoEntradaRepository)
 	return service, nil
 }
 
@@ -227,11 +211,6 @@ func GetInspecaoEntradaSagaService(ctx *fiber.Ctx) (interfaces.IInspecaoEntradaS
 
 	produtoRepository, err := repositories.NewProdutoRepository(uow, baseParams)
 
-	inspecaoEntradaPedidoVendaLoteRepository, err := repositories.NewInspecaoEntradaPedidoVendaLoteRepository(uow)
-	if err != nil {
-		return nil, err
-	}
-
 	service := NewInspecaoEntradaSagaService(
 		inspecaoEntradaRepository,
 		inspecaoEntradaExecutadoWebRepository,
@@ -241,8 +220,7 @@ func GetInspecaoEntradaSagaService(ctx *fiber.Ctx) (interfaces.IInspecaoEntradaS
 		parametroRepository,
 		estoqueLocalPedidoVendaRepository,
 		produtoRepository,
-		uow,
-		inspecaoEntradaPedidoVendaLoteRepository)
+		uow)
 	return service, nil
 }
 
@@ -313,38 +291,5 @@ func GetInspecaoEntradaHistoricoService(ctx *fiber.Ctx) (interfaces.IInspecaoEnt
 
 	service := NewInspecaoEntradaHistoricoService(inspecaoSaidaHistoricoRepository, externalSagaService,
 		inspecaoSaidaExecutadoWebRepository, localRepository)
-	return service, nil
-}
-
-func GetFileProviderProxyService(ctx *fiber.Ctx) (interfaces.IFileProviderProxyService, error) {
-	baseParams, err := getBaseParams(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewFileProviderProxyService(baseParams, ctx)
-	return service, nil
-}
-
-func GetLoteService(ctx *fiber.Ctx) (interfaces.ILoteService, error) {
-	uow, err := GetUnitOfWork(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	baseParams, err := getBaseParams(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	wmsProxyService := NewWmsProxyService(baseParams, ctx)
-
-	produtoRepository, err := repositories.NewProdutoRepository(uow, baseParams)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewLoteService(wmsProxyService, produtoRepository)
-
 	return service, nil
 }

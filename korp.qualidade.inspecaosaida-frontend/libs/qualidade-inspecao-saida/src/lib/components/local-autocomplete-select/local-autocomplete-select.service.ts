@@ -12,6 +12,8 @@ import { LocalOutput } from './local-autocomplete-select.component';
 
 @Injectable()
 export class LocalAutocompleteSelectService {
+  private readonly headers = this.sessionService.defaultHttpHeaders;
+
   constructor(protected httpClient: HttpClient, @Inject(VS_BACKEND_URL) private apiBaseUrl: string,
               @Inject(VS_API_PREFIX) private apiPrefix: string, private sessionService: SessionService) {
   }
@@ -33,12 +35,12 @@ export class LocalAutocompleteSelectService {
 
     return this.httpClient.get<IPagedResultOutputDto<LocalOutput>>(this.basePath(), {
       params: queryParameters,
-      headers: this.sessionService.defaultHttpHeaders
+      headers: this.headers
     });
   }
 
-  public get(id: string): Observable<LocalOutput> {
-    return this.httpClient.get<LocalOutput>(`${this.basePath()}/codigo/${id}`, { headers: this.sessionService.defaultHttpHeaders });
+  public get(id: number): Observable<LocalOutput> {
+    return this.httpClient.get<LocalOutput>(`${this.basePath()}/codigo/${id}`, { headers: this.headers });
   }
 
   private basePath(): string {

@@ -46,7 +46,6 @@ func MapPlanosInspecaoModelsToDTOs(models []models.PlanoInspecao) []*dto.PlanoIn
 func MapPlanoInspecaoModelToDTO(model models.PlanoInspecao) *dto.PlanoInspecaoDTO {
 	return &dto.PlanoInspecaoDTO{
 		Id:                     model.Id.String(),
-		LegacyId:               model.LegacyId,
 		Descricao:              model.Descricao,
 		Resultado:              model.Resultado,
 		MaiorValorInspecionado: model.MaiorValorInspecionado,
@@ -70,8 +69,7 @@ func MapInspecaoEntradaItemModelsToDTOs(models []models.InspecaoEntradaItem) []d
 func mapInspecaoEntradaItemModelToDTO(model models.InspecaoEntradaItem) dto.InspecaoEntradaItemDTO {
 	return dto.InspecaoEntradaItemDTO{
 		Id:                     model.Id.String(),
-		LegacyIdPlanoInspecao:  model.LegacyIdPlanoInspecao,
-		CodigoPlano:            model.Plano,
+		CodigoProduto:          model.Plano,
 		Descricao:              model.Descricao,
 		Metodo:                 model.Metodo,
 		Sequencia:              model.Sequencia,

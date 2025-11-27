@@ -2,7 +2,6 @@ package dto
 
 type PlanoInspecaoDTO struct {
 	Id             string  `json:"id"`
-	LegacyId       int     `json:"legacyId"`
 	Descricao      string  `json:"descricao"`
 	Resultado      string  `json:"resultado,omitempty"`
 	MaiorValor     float64 `json:"maiorValor,omitempty"`

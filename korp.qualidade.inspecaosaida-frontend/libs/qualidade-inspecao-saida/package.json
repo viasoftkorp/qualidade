@@ -1,5 +1,14 @@
 {
   "name": "@viasoft/qualidade-inspecao-saida",
   "version": "0.0.1",
-  "author": "Viasoft Korp"
+  "author": "Viasoft Korp",
+  "peerDependencies": {
+    "@angular/common": "~12.2.6",
+    "@angular/core": "~12.2.6",
+    "@angular/material": "~12.2.6",
+    "@viasoft/client-core": "6.1.2",
+    "@viasoft/components": "6.1.2",
+    "@viasoft/view-template": "6.1.2",
+    "@viasoft/manage-authorization": "6.0.1"
+  }
 }

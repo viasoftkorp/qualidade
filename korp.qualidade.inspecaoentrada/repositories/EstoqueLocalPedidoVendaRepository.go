@@ -76,7 +76,7 @@ func (repo *EstoqueLocalPedidoVendaRepository) BuscarEstoqueLocalPedidosVendas(f
 		sql.Named(queries.NamedLote, lote),
 		sql.Named(queries.NamedProdutoCodigo, codigoProduto),
 		sql.Named(queries.NamedRecnoInspecaoEntrada, recnoInspecaoEntrada),
-		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 		args).
 		Scan(&items)
 
@@ -97,7 +97,7 @@ func (repo *EstoqueLocalPedidoVendaRepository) BuscarTotalCountEstoqueLocalPedid
 		sql.Named(queries.NamedLote, lote),
 		sql.Named(queries.NamedProdutoCodigo, codigoProduto),
 		sql.Named(queries.NamedRecnoInspecaoEntrada, recnoInspecaoEntrada),
-		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId)).
+		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno)).
 		Scan(&totalCount)
 
 	if countQueryResult.Error != nil {
@@ -114,7 +114,10 @@ func (repo *EstoqueLocalPedidoVendaRepository) SeedEstoqueLocalPedidosVendasInsp
 	defer cancel()
 
 	valuesToSeeQueryResult := repo.Uow.GetDb().WithContext(ctx).Raw(queries.GetSeedValuesAlocacaoPedidoVendaLocalInspecao,
-		sql.Named(queries.NamedRecnoInspecaoEntrada, recnoInspecao)).
+		sql.Named(queries.NamedLote, lote),
+		sql.Named(queries.NamedProdutoCodigo, codigoProduto),
+		sql.Named(queries.NamedRecnoInspecaoEntrada, recnoInspecao),
+		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno)).
 		Scan(&RecnoEstoquePedidoVenda)
 
 	if valuesToSeeQueryResult.Error != nil {
@@ -152,7 +155,7 @@ func (repo *EstoqueLocalPedidoVendaRepository) SeedEstoqueLocalPedidosVendasInsp
 	return nil
 }
 
-func (repo *EstoqueLocalPedidoVendaRepository) AtualizarDistribuicaoInspecaoEstoquePedidoVenda(id uuid.UUID, input dto.EstoqueLocalPedidoVendaAlocacaoInput) error {
+func (repo *EstoqueLocalPedidoVendaRepository) AtualizarDistribuicaoInspecaoEstoquePedidoVenda(id uuid.UUID, input dto.EstoqueLocalPedidoVendaAlocacaoDTO) error {
 	quantidadeAprovadaDecimal := decimal.NewFromFloat(input.QuantidadeAprovada)
 	quantidadeReprovadaDecimal := decimal.NewFromFloat(input.QuantidadeReprovada)
 
@@ -191,7 +194,7 @@ func (repo *EstoqueLocalPedidoVendaRepository) BuscarEstoqueLocalValoresPorProdu
 		sql.Named(queries.NamedProdutoCodigo, codigoProduto),
 		sql.Named(queries.NamedLote, lote),
 		sql.Named(queries.NamedLocal, codigoLocal),
-		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId)).
+		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno)).
 		Scan(&estoqueLocalValores)
 
 	if itemsQueryResult.Error != nil {

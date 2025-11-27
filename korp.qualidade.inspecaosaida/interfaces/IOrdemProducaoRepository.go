@@ -9,8 +9,6 @@ import (
 type IOrdemProducaoRepository interface {
 	BuscarOrdensInspecao(baseFilters *models.BaseFilter, filters *dto.OrdemProducaoFilters) ([]models.OrdemProducao, error)
 	BuscarQuantidadeOrdensInspecao(baseFilters *models.BaseFilter, filters *dto.OrdemProducaoFilters) (int64, error)
-	BuscarOrdem(odf int, lote string) *models.OrdemProducao
+	BuscarOrdem(odf int) *models.OrdemProducao
 	BuscarOrdemPaiHistoricoMovimentacao(lote, codigoProduto string, localDestino int) (*int, error)
-	BuscarHisrealRelatorio(odf int, codigoProduto *string) *models.OrdemProducao
-	BuscarClienteRelatorio(odf int) (*string, error)
 }

@@ -29,12 +29,6 @@ export interface ProcessamentoInspecaoI18N extends IKeyTranslate {
       Falha: string;
       Sucesso: string;
     }
-    Resultados: {
-      Aprovado: string;
-      NaoAplicavel: string;
-      NaoConforme: string;
-      ParcialmenteAprovado: string;
-    }
     Reprocessar: string;
     Inspecionados: string;
     Estornados: string;

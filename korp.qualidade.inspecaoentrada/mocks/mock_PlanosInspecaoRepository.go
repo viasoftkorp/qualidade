@@ -35,7 +35,7 @@ func (m *MockIPlanosInspecaoRepository) EXPECT() *MockIPlanosInspecaoRepositoryM
 }
 
 // BuscarPlanosNovaInspecao mocks base method.
-func (m *MockIPlanosInspecaoRepository) BuscarPlanosNovaInspecao(arg0, arg1 string, arg2 *models.BaseFilter) ([]models.PlanoInspecao, error) {
+func (m *MockIPlanosInspecaoRepository) BuscarPlanosNovaInspecao(arg0 int, arg1 string, arg2 *models.BaseFilter) ([]models.PlanoInspecao, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BuscarPlanosNovaInspecao", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]models.PlanoInspecao)
@@ -50,7 +50,7 @@ func (mr *MockIPlanosInspecaoRepositoryMockRecorder) BuscarPlanosNovaInspecao(ar
 }
 
 // BuscarQuantidadePlanosNovaInspecao mocks base method.
-func (m *MockIPlanosInspecaoRepository) BuscarQuantidadePlanosNovaInspecao(arg0, arg1 string) (int64, error) {
+func (m *MockIPlanosInspecaoRepository) BuscarQuantidadePlanosNovaInspecao(arg0 int, arg1 string) (int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BuscarQuantidadePlanosNovaInspecao", arg0, arg1)
 	ret0, _ := ret[0].(int64)
@@ -65,7 +65,7 @@ func (mr *MockIPlanosInspecaoRepositoryMockRecorder) BuscarQuantidadePlanosNovaI
 }
 
 // BuscarTodosPlanosNotaFiscalProduto mocks base method.
-func (m *MockIPlanosInspecaoRepository) BuscarTodosPlanosNotaFiscalProduto(arg0, arg1 string) ([]models.PlanoInspecao, error) {
+func (m *MockIPlanosInspecaoRepository) BuscarTodosPlanosNotaFiscalProduto(arg0 int, arg1 string) ([]models.PlanoInspecao, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BuscarTodosPlanosNotaFiscalProduto", arg0, arg1)
 	ret0, _ := ret[0].([]models.PlanoInspecao)

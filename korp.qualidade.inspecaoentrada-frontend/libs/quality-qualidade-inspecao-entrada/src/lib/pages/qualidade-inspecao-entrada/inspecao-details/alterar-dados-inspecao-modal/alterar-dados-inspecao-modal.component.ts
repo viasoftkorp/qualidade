@@ -26,16 +26,12 @@ import {
   styleUrls: ['./alterar-dados-inspecao-modal.component.scss']
 })
 export class AlterarDadosInspecaoModalComponent implements OnInit {
-
+  
   public form: FormGroup;
   public dto: PlanoInspecaoDTO;
   public resultadoOptions: VsSelectOption[] = [{
     value: ResultadosInspecao.Aprovado,
     name: 'QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosInspecaoModal.Aprovado'
-  },
-  {
-    value: ResultadosInspecao.ParcialmenteAprovado,
-    name: 'QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosInspecaoModal.ParcialmenteAprovado'
   },
   {
     value: ResultadosInspecao.NaoAplicavel,

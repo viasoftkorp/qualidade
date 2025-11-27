@@ -1,4 +1,3 @@
-import { ensureTrailingSlash } from '@viasoft/http';
 import { IItemMenuOptions } from '@viasoft/navigation';
 
 export const NAVIGATION_MENU_ITEMS: IItemMenuOptions[] = [
@@ -17,22 +16,4 @@ export const NAVIGATION_MENU_ITEMS: IItemMenuOptions[] = [
   //   path: 'historico',
   //   icon: 'history'
   // }
-  {
-    label: 'InspecaoSaida.Navigation.Configuracoes',
-    icon: 'cog',
-    children: [
-      {
-        label: 'InspecaoSaida.Navigation.Geral',
-        icon: 'cogs',
-        path: 'configuracoes'
-      },
-      {
-        label: 'InspecaoSaida.Navigation.AlterarRelatorio',
-        icon: 'sign-out-alt',
-        cta: () => {
-          window.open(`${ensureTrailingSlash(window.location.origin)}relatorios/reports`, '_blank', 'noopener noreferrer');
-        }
-      }
-    ]
-  },
 ];

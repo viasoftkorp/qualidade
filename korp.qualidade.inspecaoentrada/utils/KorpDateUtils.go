@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 )
@@ -19,13 +18,6 @@ func SetDateTimeZone(dataHora *time.Time) *time.Time {
 	return &t
 }
 
-func SetReportingDateTimeZone(dataHora *time.Time) *time.Time {
-	fusoHorarioBrasilia := time.FixedZone("UTC-3", -3*60*60)
-	dataHoraNormalizada := dataHora.In(fusoHorarioBrasilia)
-
-	return &dataHoraNormalizada
-}
-
 func StringToTime(data string) *time.Time {
 	if data == "" {
 		return nil
@@ -37,12 +29,7 @@ func StringToTime(data string) *time.Time {
 	mesRune := time.Month(mesRuneAux)
 	diaRune, _ := strconv.Atoi(string(dataRune[6:8]))
 
-	location, err := time.LoadLocation("America/Sao_Paulo")
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	dataTime := time.Date(anoRune, mesRune, diaRune, 0, 0, 0, 0, location)
+	dataTime := time.Date(anoRune, mesRune, diaRune, 0, 0, 0, 0, time.Local)
 
 	return &dataTime
 }

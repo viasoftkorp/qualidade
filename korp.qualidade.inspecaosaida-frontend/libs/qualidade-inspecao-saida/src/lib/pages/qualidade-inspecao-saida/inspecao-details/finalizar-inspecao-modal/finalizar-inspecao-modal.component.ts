@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup
 } from '@angular/forms';
@@ -13,19 +14,21 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   MessageService,
-  VsUserService,
+  UserService,
   VsSubscriptionManager
 } from '@viasoft/common';
 import {
-  VsGridOptions,
-  VsSelectOption
+  VsDialog, VsGridGetInput, VsGridGetResult, VsGridOptions, VsGridSimpleColumn, VsSelectOption
 } from '@viasoft/components';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { QualidadeInspecaoSaidaService } from '../../../../services/qualidade-inspecao-saida.service';
 import {
+  EstoqueLocalPedidoVendaAlocacaoDTO,
   FinalizarInspecaoInput,
+  GetAllEstoqueLocalPedidoVendaAlocacaoDTO,
   getErrorMessage,
   InspecaoSaidaDTO,
-  LocalOutput,
   TIPO_LOCAL_APROVADO,
   TIPO_LOCAL_REPROVADO,
   TIPO_LOCAL_RETRABALHO,
@@ -43,6 +46,7 @@ import { OrigemNaoConformidades, RncEditorModalService } from '@viasoft/rnc-lib'
 export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
   private inspecaoDto: InspecaoSaidaDTO;
   private subs = new VsSubscriptionManager();
+  private quantidadeTotalAlocadaPedido: number;
   public form: FormGroup;
   public formQuantidades: FormGroup;
   public desabilitarSalvar = false;
@@ -52,7 +56,6 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
   public localAprovadoOptions: VsSelectOption[] = [];
   public localRetrabalhoOptions: VsSelectOption[] = [];
   public formCustomValidatorMessage = '';
-  public desabilitarLocaisAprovados = false;
 
   public get salvarDesabilitado(): boolean {
     this.quantiadeTotalAlocadaValidator();
@@ -96,7 +99,7 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
     private router: Router,
     private matDialog: MatDialog,
     private rncEditorModalService: RncEditorModalService,
-    private userService: VsUserService,
+    private userService: UserService,
     @Inject(MAT_DIALOG_DATA) data: InspecaoSaidaDTO,
   ) {
     this.inspecaoDto = data;
@@ -114,8 +117,8 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
   }
 
   private async initSelectOptions() {
-    const locaisAprovados = await this.getLocaisAprovados();
     const locaisReprovados = await this.inspecaoSaidaService.getLocais(TIPO_LOCAL_REPROVADO);
+    const locaisAprovados = await this.inspecaoSaidaService.getLocais(TIPO_LOCAL_APROVADO);
     const locaisRetrabalhos = await this.inspecaoSaidaService.getLocais(TIPO_LOCAL_RETRABALHO);
 
     locaisReprovados.forEach((l) => {
@@ -218,7 +221,7 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
             operacaoEngenharia: p.operacaoEngenharia
           });
         });
-
+        
         this.inspecaoSaidaService.finalizarInspecao(input).subscribe(() => {
           this.matDialog.closeAll();
           this.router.navigate(['/processamento']);
@@ -246,7 +249,6 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
       quantidadePedidoVenda: [{ value: this.inspecaoDto.quantidadeOrdem, disabled: true }],
       pedidoVenda: [{ value: this.inspecaoDto.numeroPedido, disabled: true }],
       odf: [{ value: this.inspecaoDto.odf, disabled: true }],
-      odfApontada: [{ value: this.inspecaoDto.odfApontada, disabled: true }]
     });
 
     this.buscarResultadoInspecao();
@@ -257,7 +259,7 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
       quantidadeAprovada: [{ value: 0, disabled: !this.localAprovadoOptions[0].value }],
       quantidadeReprovada: [{ value: 0, disabled: !this.localReprovadoOptions[0].value }],
       quantidadeRetrabalhada: [{ value: 0, disabled: !this.localRetrabalhoOptions[0].value }],
-      localAprovado: [{ value: this.localAprovadoOptions[0].value, disabled: this.desabilitarLocaisAprovados || !this.localAprovadoOptions[0].value }],
+      localAprovado: [{ value: this.localAprovadoOptions[0].value, disabled: !this.localAprovadoOptions[0].value }],
       localReprovado: [{ value: this.localReprovadoOptions[0].value, disabled: !this.localReprovadoOptions[0].value }],
       localRetrabalho: [{ value: this.localRetrabalhoOptions[0].value, disabled: !this.localRetrabalhoOptions[0].value }],
     });
@@ -269,23 +271,5 @@ export class FinalizarInspecaoModalComponent implements OnInit, OnDestroy {
       .subscribe((resultado: string) => {
         this.form.get('resultado').setValue(resultado);
       }));
-  }
-
-  private async getLocaisAprovados(): Promise<LocalOutput[]> {
-    let locaisAprovados: LocalOutput[];
-    const processoEngenharia = await this.inspecaoSaidaService.getProcessoEngenharia(this.inspecaoDto.codigoProduto);
-
-    if (processoEngenharia.codigoLocalDestino) {
-      this.desabilitarLocaisAprovados = true;
-
-      locaisAprovados = [{
-        codigo: processoEngenharia.codigoLocalDestino,
-        descricao: processoEngenharia.descricaoLocalDestino
-      }];
-    } else {
-      locaisAprovados = await this.inspecaoSaidaService.getLocais(TIPO_LOCAL_APROVADO);
-    }
-
-    return locaisAprovados;
   }
 }

@@ -1,1 +1,17 @@
+<ng-template #actions>
+  <span class="flex-auto"></span>
+  <vs-button
+    icon="eraser"
+    label="QualidadeInspecaoEntrada.Limpar"
+    (clickEvent)="limparFiltros()"
+    [disabled]="!possuiFiltros">
+  </vs-button>
+  <vs-button
+    icon="filter"
+    label="QualidadeInspecaoEntrada.Filtrar"
+    (clickEvent)="abrirFiltros()"
+    [ngClass]="possuiFiltros ? 'possuiFiltros' : ''">
+  </vs-button>
+</ng-template>
+
 <vs-grid [options]="gridOptions"></vs-grid>

@@ -34,28 +34,3 @@ func GetNotasFiscais(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusOK).JSON(notasFiscais)
 	}
 }
-
-func UpdateNotaFiscalDadosAdicionais(ctx *fiber.Ctx) error {
-	var idNotaFiscal string
-	var input *dto.NotaFiscalDadosAdicionaisDTO
-
-	idNotaFiscal = ctx.Params("idNotaFiscal")
-
-	err := ctx.BodyParser(&input)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	notaFiscalService, err := services.GetNotaFiscalService(ctx)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	err = notaFiscalService.UpdateNotaFiscalDadosAdicionais(idNotaFiscal, input)
-
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(err)
-	} else {
-		return ctx.Status(fiber.StatusOK).JSON(nil)
-	}
-}

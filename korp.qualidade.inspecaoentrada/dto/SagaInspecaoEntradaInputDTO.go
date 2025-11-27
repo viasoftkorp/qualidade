@@ -18,28 +18,21 @@ type MovimentarEstoqueInspecaoBackgroundInputDto struct {
 }
 
 type InspecaoEntradaTransferenciaBackgroundInputDto struct {
-	NumeroPedido       string
-	OrdemFabricacao    int
-	Fator              int
-	Quantidade         float64
-	LocalOrigem        int
-	LocalDestino       int
-	Documento          string
-	TipoTransferencia  int
-	PesoLiquido        *float64
-	PesoBruto          *float64
-	DataValidade       *time.Time
-	DataFabricacao     *time.Time
-	UltimoValorPago    float64
-	Sequencial         int
-	Lote               string
-	LoteOrigem         string
-	SeriesProducao     []InspecaoEntradaSerieProducaoBackgroundInputDto
-	Dimensao1          float64
-	Dimensao2          float64
-	Dimensao3          float64
-	DimensaoDiferenca  float64
-	DimensaoQuantidade int
+	NumeroPedido      string
+	OrdemFabricacao   int
+	Fator             int
+	Quantidade        float64
+	LocalOrigem       int
+	LocalDestino      int
+	Documento         string
+	TipoTransferencia int
+	PesoLiquido       *float64
+	PesoBruto         *float64
+	DataValidade      *time.Time
+	DataFabricacao    *time.Time
+	UltimoValorPago   float64
+	Sequencial        int
+	SeriesProducao    []InspecaoEntradaSerieProducaoBackgroundInputDto
 }
 
 type InspecaoEntradaSerieProducaoBackgroundInputDto struct {

@@ -6,9 +6,6 @@ export const INSPECAO_SAIDA_I18N_PT: InspecaoSaidaI18n = {
       Title: 'Inspeção de Saída',
       Processamento: 'Processamento',
       Historico: 'Histórico',
-      Configuracoes: 'Configurações',
-      AlterarRelatorio: 'Alterar Relatório',
-      Geral: 'Geral',
     },
     Permissions: {
     }

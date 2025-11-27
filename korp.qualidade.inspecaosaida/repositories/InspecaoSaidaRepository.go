@@ -1,20 +1,18 @@
 package repositories
 
 import (
-	"database/sql"
-	"errors"
-	"strconv"
-	"strings"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/queries"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
+	"database/sql"
+	"errors"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"strconv"
+	"time"
 )
 
 type InspecaoSaidaRepository struct {
@@ -31,47 +29,29 @@ func NewInspecaoSaidaRepository(uow unit_of_work.UnitOfWork, params *models.Base
 	}, nil
 }
 
-func (repo *InspecaoSaidaRepository) BuscarInspecoesSaida(odf int, baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaFilters) ([]*models.InspecaoSaida, error) {
-	var result []*models.InspecaoSaida
+func (repo *InspecaoSaidaRepository) BuscarInspecoesSaida(odf int, filter *models.BaseFilter) ([]*entities.InspecaoSaida, error) {
+	var result []*entities.InspecaoSaida
 
-	if baseFilters.Sorting == "" {
-		baseFilters.Sorting = "QA_INSPECAO_SAIDA.DATAINSP DESC"
-	}
-
-	res := repo.Uow.GetDb().
-		Table(entities.InspecaoSaida{}.TableName()).
-		Select(queries.GetInspecoesSelect).
-		Joins(queries.GetInspecoesJoin).
-		Distinct()
-
-	res = repo.AplicarFiltros(res, baseFilters, filters)
-
-	res = res.
-		Where("QA_INSPECAO_SAIDA.EMPRESA_RECNO = ? AND QA_INSPECAO_SAIDA.NUMODF = ?", repo.BaseParams.LegacyCompanyId, odf).
-		Where("QA_INSPECAO_SAIDA.R_E_C_N_O_ NOT IN (SELECT DISTINCT RECNO_INSPECAO_SAIDA FROM InspecaoSaidaExecutadoWeb)").
-		Where("QA_INSPECAO_SAIDA.INSPECIONADO != 'S'").
-		Order(baseFilters.Sorting).
-		Limit(baseFilters.PageSize).
-		Offset(baseFilters.Skip).
+	res := repo.Uow.GetDb().Table(entities.InspecaoSaida{}.TableName()).Where(entities.InspecaoSaida{
+		IdEmpresa: repo.BaseParams.CompanyRecno,
+		Odf:       odf,
+	}).
+		Where("R_E_C_N_O_ NOT IN (SELECT DISTINCT RECNO_INSPECAO_SAIDA FROM InspecaoSaidaExecutadoWeb)").
+		Where("Inspecionado != 'S'").
+		Limit(filter.PageSize).
+		Offset(filter.Skip).
 		Scan(&result)
 
 	return result, res.Error
 }
 
-func (repo *InspecaoSaidaRepository) BuscarQuantidadeInspecoesSaida(odf int, baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaFilters) (int64, error) {
+func (repo *InspecaoSaidaRepository) BuscarQuantidadeInspecoesSaida(odf int) (int64, error) {
 	var result int64
 
-	res := repo.Uow.GetDb().
-		Table(entities.InspecaoSaida{}.TableName()).
-		Joins(queries.GetInspecoesJoin).
-		Distinct()
-
-	res = repo.AplicarFiltros(res, baseFilters, filters)
-
-	res = res.
-		Where("QA_INSPECAO_SAIDA.EMPRESA_RECNO = ? AND QA_INSPECAO_SAIDA.NUMODF = ?", repo.BaseParams.LegacyCompanyId, odf).
-		Where("QA_INSPECAO_SAIDA.R_E_C_N_O_ NOT IN (SELECT DISTINCT RECNO_INSPECAO_SAIDA FROM InspecaoSaidaExecutadoWeb)").
-		Where("QA_INSPECAO_SAIDA.INSPECIONADO != 'S'").
+	res := repo.Uow.GetDb().Table(entities.InspecaoSaida{}.TableName()).Where(entities.InspecaoSaida{
+		IdEmpresa: repo.BaseParams.CompanyRecno,
+		Odf:       odf,
+	}).
 		Count(&result)
 
 	return result, res.Error
@@ -131,7 +111,7 @@ func (repo *InspecaoSaidaRepository) BuscarNovoCodigoInspecao() int {
 
 func (repo *InspecaoSaidaRepository) CriarInspecao(inspecaoModel *models.InspecaoSaida) error {
 	entity := &entities.InspecaoSaida{
-		Id:                 inspecaoModel.Id,
+		Id:                 uuid.New(),
 		CodigoInspecao:     inspecaoModel.CodigoInspecao,
 		Odf:                inspecaoModel.Odf,
 		Pedido:             inspecaoModel.Pedido,
@@ -180,7 +160,6 @@ func (repo *InspecaoSaidaRepository) BuscarInformacoesPreenchimentoRNC(recnoInsp
 	if err != nil {
 		return nil, err
 	}
-	output.NumeroOdf = strconv.Itoa(insp.Odf)
 
 	var idCliente string
 	res := repo.Uow.GetDb().Raw(`SELECT cast(Id as varchar(36)) AS idCliente FROM CLIENTES WHERE CODIGO = ?`, insp.Cliente).First(&idCliente)
@@ -196,46 +175,44 @@ func (repo *InspecaoSaidaRepository) BuscarInformacoesPreenchimentoRNC(recnoInsp
 
 	var detailsEstoqueLocal RncDetailsEstoqueLocal
 	res = repo.Uow.GetDb().Raw(`
-		SELECT
-			ESTOQUE_LOCAL.DTFABRICACAO AS DataFabricacao,
+		SELECT 
+			ESTOQUE_LOCAL.DTFABRICACAO AS DataFabricacao, 
 			ESTOQUE_LOCAL.QTDE AS SaldoLote,
 			ESTOQUE_LOCAL.LOCAL AS CodigoLocal
 		FROM ESTOQUE_LOCAL
 		INNER JOIN LOCAIS ON LOCAIS.CODIGO = ESTOQUE_LOCAL.LOCAL AND LOCAIS.EMPRESA_RECNO = ESTOQUE_LOCAL.EMPRESA_RECNO
 		WHERE ESTOQUE_LOCAL.CODIGO = ? AND ESTOQUE_LOCAL.LOTE = ? AND ESTOQUE_LOCAL.ODF = ? AND ESTOQUE_LOCAL.EMPRESA_RECNO = ? AND LOCAIS.LOCAL_CQ_SAIDA = 'S'
-	`, insp.CodigoProduto, insp.Lote, insp.Odf, repo.BaseParams.LegacyCompanyId).Scan(&detailsEstoqueLocal)
+	`, insp.CodigoProduto, insp.Lote, insp.Odf, repo.BaseParams.CompanyRecno).Scan(&detailsEstoqueLocal)
 	if res.Error != nil {
 		return nil, res.Error
 	}
 
+	var OdfPai int
+	res = repo.Uow.GetDb().Raw(`SELECT TOP 1 ODF as OdfPai FROM HISREAL WHERE HISREAL.LOTE = ? AND HISREAL.CODIGO = ? AND HISREAL.LOCAL_DESTINO = ? AND
+		HISREAL.FORMA = 'E' AND HISREAL.ESTORNADO_APT_PRODUCAO = 'N' AND HISREAL.EMPRESA_RECNO = ?`, insp.Lote, insp.CodigoProduto, detailsEstoqueLocal.CodigoLocal, repo.BaseParams.CompanyRecno).
+		First(&OdfPai)
+	if res.Error != nil {
+		if !errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, res.Error
+		}
+	}
+
+	if OdfPai != 0 {
+		output.NumeroOdf = strconv.Itoa(OdfPai)
+	} else {
+		output.NumeroOdf = strconv.Itoa(insp.Odf)
+	}
+
 	var detailsEstoque RncDetailsEstoque
 	res = repo.Uow.GetDb().Raw(`
-		SELECT
-		CAST(ESTOQUE.ID AS VARCHAR(36)) AS IdProduto,
-		COALESCE(PPEDLISE.REVISAO, FECHA.REVISAO, PROCESSO.REVISAO) AS Revisao
-		FROM
-		ESTOQUE
-		LEFT JOIN PROCESSO ON
-		PROCESSO.NUMPEC = ESTOQUE.CODIGO
-		LEFT JOIN PPEDLISE ON
-		PPEDLISE.CODPCA = ESTOQUE.CODIGO
-		AND PPEDLISE.NUMODF = @Odf
-		AND PPEDLISE.NUMPED = @NumeroPedido
-		AND PPEDLISE.EMPRESA_RECNO = @EmpresaRecno
-		LEFT JOIN FECHA
-		ON FECHA.PROCESSO = ESTOQUE.CODIGO
-		AND FECHA.NODF = @Odf
-		AND FECHA.NUMPED = @NumeroPedido
-		AND FECHA.EMPRESA_RECNO = @EmpresaRecno
-		WHERE
-		ESTOQUE.CODIGO = @CodigoProduto
-	`,
-		sql.Named("Odf", output.NumeroOdf),
-		sql.Named("NumeroPedido", insp.Pedido),
-		sql.Named("EmpresaRecno", repo.BaseParams.LegacyCompanyId),
-		sql.Named("CodigoProduto", insp.CodigoProduto)).
-		Scan(&detailsEstoque)
-
+		SELECT 
+			cast(ESTOQUE.ID as varchar(36)) AS IdProduto, 
+			COALESCE(PPEDLISE.REVISAO, FECHA.REVISAO) AS Revisao
+		FROM ESTOQUE 
+		LEFT JOIN PPEDLISE ON PPEDLISE.CODPCA = ESTOQUE.CODIGO
+        LEFT JOIN FECHA ON FECHA.PROCESSO = ESTOQUE.CODIGO
+		WHERE COALESCE(PPEDLISE.NUMODF, FECHA.NODF) = ? AND COALESCE(PPEDLISE.NUMPED, FECHA.NUMPED) = ? AND COALESCE(PPEDLISE.EMPRESA_RECNO, FECHA.EMPRESA_RECNO) = ?
+	`, output.NumeroOdf, insp.Pedido, repo.BaseParams.CompanyRecno).Scan(&detailsEstoque)
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -263,15 +240,7 @@ type RncDetailsMaterial struct {
 func (repo *InspecaoSaidaRepository) PreencherInformacoesMaterialRetrabalho(rnc dto.RncInputDTO, ordemRetrabalho *dto.InspecaoSaidaOrdemRetrabalhoBackgroundDto) error {
 	for i, material := range rnc.Materiais {
 		var detailsMaterial RncDetailsMaterial
-		res := repo.Uow.GetDb().Raw(`
-			SELECT 
-				E.CODIGO AS CodigoProduto, 
-				EE.CATEGORIA AS CodigoCategoria 
-			FROM ESTOQUE E
-			INNER JOIN ESTOQUE_EMPRESA EE ON EE.CODIGO = E.CODIGO AND EE.EMPRESA_RECNO = ?
-			WHERE E.ID = ?
-		`, repo.BaseParams.LegacyCompanyId, material.IdProduto).Scan(&detailsMaterial)
-
+		res := repo.Uow.GetDb().Raw(`SELECT CODIGO AS CodigoProduto, CATEGORIA AS CodigoCategoria FROM ESTOQUE WHERE ID = ?`, material.IdProduto).Scan(&detailsMaterial)
 		if res.Error != nil {
 			return res.Error
 		}
@@ -321,90 +290,4 @@ func (repo *InspecaoSaidaRepository) PreencherInformacoesMaquinaRetrabalho(rnc d
 		})
 	}
 	return nil
-}
-
-func (repo *InspecaoSaidaRepository) AplicarFiltros(query *gorm.DB, baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaFilters) (result *gorm.DB) {
-	if len(filters.ObservacoesMetricas) > 0 {
-		var observacoesLikeQuery = ""
-
-		for index, observacao := range filters.ObservacoesMetricas {
-			if index == 0 {
-				observacoesLikeQuery += "("
-			}
-
-			observacoesLikeQuery += "QA_ITEM_INSPECAO_SAIDA.OBSERVACAO LIKE '%" + observacao + "%'"
-
-			if index == len(filters.ObservacoesMetricas)-1 {
-				observacoesLikeQuery += ")"
-			} else {
-				observacoesLikeQuery += " OR "
-			}
-		}
-
-		query = query.
-			Joins("JOIN QA_ITEM_INSPECAO_SAIDA ON QA_ITEM_INSPECAO_SAIDA.CODINSP = QA_INSPECAO_SAIDA.CODINSP AND " + observacoesLikeQuery)
-	}
-
-	query = query.
-		Where(utils.ApplyAdvancedFilter(baseFilters.AdvancedFilter))
-
-	return query
-}
-
-func (repo *InspecaoSaidaRepository) BuscarNotasRelatorio(lote string, produtoCodigo string, filter *models.BaseFilter) (models.PagedResultDto[models.NotaFiscal], error) {
-	var totalCount int
-	result := make([]models.NotaFiscal, 0)
-	advancedFilter := utils.ApplyAdvancedFilter(filter.AdvancedFilter)
-
-	if filter.Sorting == "" {
-		filter.Sorting = "NotaFiscal.NOTA DESC"
-	}
-
-	query := queries.GetNotasRelatorio
-
-	if advancedFilter != "" {
-		query = strings.ReplaceAll(query, "@"+queries.NamedAdvancedFilter, "AND "+advancedFilter)
-	} else {
-		query = strings.ReplaceAll(query, "@"+queries.NamedAdvancedFilter, advancedFilter)
-	}
-
-	query = strings.ReplaceAll(query, "@"+queries.NamedSorting, filter.Sorting)
-
-	err := repo.Uow.GetDb().Raw(query,
-		sql.Named(queries.NamedLote, lote),
-		sql.Named(queries.NamedProdutoCodigo, produtoCodigo),
-		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
-		sql.Named(queries.NamedSkip, filter.Skip),
-		sql.Named(queries.NamedPageSize, filter.PageSize),
-	).
-		Scan(&result).
-		Error
-	if err != nil {
-		return models.PagedResultDto[models.NotaFiscal]{}, err
-	}
-
-	query = queries.GetNotasRelatorioCount
-	if advancedFilter != "" {
-		query = strings.ReplaceAll(query, "@"+queries.NamedAdvancedFilter, "AND "+advancedFilter)
-	} else {
-		query = strings.ReplaceAll(query, "@"+queries.NamedAdvancedFilter, advancedFilter)
-	}
-
-	err = repo.Uow.GetDb().Raw(query,
-		sql.Named(queries.NamedLote, lote),
-		sql.Named(queries.NamedProdutoCodigo, produtoCodigo),
-		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
-	).Scan(&totalCount).
-		Error
-
-	if err != nil {
-		return models.PagedResultDto[models.NotaFiscal]{}, err
-	}
-
-	pagedDto := models.PagedResultDto[models.NotaFiscal]{
-		Items:      result,
-		TotalCount: totalCount,
-	}
-
-	return pagedDto, err
 }

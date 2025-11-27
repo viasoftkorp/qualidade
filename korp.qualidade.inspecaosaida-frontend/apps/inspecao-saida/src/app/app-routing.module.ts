@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MustBeLoggedAuthGuard } from '@viasoft/common';
-import { authorizationRoutes } from '@viasoft/authorization-management';
+import { authorizationRoutes } from '@viasoft/manage-authorization';
 import { IS_ON_PREMISE } from '../environments/is-on-premise.const';
 
 const ROUTES: Routes = [

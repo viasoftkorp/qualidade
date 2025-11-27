@@ -111,18 +111,18 @@ func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarInspecaoSaidaPeloRecno
 }
 
 // BuscarInspecoesSaida mocks base method.
-func (m *MockIInspecaoSaidaRepository) BuscarInspecoesSaida(arg0 int, arg1 *models.BaseFilter, arg2 *dto.InspecaoSaidaFilters) ([]*models.InspecaoSaida, error) {
+func (m *MockIInspecaoSaidaRepository) BuscarInspecoesSaida(arg0 int, arg1 *models.BaseFilter) ([]*entities.InspecaoSaida, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarInspecoesSaida", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]*models.InspecaoSaida)
+	ret := m.ctrl.Call(m, "BuscarInspecoesSaida", arg0, arg1)
+	ret0, _ := ret[0].([]*entities.InspecaoSaida)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarInspecoesSaida indicates an expected call of BuscarInspecoesSaida.
-func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarInspecoesSaida(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarInspecoesSaida(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesSaida", reflect.TypeOf((*MockIInspecaoSaidaRepository)(nil).BuscarInspecoesSaida), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesSaida", reflect.TypeOf((*MockIInspecaoSaidaRepository)(nil).BuscarInspecoesSaida), arg0, arg1)
 }
 
 // BuscarNovoCodigoInspecao mocks base method.
@@ -140,18 +140,18 @@ func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarNovoCodigoInspecao() *
 }
 
 // BuscarQuantidadeInspecoesSaida mocks base method.
-func (m *MockIInspecaoSaidaRepository) BuscarQuantidadeInspecoesSaida(arg0 int, arg1 *models.BaseFilter, arg2 *dto.InspecaoSaidaFilters) (int64, error) {
+func (m *MockIInspecaoSaidaRepository) BuscarQuantidadeInspecoesSaida(arg0 int) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarQuantidadeInspecoesSaida", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "BuscarQuantidadeInspecoesSaida", arg0)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarQuantidadeInspecoesSaida indicates an expected call of BuscarQuantidadeInspecoesSaida.
-func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarQuantidadeInspecoesSaida(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarQuantidadeInspecoesSaida(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarQuantidadeInspecoesSaida", reflect.TypeOf((*MockIInspecaoSaidaRepository)(nil).BuscarQuantidadeInspecoesSaida), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarQuantidadeInspecoesSaida", reflect.TypeOf((*MockIInspecaoSaidaRepository)(nil).BuscarQuantidadeInspecoesSaida), arg0)
 }
 
 // CriarInspecao mocks base method.
@@ -208,19 +208,4 @@ func (m *MockIInspecaoSaidaRepository) RemoverInspecaoSaida(arg0 int) error {
 func (mr *MockIInspecaoSaidaRepositoryMockRecorder) RemoverInspecaoSaida(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoverInspecaoSaida", reflect.TypeOf((*MockIInspecaoSaidaRepository)(nil).RemoverInspecaoSaida), arg0)
-}
-
-// BuscarNotasRelatorio mocks base method.
-func (m *MockIInspecaoSaidaRepository) BuscarNotasRelatorio(arg0 string, arg1 string, arg2 *models.BaseFilter) (models.PagedResultDto[models.NotaFiscal], error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarNotasRelatorio", arg0, arg1, arg2)
-	ret0, _ := ret[0].(models.PagedResultDto[models.NotaFiscal])
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BuscarNotasRelatorio indicates an expected call of BuscarNotasRelatorio.
-func (mr *MockIInspecaoSaidaRepositoryMockRecorder) BuscarNotasRelatorio(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotasRelatorio", reflect.TypeOf((*MockIInspecaoSaidaRepository)(nil).BuscarNotasRelatorio), arg0, arg1, arg2)
 }

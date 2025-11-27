@@ -1,8 +1,6 @@
 package services
 
 import (
-	"strconv"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/consts"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/entities"
@@ -11,22 +9,21 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
+	"strconv"
 )
 
 type InspecaoEntradaSagaService struct {
 	interfaces.IInspecaoEntradaSagaService
-	InspecaoEntradaRepository                interfaces.IInspecaoEntradaRepository
-	InspecaoEntradaExecutadoWebRepository    interfaces.IInspecaoEntradaExecutadoWebRepository
-	InspecaoEntradaSagaService               interfaces.IExternalInspecaoEntradaSagaService
-	NotaFiscalRepository                     interfaces.INotaFiscalRepository
-	LocaisRepository                         interfaces.ILocaisRepository
-	ParametroRepository                      interfaces.IParametrosRepository
-	EstoqueLocalRepository                   interfaces.IEstoquePedidoVendaRepository
-	ProdutoRepository                        interfaces.IProdutoRepository
-	Uow                                      unit_of_work.UnitOfWork
-	InspecaoEntradaPedidoVendaLoteRepository interfaces.IInspecaoEntradaPedidoVendaLoteRepository
+	InspecaoEntradaRepository             interfaces.IInspecaoEntradaRepository
+	InspecaoEntradaExecutadoWebRepository interfaces.IInspecaoEntradaExecutadoWebRepository
+	InspecaoEntradaSagaService            interfaces.IExternalInspecaoEntradaSagaService
+	NotaFiscalRepository                  interfaces.INotaFiscalRepository
+	LocaisRepository                      interfaces.ILocaisRepository
+	ParametroRepository                   interfaces.IParametrosRepository
+	EstoqueLocalRepository                interfaces.IEstoquePedidoVendaRepository
+	ProdutoRepository                     interfaces.IProdutoRepository
+	Uow                                   unit_of_work.UnitOfWork
 }
 
 func NewInspecaoEntradaSagaService(
@@ -37,20 +34,17 @@ func NewInspecaoEntradaSagaService(
 	locaisRepository interfaces.ILocaisRepository,
 	parametrosRepository interfaces.IParametrosRepository,
 	estoqueLocalRepository interfaces.IEstoquePedidoVendaRepository,
-	produtoRepository interfaces.IProdutoRepository,
-	uow unit_of_work.UnitOfWork,
-	inspecaoEntradaPedidoVendaLoteRepository interfaces.IInspecaoEntradaPedidoVendaLoteRepository) interfaces.IInspecaoEntradaSagaService {
+	produtoRepository interfaces.IProdutoRepository, uow unit_of_work.UnitOfWork) interfaces.IInspecaoEntradaSagaService {
 	return &InspecaoEntradaSagaService{
-		InspecaoEntradaRepository:                inspecaoEntradaRepository,
-		InspecaoEntradaExecutadoWebRepository:    inspecaoEntradaExecutadoWebRepository,
-		InspecaoEntradaSagaService:               inspecaoEntradaSagaService,
-		NotaFiscalRepository:                     notaFiscalRepository,
-		LocaisRepository:                         locaisRepository,
-		ParametroRepository:                      parametrosRepository,
-		EstoqueLocalRepository:                   estoqueLocalRepository,
-		ProdutoRepository:                        produtoRepository,
-		Uow:                                      uow,
-		InspecaoEntradaPedidoVendaLoteRepository: inspecaoEntradaPedidoVendaLoteRepository,
+		InspecaoEntradaRepository:             inspecaoEntradaRepository,
+		InspecaoEntradaExecutadoWebRepository: inspecaoEntradaExecutadoWebRepository,
+		InspecaoEntradaSagaService:            inspecaoEntradaSagaService,
+		NotaFiscalRepository:                  notaFiscalRepository,
+		LocaisRepository:                      locaisRepository,
+		ParametroRepository:                   parametrosRepository,
+		EstoqueLocalRepository:                estoqueLocalRepository,
+		ProdutoRepository:                     produtoRepository,
+		Uow:                                   uow,
 	}
 }
 
@@ -79,7 +73,7 @@ func (service *InspecaoEntradaSagaService) ReprocessarSaga(id string) error {
 func (service *InspecaoEntradaSagaService) BuscarSagas(baseFilters *models.BaseFilter, filters *dto.ProcessamentoInspecaoEntradaFilters, estorno bool) (*dto.GetAllProcessamentoInspecaoEntradaOutput, error) {
 	var output dto.GetAllProcessamentoInspecaoEntradaOutput
 
-	result, err := service.InspecaoEntradaSagaService.BuscarSagas(baseFilters, filters, estorno)
+	result, err := service.InspecaoEntradaSagaService.BuscarSagas(baseFilters.Skip, baseFilters.PageSize, filters, estorno)
 	if err != nil {
 		return nil, err
 	}
@@ -141,8 +135,6 @@ func (service *InspecaoEntradaSagaService) BuscarSagas(baseFilters *models.BaseF
 				LocalDestino:          transferencia.LocalDestino,
 				DescricaoLocalDestino: strconv.Itoa(transferencia.LocalDestino) + " - " + descricaoDestino,
 				TipoTransferencia:     transferencia.TipoTransferencia,
-				Lote:                  transferencia.Lote,
-				LoteOrigem:            transferencia.LoteOrigem,
 			})
 		}
 
@@ -193,16 +185,9 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasEstorno(saga *
 	var pesoBruto *float64
 
 	for _, transferencia := range saga.Transferencias {
-		// Locais e lotes invertidos pois e acao de estorno
+		// Locais invertidos pois e acao de estorno
 		localOrigem := transferencia.LocalDestino
 		localDestino := transferencia.LocalOrigem
-
-		loteOrigem := transferencia.Lote
-		lote := transferencia.LoteOrigem
-		if lote == "" || loteOrigem == "" {
-			loteOrigem = saga.Lote
-			lote = saga.Lote
-		}
 
 		descricaoOrigem, err := service.LocaisRepository.BuscarLocalDescricao(localOrigem)
 		if err != nil {
@@ -214,7 +199,7 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasEstorno(saga *
 			return nil, err
 		}
 
-		estoqueLocalValores, err := service.EstoqueLocalRepository.BuscarEstoqueLocalValoresPorProduto(saga.CodigoProduto, transferencia.Lote, localOrigem)
+		estoqueLocalValores, err := service.EstoqueLocalRepository.BuscarEstoqueLocalValoresPorProduto(saga.CodigoProduto, saga.Lote, localOrigem)
 		if err != nil {
 			return nil, err
 		}
@@ -241,28 +226,21 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasEstorno(saga *
 			})
 		}
 		transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-			Quantidade:         transferencia.Quantidade,
-			LocalOrigem:        localOrigem,
-			LocalDestino:       localDestino,
-			Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-			Fator:              1,
-			NumeroPedido:       transferencia.NumeroPedido,
-			TipoTransferencia:  transferencia.TipoTransferencia,
-			PesoLiquido:        pesoLiquido,
-			PesoBruto:          pesoBruto,
-			DataValidade:       utils.StringToTime(estoqueLocalValores.DataValidade),
-			DataFabricacao:     utils.StringToTime(estoqueLocalValores.DataFabricacao),
-			UltimoValorPago:    utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
-			OrdemFabricacao:    transferencia.OrdemFabricacao,
-			Sequencial:         transferencia.Sequencial,
-			SeriesProducao:     series,
-			Lote:               lote,
-			LoteOrigem:         loteOrigem,
-			Dimensao1:          transferencia.Dimensao1,
-			Dimensao2:          transferencia.Dimensao2,
-			Dimensao3:          transferencia.Dimensao3,
-			DimensaoDiferenca:  transferencia.DimensaoDiferenca,
-			DimensaoQuantidade: transferencia.DimensaoQuantidade,
+			Quantidade:        transferencia.Quantidade,
+			LocalOrigem:       localOrigem,
+			LocalDestino:      localDestino,
+			Documento:         service.GetDocumento(descricaoOrigem, descricaoDestino),
+			Fator:             1,
+			NumeroPedido:      transferencia.NumeroPedido,
+			TipoTransferencia: transferencia.TipoTransferencia,
+			PesoLiquido:       pesoLiquido,
+			PesoBruto:         pesoBruto,
+			DataValidade:      utils.StringToTime(estoqueLocalValores.DataValidade),
+			DataFabricacao:    utils.StringToTime(estoqueLocalValores.DataFabricacao),
+			UltimoValorPago:   utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
+			OrdemFabricacao:   transferencia.OrdemFabricacao,
+			Sequencial:        transferencia.Sequencial,
+			SeriesProducao:    series,
 		})
 	}
 
@@ -283,12 +261,7 @@ func (service *InspecaoEntradaSagaService) PublicarSagaInspecaoEntrada(input *dt
 			return false, nil, err
 		}
 
-		notaFiscal, estoqueLocalValores, err := service.GetNotaFiscalEstoqueLocal(inspecoesEntrada[0].RecnoItemNotaFiscal, inspecoesEntrada[0].NotaFiscal, inspecoesEntrada[0].Lote)
-		if err != nil {
-			return false, nil, err
-		}
-
-		caracteristica, err := service.GetCaracteristicaItemNotaFiscal(inspecoesEntrada[0].RecnoItemNotaFiscal, (inspecoesEntrada[0].QuantidadeAprovada.Add(inspecoesEntrada[0].QuantidadeReprovada)))
+		notaFiscal, estoqueLocalValores, err := service.GetNotaFiscalEstoqueLocal(inspecoesEntrada[0].NotaFiscal, inspecoesEntrada[0].Lote)
 		if err != nil {
 			return false, nil, err
 		}
@@ -303,26 +276,8 @@ func (service *InspecaoEntradaSagaService) PublicarSagaInspecaoEntrada(input *dt
 			return false, nil, err
 		}
 
-		var idsInspecaoEntradaPedidoVendaWeb = make([]uuid.UUID, 0)
-		for _, inspecao := range inspecoesEntrada {
-			idsInspecaoEntradaPedidoVendaWeb = append(idsInspecaoEntradaPedidoVendaWeb, inspecao.IdInspecaoEntradaPedidoVendaWeb)
-		}
-
-		lotesAQuebrarDeTodasAsInpecoes, err := service.InspecaoEntradaPedidoVendaLoteRepository.GetAllByIdPedidoVenda(idsInspecaoEntradaPedidoVendaWeb)
-
-		if err != nil {
-			return false, nil, err
-		}
-
 		for _, inspecaoPedido := range inspecoesEntrada {
-			var lotesAQuebrar = make([]entities.InspecaoEntradaPedidoVendaLote, 0)
-			for _, lote := range lotesAQuebrarDeTodasAsInpecoes {
-				if lote.IdInspecaoEntradaPedidoVenda == inspecaoPedido.IdInspecaoEntradaPedidoVendaWeb {
-					lotesAQuebrar = append(lotesAQuebrar, *lote)
-				}
-			}
-
-			transferencias, err := service.PreencherTransferenciasFromInspecaoEntrada(&inspecaoPedido, estoqueLocalValores, notaFiscal.CodigoLocal, descricaoOrigem, lotesAQuebrar, caracteristica)
+			transferencias, err := service.PreencherTransferenciasFromInspecaoEntrada(&inspecaoPedido, estoqueLocalValores, notaFiscal.CodigoLocal, descricaoOrigem)
 			if err != nil {
 				return false, nil, err
 			}
@@ -344,12 +299,7 @@ func (service *InspecaoEntradaSagaService) PublicarSagaInspecaoEntrada(input *dt
 			return false, nil, err
 		}
 
-		notaFiscal, estoqueLocalValores, err := service.GetNotaFiscalEstoqueLocal(inspecaoEntrada.RecnoItemNotaFiscal, inspecaoEntrada.NotaFiscal, inspecaoEntrada.Lote)
-		if err != nil {
-			return false, nil, err
-		}
-
-		caracteristica, err := service.GetCaracteristicaItemNotaFiscal(inspecaoEntrada.RecnoItemNotaFiscal, inspecaoEntrada.QuantidadeInspecao)
+		notaFiscal, estoqueLocalValores, err := service.GetNotaFiscalEstoqueLocal(inspecaoEntrada.NotaFiscal, inspecaoEntrada.Lote)
 		if err != nil {
 			return false, nil, err
 		}
@@ -364,7 +314,7 @@ func (service *InspecaoEntradaSagaService) PublicarSagaInspecaoEntrada(input *dt
 			return false, nil, err
 		}
 
-		movimentarEstoqueInput.Transferencias, err = service.PreencherTransferenciasFromInput(input, estoqueLocalValores, notaFiscal, descricaoOrigem, caracteristica)
+		movimentarEstoqueInput.Transferencias, err = service.PreencherTransferenciasFromInput(input, estoqueLocalValores, notaFiscal.CodigoLocal, descricaoOrigem)
 		if err != nil {
 			return false, nil, err
 		}
@@ -459,14 +409,7 @@ func (service *InspecaoEntradaSagaService) GetMovimentarEstoqueInput(inspecaoEnt
 	return movimentarEstoqueInput, nil
 }
 
-func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInspecaoEntrada(
-	inspecaoEntrada *models.InspecaoEntradaJoin,
-	estoqueLocalValores *models.EstoqueLocalValores,
-	localOrigem int,
-	descricaoOrigem string,
-	lotesAQuebrar []entities.InspecaoEntradaPedidoVendaLote,
-	caracteristica *models.CaracteristicaItemNotaFiscalModel) ([]dto.InspecaoEntradaTransferenciaBackgroundInputDto, error) {
-
+func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInspecaoEntrada(inspecaoEntrada *models.InspecaoEntradaJoin, estoqueLocalValores *models.EstoqueLocalValores, localOrigem int, descricaoOrigem string) ([]dto.InspecaoEntradaTransferenciaBackgroundInputDto, error) {
 	transferencias := make([]dto.InspecaoEntradaTransferenciaBackgroundInputDto, 0)
 	numerosSeriesJaMovidos := make([]string, 0)
 
@@ -502,64 +445,22 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInspecaoEn
 
 		seriesInput := service.GetSeriesInput(series, &numerosSeriesJaMovidos, quantidadeAprovada)
 
-		for _, lote := range lotesAQuebrar {
-			transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-				Quantidade:         lote.Quantidade,
-				LocalOrigem:        localOrigem,
-				LocalDestino:       inspecaoEntrada.CodigoLocalAprovado,
-				Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-				Fator:              1,
-				NumeroPedido:       inspecaoEntrada.NumeroPedido,
-				OrdemFabricacao:    inspecaoEntrada.Odf,
-				TipoTransferencia:  enums.Aprovado,
-				PesoLiquido:        pesoLiquido,
-				PesoBruto:          pesoBruto,
-				DataValidade:       utils.StringToTime(estoqueLocalValores.DataValidade),
-				DataFabricacao:     utils.StringToTime(estoqueLocalValores.DataFabricacao),
-				UltimoValorPago:    utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
-				SeriesProducao:     seriesInput,
-				Lote:               lote.NumeroLote,
-				LoteOrigem:         inspecaoEntrada.Lote,
-				Dimensao1:          utils.DecimalToFloat64(caracteristica.Dimensao1),
-				Dimensao2:          utils.DecimalToFloat64(caracteristica.Dimensao2),
-				Dimensao3:          utils.DecimalToFloat64(caracteristica.Dimensao3),
-				DimensaoDiferenca:  utils.DecimalToFloat64(caracteristica.Diferenca),
-				DimensaoQuantidade: caracteristica.Quantidade,
-			})
-		}
-		somaQuantidadesLotes := 0.0
-
-		for _, item := range lotesAQuebrar {
-			somaQuantidadesLotes += item.Quantidade
-		}
-
-		var quantidadeManterLote = quantidadeAprovada - somaQuantidadesLotes
-
-		if quantidadeManterLote > 0.0 {
-			transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-				Quantidade:         quantidadeManterLote,
-				LocalOrigem:        localOrigem,
-				LocalDestino:       inspecaoEntrada.CodigoLocalAprovado,
-				Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-				Fator:              1,
-				NumeroPedido:       inspecaoEntrada.NumeroPedido,
-				OrdemFabricacao:    inspecaoEntrada.Odf,
-				TipoTransferencia:  enums.Aprovado,
-				PesoLiquido:        pesoLiquido,
-				PesoBruto:          pesoBruto,
-				DataValidade:       utils.StringToTime(estoqueLocalValores.DataValidade),
-				DataFabricacao:     utils.StringToTime(estoqueLocalValores.DataFabricacao),
-				UltimoValorPago:    utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
-				SeriesProducao:     seriesInput,
-				Lote:               inspecaoEntrada.Lote,
-				LoteOrigem:         inspecaoEntrada.Lote,
-				Dimensao1:          utils.DecimalToFloat64(caracteristica.Dimensao1),
-				Dimensao2:          utils.DecimalToFloat64(caracteristica.Dimensao2),
-				Dimensao3:          utils.DecimalToFloat64(caracteristica.Dimensao3),
-				DimensaoDiferenca:  utils.DecimalToFloat64(caracteristica.Diferenca),
-				DimensaoQuantidade: caracteristica.Quantidade,
-			})
-		}
+		transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
+			Quantidade:        quantidadeAprovada,
+			LocalOrigem:       localOrigem,
+			LocalDestino:      inspecaoEntrada.CodigoLocalAprovado,
+			Documento:         service.GetDocumento(descricaoOrigem, descricaoDestino),
+			Fator:             1,
+			NumeroPedido:      inspecaoEntrada.NumeroPedido,
+			OrdemFabricacao:   inspecaoEntrada.Odf,
+			TipoTransferencia: enums.Aprovado,
+			PesoLiquido:       pesoLiquido,
+			PesoBruto:         pesoBruto,
+			DataValidade:      utils.StringToTime(estoqueLocalValores.DataValidade),
+			DataFabricacao:    utils.StringToTime(estoqueLocalValores.DataFabricacao),
+			UltimoValorPago:   utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
+			SeriesProducao:    seriesInput,
+		})
 	}
 
 	if quantidadeReprovada > 0 {
@@ -571,71 +472,48 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInspecaoEn
 		seriesInput := service.GetSeriesInput(series, &numerosSeriesJaMovidos, quantidadeReprovada)
 
 		transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-			Quantidade:         quantidadeReprovada,
-			LocalOrigem:        localOrigem,
-			LocalDestino:       inspecaoEntrada.CodigoLocalReprovado,
-			Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-			Fator:              1,
-			NumeroPedido:       inspecaoEntrada.NumeroPedido,
-			OrdemFabricacao:    inspecaoEntrada.Odf,
-			TipoTransferencia:  enums.Reprovado,
-			PesoLiquido:        pesoLiquido,
-			PesoBruto:          pesoBruto,
-			DataValidade:       utils.StringToTime(estoqueLocalValores.DataValidade),
-			DataFabricacao:     utils.StringToTime(estoqueLocalValores.DataFabricacao),
-			UltimoValorPago:    utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
-			SeriesProducao:     seriesInput,
-			Lote:               inspecaoEntrada.Lote,
-			LoteOrigem:         inspecaoEntrada.Lote,
-			Dimensao1:          utils.DecimalToFloat64(caracteristica.Dimensao1),
-			Dimensao2:          utils.DecimalToFloat64(caracteristica.Dimensao2),
-			Dimensao3:          utils.DecimalToFloat64(caracteristica.Dimensao3),
-			DimensaoDiferenca:  utils.DecimalToFloat64(caracteristica.Diferenca),
-			DimensaoQuantidade: caracteristica.Quantidade,
+			Quantidade:        quantidadeReprovada,
+			LocalOrigem:       localOrigem,
+			LocalDestino:      inspecaoEntrada.CodigoLocalReprovado,
+			Documento:         service.GetDocumento(descricaoOrigem, descricaoDestino),
+			Fator:             1,
+			NumeroPedido:      inspecaoEntrada.NumeroPedido,
+			OrdemFabricacao:   inspecaoEntrada.Odf,
+			TipoTransferencia: enums.Reprovado,
+			PesoLiquido:       pesoLiquido,
+			PesoBruto:         pesoBruto,
+			DataValidade:      utils.StringToTime(estoqueLocalValores.DataValidade),
+			DataFabricacao:    utils.StringToTime(estoqueLocalValores.DataFabricacao),
+			UltimoValorPago:   utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
+			SeriesProducao:    seriesInput,
 		})
 	}
 
 	return transferencias, nil
 }
 
-func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInput(input *dto.FinalizarInspecaoInput, estoqueLocalValores *models.EstoqueLocalValores, notaFiscal *models.NotaFiscalModel, descricaoOrigem string, caracteristica *models.CaracteristicaItemNotaFiscalModel) ([]dto.InspecaoEntradaTransferenciaBackgroundInputDto, error) {
+func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInput(input *dto.FinalizarInspecaoInput, estoqueLocalValores *models.EstoqueLocalValores, localOrigem int, descricaoOrigem string) ([]dto.InspecaoEntradaTransferenciaBackgroundInputDto, error) {
 	transferencias := make([]dto.InspecaoEntradaTransferenciaBackgroundInputDto, 0)
 	numerosSeriesJaMovidos := make([]string, 0)
 
 	var pesoLiquido *float64
 	var pesoBruto *float64
-	var dataValidade string
-	var dataFabricacao string
-	var valorPago decimal.Decimal
-	var estoqueLocalRecno int
 
-	if estoqueLocalValores == nil {
-		dataValidade = ""
-		dataFabricacao = ""
-		valorPago = decimal.Zero
-		estoqueLocalRecno = 0
-	} else {
-		dataValidade = estoqueLocalValores.DataValidade
-		dataFabricacao = estoqueLocalValores.DataFabricacao
-		valorPago = estoqueLocalValores.ValorPago
-		estoqueLocalRecno = estoqueLocalValores.Recno
-	}
-
-	if estoqueLocalValores == nil || estoqueLocalValores.PesoLiquido == nil {
+	if estoqueLocalValores.PesoLiquido == nil {
 		pesoLiquido = nil
 	} else {
 		pesoLiquidoFloat := utils.DecimalToFloat64(*estoqueLocalValores.PesoLiquido)
 		pesoLiquido = &pesoLiquidoFloat
 	}
 
-	if estoqueLocalValores == nil || estoqueLocalValores.PesoBruto == nil {
+	if estoqueLocalValores.PesoBruto == nil {
 		pesoBruto = nil
 	} else {
 		pesoBrutoFloat := utils.DecimalToFloat64(*estoqueLocalValores.PesoBruto)
 		pesoBruto = &pesoBrutoFloat
 	}
 
-	series, err := service.EstoqueLocalRepository.BuscarSeries(estoqueLocalRecno)
+	series, err := service.EstoqueLocalRepository.BuscarSeries(estoqueLocalValores.Recno)
 	if err != nil {
 		return nil, err
 	}
@@ -647,59 +525,21 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInput(inpu
 		}
 
 		seriesInput := service.GetSeriesInput(series, &numerosSeriesJaMovidos, input.QuantidadeAprovada)
-		for _, lote := range input.Lotes {
-			transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-				Quantidade:         lote.Quantidade,
-				LocalOrigem:        notaFiscal.CodigoLocal,
-				LocalDestino:       input.CodigoLocalPrincipal,
-				Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-				Fator:              1,
-				TipoTransferencia:  enums.Aprovado,
-				PesoLiquido:        pesoLiquido,
-				PesoBruto:          pesoBruto,
-				DataValidade:       utils.StringToTime(dataValidade),
-				DataFabricacao:     utils.StringToTime(dataFabricacao),
-				UltimoValorPago:    utils.DecimalToFloat64(valorPago),
-				SeriesProducao:     seriesInput,
-				Lote:               lote.NumeroLote,
-				LoteOrigem:         notaFiscal.Lote,
-				Dimensao1:          utils.DecimalToFloat64(caracteristica.Dimensao1),
-				Dimensao2:          utils.DecimalToFloat64(caracteristica.Dimensao2),
-				Dimensao3:          utils.DecimalToFloat64(caracteristica.Dimensao3),
-				DimensaoDiferenca:  utils.DecimalToFloat64(caracteristica.Diferenca),
-				DimensaoQuantidade: caracteristica.Quantidade,
-			})
-		}
-		somaQuantidadesLotes := 0.0
 
-		for _, item := range input.Lotes {
-			somaQuantidadesLotes += item.Quantidade
-		}
-
-		var quantidadeManterLote = input.QuantidadeAprovada - somaQuantidadesLotes
-		if quantidadeManterLote > 0.0 {
-			transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-				Quantidade:         quantidadeManterLote,
-				LocalOrigem:        notaFiscal.CodigoLocal,
-				LocalDestino:       input.CodigoLocalPrincipal,
-				Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-				Fator:              1,
-				TipoTransferencia:  enums.Aprovado,
-				PesoLiquido:        pesoLiquido,
-				PesoBruto:          pesoBruto,
-				DataValidade:       utils.StringToTime(dataValidade),
-				DataFabricacao:     utils.StringToTime(dataFabricacao),
-				UltimoValorPago:    utils.DecimalToFloat64(valorPago),
-				SeriesProducao:     seriesInput,
-				Lote:               notaFiscal.Lote,
-				LoteOrigem:         notaFiscal.Lote,
-				Dimensao1:          utils.DecimalToFloat64(caracteristica.Dimensao1),
-				Dimensao2:          utils.DecimalToFloat64(caracteristica.Dimensao2),
-				Dimensao3:          utils.DecimalToFloat64(caracteristica.Dimensao3),
-				DimensaoDiferenca:  utils.DecimalToFloat64(caracteristica.Diferenca),
-				DimensaoQuantidade: caracteristica.Quantidade,
-			})
-		}
+		transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
+			Quantidade:        input.QuantidadeAprovada,
+			LocalOrigem:       localOrigem,
+			LocalDestino:      input.CodigoLocalPrincipal,
+			Documento:         service.GetDocumento(descricaoOrigem, descricaoDestino),
+			Fator:             1,
+			TipoTransferencia: enums.Aprovado,
+			PesoLiquido:       pesoLiquido,
+			PesoBruto:         pesoBruto,
+			DataValidade:      utils.StringToTime(estoqueLocalValores.DataValidade),
+			DataFabricacao:    utils.StringToTime(estoqueLocalValores.DataFabricacao),
+			UltimoValorPago:   utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
+			SeriesProducao:    seriesInput,
+		})
 	}
 
 	if input.QuantidadeRejeitada > 0 {
@@ -711,25 +551,18 @@ func (service *InspecaoEntradaSagaService) PreencherTransferenciasFromInput(inpu
 		seriesInput := service.GetSeriesInput(series, &numerosSeriesJaMovidos, input.QuantidadeRejeitada)
 
 		transferencias = append(transferencias, dto.InspecaoEntradaTransferenciaBackgroundInputDto{
-			Quantidade:         input.QuantidadeRejeitada,
-			LocalOrigem:        notaFiscal.CodigoLocal,
-			LocalDestino:       input.CodigoLocalReprovado,
-			Documento:          service.GetDocumento(descricaoOrigem, descricaoDestino),
-			Fator:              1,
-			TipoTransferencia:  enums.Reprovado,
-			PesoLiquido:        pesoLiquido,
-			PesoBruto:          pesoBruto,
-			DataValidade:       utils.StringToTime(estoqueLocalValores.DataValidade),
-			DataFabricacao:     utils.StringToTime(estoqueLocalValores.DataFabricacao),
-			UltimoValorPago:    utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
-			SeriesProducao:     seriesInput,
-			Lote:               notaFiscal.Lote,
-			LoteOrigem:         notaFiscal.Lote,
-			Dimensao1:          utils.DecimalToFloat64(caracteristica.Dimensao1),
-			Dimensao2:          utils.DecimalToFloat64(caracteristica.Dimensao2),
-			Dimensao3:          utils.DecimalToFloat64(caracteristica.Dimensao3),
-			DimensaoDiferenca:  utils.DecimalToFloat64(caracteristica.Diferenca),
-			DimensaoQuantidade: caracteristica.Quantidade,
+			Quantidade:        input.QuantidadeRejeitada,
+			LocalOrigem:       localOrigem,
+			LocalDestino:      input.CodigoLocalReprovado,
+			Documento:         service.GetDocumento(descricaoOrigem, descricaoDestino),
+			Fator:             1,
+			TipoTransferencia: enums.Reprovado,
+			PesoLiquido:       pesoLiquido,
+			PesoBruto:         pesoBruto,
+			DataValidade:      utils.StringToTime(estoqueLocalValores.DataValidade),
+			DataFabricacao:    utils.StringToTime(estoqueLocalValores.DataFabricacao),
+			UltimoValorPago:   utils.DecimalToFloat64(estoqueLocalValores.ValorPago),
+			SeriesProducao:    seriesInput,
 		})
 	}
 
@@ -769,23 +602,14 @@ func (service *InspecaoEntradaSagaService) GetResultado(quantidadeLoteDecimal de
 	return resultado
 }
 
-func (service *InspecaoEntradaSagaService) GetNotaFiscalEstoqueLocal(recnoNotaFiscal int, codigoNotaFiscal int, lote string) (*models.NotaFiscalModel, *models.EstoqueLocalValores, error) {
-	notaFiscal, _ := service.NotaFiscalRepository.BuscarNotaFiscal(recnoNotaFiscal, codigoNotaFiscal, lote)
+func (service *InspecaoEntradaSagaService) GetNotaFiscalEstoqueLocal(codigoNotaFiscal int, lote string) (*models.NotaFiscalModel, *models.EstoqueLocalValores, error) {
+	notaFiscal, _ := service.NotaFiscalRepository.BuscarNotaFiscal(codigoNotaFiscal, lote)
 	estoqueLocalValores, err := service.EstoqueLocalRepository.BuscarEstoqueLocalValoresPorProduto(notaFiscal.CodigoProduto, notaFiscal.Lote, notaFiscal.CodigoLocal)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	return &notaFiscal, estoqueLocalValores, err
-}
-
-func (service *InspecaoEntradaSagaService) GetCaracteristicaItemNotaFiscal(recnoNotaFiscal int, quantidade decimal.Decimal) (*models.CaracteristicaItemNotaFiscalModel, error) {
-	caracteristica, err := service.NotaFiscalRepository.BuscarCaracteristicaItemNotaFiscal(recnoNotaFiscal, quantidade)
-	if err != nil {
-		return nil, err
-	}
-
-	return &caracteristica, err
 }
 
 func (service *InspecaoEntradaSagaService) GetDocumento(descricaoOrigem string, descricaoDestino string) string {

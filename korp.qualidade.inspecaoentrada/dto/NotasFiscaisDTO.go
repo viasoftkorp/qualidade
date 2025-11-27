@@ -1,18 +1,11 @@
 package dto
 
-import (
-	"time"
-
-	"github.com/google/uuid"
-)
+import "time"
 
 type NotaFiscalDTO struct {
-	Id                     uuid.UUID  `json:"id"`
-	Recno                  int        `json:"recno"`
 	NotaFiscal             int        `json:"notaFiscal"`
 	Lote                   string     `json:"lote"`
-	Plano                  string     `json:"plano"`
-	CodigoForneced         string     `json:"codigoForneced"`
+	Plano                  int        `json:"plano"`
 	DescricaoForneced      string     `json:"descricaoForneced"`
 	CodigoProduto          string     `json:"codigoProduto"`
 	DescricaoProduto       string     `json:"descricaoProduto"`
@@ -22,8 +15,6 @@ type NotaFiscalDTO struct {
 	QuantidadeInspecionar  float64    `json:"quantidadeInspecionar"`
 	RecnoRateioLote        int        `json:"recnoRateioLote"`
 	DescricaoPlano         string     `json:"descricaoPlano"`
-	Serie                  string     `json:"serie"`
-	Observacao             string     `json:"observacao"`
 }
 
 type GetNotasFiscaisOutput struct {
@@ -32,10 +23,9 @@ type GetNotasFiscaisOutput struct {
 }
 
 type NotaFiscalFilters struct {
-	NotaFiscal          *int       `json:"notaFiscal"`
-	Lote                *string    `json:"lote"`
-	CodigoProduto       *string    `json:"codigoProduto"`
-	Fornecedor          *string    `json:"fornecedor"`
-	DataEntrada         *time.Time `json:"dataEntrega"`
-	ObservacoesMetricas []string   `json:"observacoesMetricas"`
+	NotaFiscal    *int       `json:"notaFiscal"`
+	Lote          *string    `json:"lote"`
+	CodigoProduto *string    `json:"codigoProduto"`
+	Fornecedor    *string    `json:"fornecedor"`
+	DataEntrada   *time.Time `json:"dataEntrega"`
 }

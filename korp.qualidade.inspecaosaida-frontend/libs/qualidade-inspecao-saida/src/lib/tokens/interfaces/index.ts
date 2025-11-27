@@ -10,7 +10,4 @@ export * from './get-processamento-inspecao-saida-output.interface';
 export * from './processamento-inspecao-saida-filters.interface';
 export * from './ordem-producao-filters.interface';
 export * from './get-historico-inspecao-saida-output.interface';
-export * from './historico-inspecao-saida-filters.interface'
-export * from './filtros-inspecao-dto';
-export * from './local-output.interface';
-export * from './processo-engenharia-output.interface';
+export * from './historico-inspecao-saida-filters.interface';

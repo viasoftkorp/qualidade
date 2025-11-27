@@ -30,7 +30,7 @@ func mapOrdemProducaoEntityToDTO(entity models.OrdemProducao) dto.OrdemProducaoD
 		DataEmissao:            utils.StringToTime(entity.DataEmissao),
 		Lote:                   entity.Lote,
 		QuantidadeInspecionada: utils.DecimalToFloat64(entity.QuantidadeInspecionada),
-		QuantidadeInspecionar:  utils.DecimalToFloat64(entity.QuantidadeProduzida.Sub(entity.QuantidadeInspecionada)),
+		QuantidadeInspecionar:  utils.DecimalToFloat64(entity.QuantidadeProduzida),
 		Plano:                  entity.Plano,
 		DataNegociada:          entity.DataNegociada,
 		DescricaoPlano:         entity.DescricaoPlano,

@@ -2,6 +2,16 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/quality-qualidade-inspecao-entrada",
   "lib": {
-    "entryFile": "src/index.ts"
+    "entryFile": "src/public-api.ts",
+    "umdId": "QualidadeInspecaoEntrada",
+    "umdModuleIds": {
+      "@viasoft/components/grid": "VsComponentsGrid",
+      "@viasoft/components/dialog": "VsComponentsDialog",
+      "@viasoft/components/message-dialog": "VsComponentsMessageDialog",
+      "@viasoft/common": "VsCommon",
+      "@viasoft/components/button": "VsComponentsButton",
+      "@viasoft/view-template": "VsViewTemplate",
+      "@viasoft/client-core": "VsClientCore"
+    }
   }
 }

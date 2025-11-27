@@ -1,10 +1,6 @@
 package dto
 
-import (
-	"time"
-
-	"github.com/google/uuid"
-)
+import "time"
 
 type InspecaoSaidaHistoricoCabecalhoDTO struct {
 	OdfApontada        int     `json:"odfApontada"`
@@ -20,7 +16,6 @@ type InspecaoSaidaHistoricoCabecalhoDTO struct {
 	DescricaoPlano     string  `json:"descricaoPlano"`
 	DataNegociada      string  `json:"dataNegociada"`
 	Revisao            string  `json:"revisao"`
-	CodigoInspecao     int     `json:"codigoInspecao"`
 }
 
 type GetAllInspecaoSaidaHistoricoCabecalhoDTO struct {
@@ -29,36 +24,33 @@ type GetAllInspecaoSaidaHistoricoCabecalhoDTO struct {
 }
 
 type InspecaoSaidaHistoricoCabecalhoFilters struct {
-	OrdemFabricacao     *int     `json:"ordemFabricacao"`
-	CodigoProduto       *string  `json:"codigoProduto"`
-	Lote                *string  `json:"lote"`
-	ObservacoesMetricas []string `json:"observacoesMetricas"`
+	OrdemFabricacao *int    `json:"ordemFabricacao"`
+	CodigoProduto   *string `json:"codigoProduto"`
+	Lote            *string `json:"lote"`
 }
 
 type InspecaoSaidaHistoricoItems struct {
-	IdInspecao             uuid.UUID `json:"idInspecao"`
-	CodigoInspecao         int       `json:"codigoInspecao"`
-	RecnoInspecao          int       `json:"recnoInspecao"`
-	OdfApontada            int       `json:"odfApontada"`
-	OrdemFabricacao        int       `json:"ordemFabricacao"`
-	CodigoProduto          string    `json:"codigoProduto"`
-	DescricaoProduto       string    `json:"descricaoProduto"`
-	QuantidadeInspecao     float64   `json:"quantidadeInspecao"`
-	QuantidadeRetrabalhada float64   `json:"quantidadeRetrabalhada"`
-	QuantidadeAprovada     float64   `json:"quantidadeAprovada"`
-	QuantidadeReprovada    float64   `json:"quantidadeReprovada"`
-	Inspetor               string    `json:"inspetor"`
-	TipoInspecao           string    `json:"tipoInspecao"`
-	Resultado              string    `json:"resultado"`
-	DataInspecao           string    `json:"dataInspecao,omitempty"`
-	NumeroPedido           string    `json:"numeroPedido"`
-	Cliente                string    `json:"cliente"`
-	CodigoRnc              *int      `json:"codigoRnc"`
-	IdRnc                  *string   `json:"idRnc"`
+	CodigoInspecao         int        `json:"codigoInspecao"`
+	RecnoInspecao          int        `json:"recnoInspecao"`
+	OdfApontada            int        `json:"odfApontada"`
+	OrdemFabricacao        int        `json:"ordemFabricacao"`
+	CodigoProduto          string     `json:"codigoProduto"`
+	DescricaoProduto       string     `json:"descricaoProduto"`
+	QuantidadeInspecao     float64    `json:"quantidadeInspecao"`
+	QuantidadeRetrabalhada float64    `json:"quantidadeRetrabalhada"`
+	QuantidadeAprovada     float64    `json:"quantidadeAprovada"`
+	QuantidadeReprovada    float64    `json:"quantidadeReprovada"`
+	Inspetor               string     `json:"inspetor"`
+	TipoInspecao           string     `json:"tipoInspecao"`
+	Resultado              string     `json:"resultado"`
+	DataInspecao           *time.Time `json:"dataInspecao,omitempty"`
+	NumeroPedido           string     `json:"numeroPedido"`
+	Cliente                string     `json:"cliente"`
+	CodigoRnc              *int       `json:"codigoRnc"`
+	IdRnc                  *string    `json:"idRnc"`
 }
 
 type InspecaoSaidaHistoricoItemsDTO struct {
-	IdInspecao             uuid.UUID                                   `json:"idInspecao"`
 	RecnoInspecao          int                                         `json:"recnoInspecao"`
 	CodigoInspecao         int                                         `json:"codigoInspecao"`
 	OdfApontada            int                                         `json:"odfApontada"`
@@ -88,7 +80,6 @@ type GetAllInspecaoSaidaHistoricoItemsDTO struct {
 
 type HistoricoInspecaoSaidaTransferenciaOutput struct {
 	OrdemFabricacao       int     `json:"ordemFabricacao"`
-	OdfApontada           int     `json:"odfApontada"`
 	Quantidade            float64 `json:"quantidade"`
 	NumeroPedido          string  `json:"numeroPedido"`
 	LocalOrigem           int     `json:"localOrigem"`

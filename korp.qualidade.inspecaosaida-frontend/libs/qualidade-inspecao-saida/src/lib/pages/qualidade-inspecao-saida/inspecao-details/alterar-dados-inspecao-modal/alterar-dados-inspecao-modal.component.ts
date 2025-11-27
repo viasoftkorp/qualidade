@@ -19,7 +19,6 @@ import {
   PlanoInspecaoDTO,
   ResultadosInspecao
 } from '../../../../tokens';
-import { VsSubscriptionManager } from '@viasoft/common';
 
 @Component({
   selector: 'qa-alterar-dados-inspecao-modal',
@@ -30,14 +29,9 @@ export class AlterarDadosInspecaoModalComponent implements OnInit {
 
   public form: FormGroup;
   public dto: PlanoInspecaoDTO;
-  public subscriptionManager = new VsSubscriptionManager();
   public resultadoOptions: VsSelectOption[] = [{
     value: ResultadosInspecao.Aprovado,
     name: 'QualidadeInspecaoSaida.InspecaoDetails.AlterarDadosInspecaoModal.Aprovado'
-  },
-  {
-    value: ResultadosInspecao.ParcialmenteAprovado,
-    name: 'QualidadeInspecaoSaida.InspecaoDetails.AlterarDadosInspecaoModal.ParcialmenteAprovado'
   },
   {
     value: ResultadosInspecao.NaoAplicavel,
@@ -47,6 +41,26 @@ export class AlterarDadosInspecaoModalComponent implements OnInit {
     value: ResultadosInspecao.NaoConforme,
     name: 'QualidadeInspecaoSaida.InspecaoDetails.AlterarDadosInspecaoModal.NaoConforme'
   }];
+
+  public get listenFormResultadoValueChanges(): boolean {
+    if (this.form) {
+      if ((this.form.get('menorValor').value == null && this.form.get('maiorValor').value == null) ||
+        (this.form.get('menorValor').value == 0 && this.form.get('maiorValor').value == 0)) {
+        return;
+      }
+      if (Number(this.form.get('menorValorBase').value) == 0 && Number(this.form.get('maiorValorBase').value) == 0) {
+        this.form.get('resultado').setValue(ResultadosInspecao.NaoAplicavel);
+      } else if ((this.form.get('menorValor').value >= this.form.get('menorValorBase').value)
+        && (this.form.get('menorValor').value <= this.form.get('maiorValorBase').value)
+        && (this.form.get('maiorValor').value <= this.form.get('maiorValorBase').value)
+        && (this.form.get('maiorValor').value >= this.form.get('menorValorBase').value)) {
+        this.form.get('resultado').setValue(ResultadosInspecao.Aprovado);
+      } else {
+        this.form.get('resultado').setValue(ResultadosInspecao.NaoConforme);
+      }
+    }
+    return false;
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -61,37 +75,15 @@ export class AlterarDadosInspecaoModalComponent implements OnInit {
     this.initForm();
   }
 
-  public get valorBaseAprovado(): boolean {
-    const valorBaseDesconsideravel = Number(this.form.get('menorValorBase').value) == 0 && Number(this.form.get('maiorValorBase').value) == 0
-      && !this.form.get('menorValor').value && !this.form.get('maiorValor').value;
-
-    const valorBaseAprovado = valorBaseDesconsideravel
-        || ((this.form.get('menorValor').value >= this.form.get('menorValorBase').value)
-        && (this.form.get('menorValor').value <= this.form.get('maiorValorBase').value)
-        && (this.form.get('maiorValor').value <= this.form.get('maiorValorBase').value)
-        && (this.form.get('maiorValor').value >= this.form.get('menorValorBase').value));
-
-    return valorBaseAprovado;
-  }
-
-  public get valorBaseNaoAplicavel(): boolean {
-    const valorBaseNaoAplicavel = Number(this.form.get('menorValorBase').value) == 0 && Number(this.form.get('maiorValorBase').value) == 0
-      && (this.form.get('menorValor').value || this.form.get('maiorValor').value);
-
-    return valorBaseNaoAplicavel;
-  }
-
   public async salvarAlteracoes(): Promise<void> {
-    const maiorValor = this.form.get('maiorValor').value as string;
-    const menorValor = this.form.get('menorValor').value as string;
-    const observacao = this.form.get('observacao').value as string;
-    const resultado = this.form.get('resultado').value as ResultadosInspecao;
+    const maiorValor = Number(this.form.get('maiorValor').value);
+    const menorValor = Number(this.form.get('menorValor').value);
 
-    await this.validarAtualizacao();
-    this.dto.resultado = resultado;
-    this.dto.maiorValor = Number(maiorValor)
-    this.dto.menorValor = Number(menorValor)
-    this.dto.observacao = observacao;
+    await this.validateResult();
+    this.dto.resultado = this.form.get('resultado').value;
+    this.dto.maiorValor = maiorValor || null;
+    this.dto.menorValor = menorValor || null;
+    this.dto.observacao = this.form.get('observacao').value;
     this.dialogRef.close(this.dto);
   }
 
@@ -105,73 +97,52 @@ export class AlterarDadosInspecaoModalComponent implements OnInit {
       maiorValorBase: [{ value: this.dto.maiorValorBase, disabled: true }],
       observacao: [this.dto.observacao]
     });
-
-    this.subscriptionManager.add('menor-valor-value-changes', this.form.get('menorValor').valueChanges
-      .subscribe(() => this.validarValorBase()));
-
-    this.subscriptionManager.add('maior-valor-value-changes', this.form.get('maiorValor').valueChanges
-      .subscribe(() => this.validarValorBase()));
   }
 
-  private async validarAtualizacao(): Promise<void> {
-    const resultado = this.form.get('resultado').value as ResultadosInspecao;
-
-    if (resultado === ResultadosInspecao.Aprovado && !this.valorBaseAprovado) {
-      const confirm = await this.matDialog.open(VsMessageDialogComponent, {
-        maxWidth: '60vw',
-        panelClass: 'vs-message-dialog-panel',
-        data: {
-          message: 'Atenção resultado está marcado como aprovado, mas os menores e maiores valores não estão dentro da faixa, deseja realmente marcar como aprovado?',
-          messageDialogType: 'confirm',
-        }
-      }).afterClosed().toPromise();
-      if (!confirm) {
-        this.form.get('resultado').setValue(ResultadosInspecao.NaoConforme, { emitEvent: false });
-      }
-
+  private async validateResult() {
+    if ((Number(this.form.get('menorValorBase').value) == 0 && Number(this.form.get('maiorValorBase').value) == 0) || this.form.get('resultado').value == ResultadosInspecao.NaoAplicavel) {
       return;
     }
 
-    if (resultado === ResultadosInspecao.NaoAplicavel && this.valorBaseAprovado) {
-      const confirm = await this.matDialog.open(VsMessageDialogComponent, {
-        maxWidth: '60vw',
-        panelClass: 'vs-message-dialog-panel',
-        data: {
-          message: 'Atenção resultado está marcado como não aplicável, mas os menores e maiores valores estão dentro da faixa, deseja realmente marcar como não aplicável?',
-          messageDialogType: 'confirm',
+    if (this.form.get('resultado').value == ResultadosInspecao.Aprovado) {
+      if ((this.form.get('menorValor').value >= this.form.get('menorValorBase').value)
+        && (this.form.get('menorValor').value <= this.form.get('maiorValorBase').value)
+        && (this.form.get('maiorValor').value <= this.form.get('maiorValorBase').value)
+        && (this.form.get('maiorValor').value >= this.form.get('menorValorBase').value)) {
+        return;
+      } else {
+        const confirm = await this.matDialog.open(VsMessageDialogComponent, {
+          maxWidth: '60vw',
+          panelClass: 'vs-message-dialog-panel',
+          data: {
+            message: 'Atenção resultado está marcado como aprovado, mas os menores e maiores valores não estão dentro da faixa, deseja realmente marcar como aprovado?',
+            messageDialogType: 'confirm',
+          }
+        }).afterClosed().toPromise();
+        if (!confirm) {
+          this.form.get('resultado').setValue(ResultadosInspecao.NaoConforme);
         }
-      }).afterClosed().toPromise();
-      if (!confirm) {
-        this.form.get('resultado').setValue(ResultadosInspecao.Aprovado, { emitEvent: false });
       }
-
-      return;
-    }
-
-    if (resultado === ResultadosInspecao.NaoConforme && this.valorBaseAprovado) {
-      const confirm = await this.matDialog.open(VsMessageDialogComponent, {
-        maxWidth: '60vw',
-        panelClass: 'vs-message-dialog-panel',
-        data: {
-          message: 'Atenção resultado está marcado como não conforme, mas os menores e maiores valores estão dentro da faixa, deseja realmente marcar como não conforme?',
-          messageDialogType: 'confirm',
+    } else if (this.form.get('resultado').value == ResultadosInspecao.NaoConforme) {
+      if ((this.form.get('menorValor').value >= this.form.get('menorValorBase').value)
+        && (this.form.get('menorValor').value <= this.form.get('maiorValorBase').value)
+        && (this.form.get('maiorValor').value <= this.form.get('maiorValorBase').value)
+        && (this.form.get('maiorValor').value >= this.form.get('menorValorBase').value)) {
+        const confirm = await this.matDialog.open(VsMessageDialogComponent, {
+          maxWidth: '60vw',
+          panelClass: 'vs-message-dialog-panel',
+          data: {
+            message: 'Atenção resultado está marcado como não conforme, mas os menores e maiores valores estão dentro da faixa, deseja realmente marcar como não conforme?',
+            messageDialogType: 'confirm',
+          }
+        }).afterClosed().toPromise();
+        if (!confirm) {
+          this.form.get('resultado').setValue(ResultadosInspecao.Aprovado);
         }
-      }).afterClosed().toPromise();
-      if (!confirm) {
-        this.form.get('resultado').setValue(ResultadosInspecao.Aprovado, { emitEvent: false });
+      } else {
+        return;
       }
-
-      return;
     }
   }
 
-  private validarValorBase(): void {
-    if (this.valorBaseAprovado) {
-      this.form.get('resultado').setValue(ResultadosInspecao.Aprovado, { emitEvent: false });
-    } else if (this.valorBaseNaoAplicavel) {
-      this.form.get('resultado').setValue(ResultadosInspecao.NaoAplicavel, { emitEvent: false });
-    } else {
-      this.form.get('resultado').setValue(ResultadosInspecao.NaoConforme, { emitEvent: false });
-    }
-  }
 }

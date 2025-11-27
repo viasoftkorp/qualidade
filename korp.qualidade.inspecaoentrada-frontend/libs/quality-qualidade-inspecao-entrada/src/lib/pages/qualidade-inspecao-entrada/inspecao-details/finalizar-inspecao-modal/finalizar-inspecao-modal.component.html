@@ -23,8 +23,7 @@
       </form>
       <vs-label *ngIf="formCustomValidatorMessage" [label]="formCustomValidatorMessage | translate" model="error">
       </vs-label>
-      <ng-container *ngIf="!utilizaReserva && formLocais">
-        <form [formGroup]="formLocais" group-2>
+      <form *ngIf="!utilizaReserva && formLocais" [formGroup]="formLocais" group-2>
           <vs-select
             formControlName="localPrincipal"
             placeholder="QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.LocalPrincipal"
@@ -39,21 +38,19 @@
             [required]="true"
             [cleanable]="false"
           ></vs-select>
-        </form>
-        <form [formGroup]="formQuantidades" group-2>
-          <vs-input
-            formControlName="quantidadeAprovada"
-            placeholder="QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.QuantidadeAprovada"
-            type="number"
-          ></vs-input>
-          <vs-input
-            formControlName="quantidadeRejeitada"
-            placeholder="QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.QuantidadeRejeitada"
-            type="number"
-          ></vs-input>
-        </form>
-        <inspecao-entrada-quebra-lotes-grid [utilizaReserva]="utilizaReserva"></inspecao-entrada-quebra-lotes-grid>
-      </ng-container>
+      </form>
+      <form *ngIf="!utilizaReserva && formQuantidades" [formGroup]="formQuantidades" group-2>
+        <vs-input
+          formControlName="quantidadeAprovada"
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.QuantidadeAprovada"
+          type="number"
+        ></vs-input>
+        <vs-input
+          formControlName="quantidadeRejeitada"
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.FinalizarInspecaoModal.QuantidadeRejeitada"
+          type="number"
+        ></vs-input>
+      </form>
     </vs-form>
     <ng-container *ngIf="this.utilizaReserva">
       <vs-grid [options]="gridOptions"></vs-grid>

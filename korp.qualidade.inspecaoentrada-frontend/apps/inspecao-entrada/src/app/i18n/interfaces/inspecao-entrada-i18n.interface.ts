@@ -8,7 +8,6 @@ export interface InspecaoEntradaI18n extends IKeyTranslate {
       Historico: string;
       Configuracoes: string;
       PlanoAmostragem: string;
-      AlterarRelatorio: string;
     };
     Permissions: {
     };

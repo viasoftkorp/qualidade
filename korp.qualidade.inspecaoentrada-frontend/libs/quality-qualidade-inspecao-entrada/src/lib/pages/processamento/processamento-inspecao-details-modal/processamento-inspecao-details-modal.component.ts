@@ -69,14 +69,6 @@ export class ProcessamentoInspecaoDetailsModalComponent {
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.Transferencia.DescricaoLocalDestino',
         field: 'descricaoLocalDestino'
-      }),
-      new VsGridSimpleColumn({
-        headerName: 'ProcessamentoInspecao.Transferencia.LoteOrigem',
-        field: 'loteOrigem'
-      }),
-      new VsGridSimpleColumn({
-        headerName: 'ProcessamentoInspecao.Transferencia.LoteDestino',
-        field: 'lote'
       })
     ];
 

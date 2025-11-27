@@ -2,16 +2,12 @@ import { IKeyTranslate } from '@viasoft/common';
 
 export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
   QualidadeInspecaoEntrada: {
-    Atencao: string;
     Filtrar: string;
     Filtros: string;
     Limpar: string;
     Lote: string;
-    NumeroLote: string;
     NotaFiscal: string;
     Produto: string;
-    Quantidade: string;
-    QuebrarLote: string;
     InspecaoEntradaGrid: {
       DataInspecao: string;
       Inspetor: string;
@@ -23,7 +19,6 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
       QuantidadeReprovada: string;
       EditarInspecao: string;
       ExcluirInspecao: string;
-      ImprimirInspecao: string;
     };
     InspecaoDetails: {
       NovaInspecao: string;
@@ -42,14 +37,12 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
       MenorValorBase: string;
       MaiorValorBase: string;
       Salvar: string;
-      SomaLoteInvalida: string;
       Observacao: string;
       AlterarDadosInspecaoModal: {
         Titulo: string;
         Aprovado: string;
         NaoAplicavel: string;
         NaoConforme: string;
-        ParcialmenteAprovado: string;
         Alterar: string;
       };
       AlterarDadosFinalizacaoModal: {
@@ -57,13 +50,9 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
         LocalPrincipal: string;
         LocalReprovado: string;
         NumeroPedido: string;
-        Odf: string;
         QuantidadeAprovada: string;
         QuantidadeRejeitada: string;
-        QuantidadePedido: string;
-        QuantidadeEntrada: string;
-        SaldoInspecionar: string;
-        QuantidadeInspecao: string;
+        QuantidadeAlocadaPedido: string;
       };
       FinalizarInspecaoModal: {
         Titulo: string;
@@ -75,18 +64,13 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
         NumODF: string;
         NumPedido: string;
         Error: {
-          AlocacaoQuantidadeRestante: string;
-          AlocacaoQuantidadeSuperiorInspecao: string;
-          AlocacaoQuantidadeInferiorInspecao: string;
-          AlocacaoQuantidadeEntrada: string;
+          AlocacaoNecessidadePedido: string;
+          AlocacaoQuantidadeInspecao: string;
         }
         GridFinalizacao: {
           Pedido: string;
-          Odf: string;
           QuantidadeLote: string;
           QuantidadePedido: string;
-          QuantidadeEntrada: string;
-          SaldoInspecionar: string;
           QuantidadeAprovada: string;
           QuantidadeReprovada: string;
           LocalAprovado: string;
@@ -95,7 +79,7 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
         }
       };
       Error: {
-        AlocacaoSuperiorInspecao: string;
+        AlocacaoSuperiorLote: string;
         AlocacaoInferiorInspecao: string;
       }
     };
@@ -114,13 +98,6 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
       DataEntrada: string;
       Plano: string;
       DescricaoPlano: string;
-      Observacao: string;
-    };
-    Resultados: {
-      Aprovado: string;
-      NaoAplicavel: string;
-      NaoConforme: string;
-      ParcialmenteAprovado: string;
     };
   };
   HistoricoInspecao: {
@@ -177,18 +154,5 @@ export interface QualidadeInspecaoEntradaI18N extends IKeyTranslate {
       DescricaoLocalDestino: string;
       NumeroPedido: string;
     }
-    Resultados: {
-      Aprovado: string;
-      NaoAplicavel: string;
-      NaoConforme: string;
-      ParcialmenteAprovado: string;
-    }
-  };
-  FiltrosInspecao: {
-    Filtrar: string;
-    Metricas: string;
-    Observacao: string;
-    Aplicar: string;
-    Limpar: string;
   };
 }

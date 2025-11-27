@@ -1,17 +1,15 @@
 package tests
 
 import (
-	"errors"
-	"testing"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/mocks"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/services"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/utils"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func InstanciarItens() []dto.InspecaoSaidaHistoricoItems {
@@ -36,7 +34,7 @@ func InstanciarItensHistorico(itens []dto.InspecaoSaidaHistoricoItems, transfere
 			Inspetor:               item.Inspetor,
 			TipoInspecao:           item.TipoInspecao,
 			Resultado:              item.Resultado,
-			DataInspecao:           utils.StringToTime(item.DataInspecao),
+			DataInspecao:           item.DataInspecao,
 			Transferencias:         transferencias,
 		})
 	}
@@ -101,6 +99,21 @@ func TestGetAllInspecaoSaidaHistoricoCabecalhoOk(t *testing.T) {
 	inspecaoMockRepository.EXPECT().
 		GetAllInspecaoSaidaHistoricoCabecalho(baseFilter, filter).
 		Return([]dto.InspecaoSaidaHistoricoCabecalhoDTO{}, nil).
+		Times(2)
+	t.Run("ErroCountInspecaoSaidaHistoricoCabecalho", func(t3 *testing.T) {
+		inspecaoMockRepository.EXPECT().
+			CountInspecaoSaidaHistoricoCabecalho(baseFilter, filter).
+			Return(int64(14), errors.New("Teste 2")).
+			Times(1)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoCabecalho(baseFilter, filter)
+
+		assert.Nil(t3, actualOutput)
+		assert.Equal(t3, errors.New("Teste 2"), err)
+
+	})
+	inspecaoMockRepository.EXPECT().
+		CountInspecaoSaidaHistoricoCabecalho(baseFilter, filter).
+		Return(int64(0), nil).
 		Times(1)
 	actualOutput, err := service.GetAllInspecaoSaidaHistoricoCabecalho(baseFilter, filter)
 
@@ -122,19 +135,17 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 		Skip:     10,
 		PageSize: 1,
 	}
-	filters := &dto.InspecaoSaidaHistoricoCabecalhoFilters{}
 	odf := 7
-	codigoInspecao := 8
 	descOrigem := "Descricao origem 1"
 	itens := InstanciarItens()
 	inspecaoSaidaExecutadoWeb := InstanciarInspecaoSaidaExecutadoWeb()
 	saga := InstanciarSaga()
 	t.Run("ErroGetAllInspecaoSaidaHistoricoItems", func(t1 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, errors.New("Test 1")).
 			Times(1)
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t1, actualOutput)
 		assert.Equal(t1, errors.New("Test 1"), err)
@@ -142,7 +153,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 
 	t.Run("ErroBuscarInspecaoSaidaExecutadoWeb", func(t2 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, nil).
 			Times(1)
 		mockWebRepo.EXPECT().
@@ -150,7 +161,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 			Return(nil, errors.New("Test 2")).
 			Times(1)
 
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t2, actualOutput)
 		assert.Equal(t2, errors.New("Test 2"), err)
@@ -158,7 +169,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 
 	t.Run("ErroBuscarSaga", func(t3 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, nil).
 			Times(1)
 		mockWebRepo.EXPECT().
@@ -169,7 +180,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 			BuscarSaga(inspecaoSaidaExecutadoWeb.IdInspecaoSaidaSaga).
 			Return(saga, errors.New("Test 3")).
 			Times(1)
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t3, actualOutput)
 		assert.Equal(t3, errors.New("Test 3"), err)
@@ -177,7 +188,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 
 	t.Run("ErroBuscarLocalDescricao", func(t4 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, nil).
 			Times(1)
 		mockWebRepo.EXPECT().
@@ -192,7 +203,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 			BuscarLocalDescricao(saga.Transferencias[0].LocalOrigem).
 			Return(descOrigem, errors.New("Test 4")).
 			Times(1)
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t4, actualOutput)
 		assert.Equal(t4, errors.New("Test 4"), err)
@@ -200,7 +211,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 
 	t.Run("ErroBuscarLocalDescricao2", func(t5 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, nil).
 			Times(1)
 		mockWebRepo.EXPECT().
@@ -219,7 +230,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 			BuscarLocalDescricao(saga.Transferencias[0].LocalDestino).
 			Return(descOrigem, errors.New("Test 5")).
 			Times(1)
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t5, actualOutput)
 		assert.Equal(t5, errors.New("Test 5"), err)
@@ -227,7 +238,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 
 	t.Run("ErroCountInspecaoSaidaHistoricoItems", func(t6 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, nil).
 			Times(1)
 		mockWebRepo.EXPECT().
@@ -247,10 +258,10 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 			Return(descOrigem, nil).
 			Times(1)
 		mockInspecaoRepo.EXPECT().
-			CountInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			CountInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(int64(300), errors.New("Test 6")).
 			Times(1)
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t6, actualOutput)
 		assert.Equal(t6, errors.New("Test 6"), err)
@@ -258,7 +269,7 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 
 	t.Run("ErroCountInspecaoSaidaHistoricoItems", func(t6 *testing.T) {
 		mockInspecaoRepo.EXPECT().
-			GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(itens, nil).
 			Times(1)
 		mockWebRepo.EXPECT().
@@ -278,17 +289,17 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 			Return(descOrigem, nil).
 			Times(1)
 		mockInspecaoRepo.EXPECT().
-			CountInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+			CountInspecaoSaidaHistoricoItems(baseFilter, odf).
 			Return(int64(300), errors.New("Test 6")).
 			Times(1)
-		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+		actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 
 		assert.Nil(t6, actualOutput)
 		assert.Equal(t6, errors.New("Test 6"), err)
 	})
 
 	mockInspecaoRepo.EXPECT().
-		GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+		GetAllInspecaoSaidaHistoricoItems(baseFilter, odf).
 		Return(itens, nil).
 		Times(1)
 	mockWebRepo.EXPECT().
@@ -308,10 +319,10 @@ func TestGetAllInspecaoSaidaHistoricoItemsOk(t *testing.T) {
 		Return(descOrigem, nil).
 		Times(1)
 	mockInspecaoRepo.EXPECT().
-		CountInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao).
+		CountInspecaoSaidaHistoricoItems(baseFilter, odf).
 		Return(int64(333), nil).
 		Times(1)
-	actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, filters, odf, codigoInspecao)
+	actualOutput, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilter, odf)
 	expectedOutput := &dto.GetAllInspecaoSaidaHistoricoItemsDTO{
 		Items: []dto.InspecaoSaidaHistoricoItemsDTO{
 			{RecnoInspecao: 14},

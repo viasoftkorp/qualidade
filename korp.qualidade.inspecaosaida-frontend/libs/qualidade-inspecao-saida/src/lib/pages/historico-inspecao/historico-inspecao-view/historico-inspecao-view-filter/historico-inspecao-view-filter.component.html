@@ -1,0 +1,25 @@
+<vs-dialog>
+  <vs-icon icon="filter">
+  </vs-icon>
+  <vs-label title label="HistoricoInspecao.Filtros">
+  </vs-label>
+
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <vs-input formControlName="lote" placeholder="HistoricoInspecao.Lote" >
+        </vs-input>
+
+        <vs-input formControlName="ordemFabricacao" placeholder="HistoricoInspecao.Odf" type="number">
+        </vs-input>
+
+        <qa-produto-autocomplete-select controlName="codigoProduto" placeholder="HistoricoInspecao.Produto">
+        </qa-produto-autocomplete-select>
+      </form>
+    </vs-form>
+  </div>
+
+  <div footer>
+    <vs-button type="save" label="HistoricoInspecao.Filtrar" (click)="filtrar()"></vs-button>
+  </div>
+</vs-dialog>

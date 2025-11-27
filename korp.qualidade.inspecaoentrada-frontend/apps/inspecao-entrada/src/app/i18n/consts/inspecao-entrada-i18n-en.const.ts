@@ -7,8 +7,7 @@ export const INSPECAO_ENTRADA_I18N_EN: InspecaoEntradaI18n = {
       Processamento: 'Processamento',
       Historico: 'Histórico',
       Configuracoes: 'Configuracões',
-      PlanoAmostragem: 'Plano Amostragem',
-      AlterarRelatorio: 'Alterar Relatório',
+      PlanoAmostragem: 'Plano Amostragem'
     },
     Permissions: {
       // TODO: Add here the authorization translations

@@ -5,7 +5,6 @@ import (
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/mappers"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 )
 
 type InspecaoEntradaHistoricoService struct {
@@ -35,7 +34,7 @@ func (service *InspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoCa
 		return nil, err
 	}
 
-	count, err := service.InspecaoEntradaHistoricoRepository.BuscarNotasFiscaisHistoricoTotalCount(baseFilters, filters)
+	count, err := service.InspecaoEntradaHistoricoRepository.BuscarNotasFiscaisHistoricoTotalCount(filters)
 	if err != nil {
 		return nil, err
 	}
@@ -48,8 +47,8 @@ func (service *InspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoCa
 	}, nil
 }
 
-func (service *InspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoItems(recnoItemNotaFiscal int, notaFiscal int, lote string, baseFilters *models.BaseFilter, filters *dto.InspecaoEntradaHistoricoCabecalhoFilters) (*dto.GetAllInspecaoEntradaHistoricoItemsDTO, error) {
-	items, err := service.InspecaoEntradaHistoricoRepository.BuscarInspecoesEntradaHistorico(recnoItemNotaFiscal, notaFiscal, lote, baseFilters, filters)
+func (service *InspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoItems(notaFiscal int, lote string, baseFilters *models.BaseFilter) (*dto.GetAllInspecaoEntradaHistoricoItemsDTO, error) {
+	items, err := service.InspecaoEntradaHistoricoRepository.BuscarInspecoesEntradaHistorico(notaFiscal, lote, baseFilters)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +58,7 @@ func (service *InspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoIt
 		return nil, err
 	}
 
-	count, err := service.InspecaoEntradaHistoricoRepository.BuscarQuantidadeInspecoesEntradaHistorico(recnoItemNotaFiscal, notaFiscal, lote, baseFilters, filters)
+	count, err := service.InspecaoEntradaHistoricoRepository.BuscarQuantidadeInspecoesEntradaHistorico(notaFiscal, lote)
 	if err != nil {
 		return nil, err
 	}
@@ -117,8 +116,6 @@ func (service *InspecaoEntradaHistoricoService) GetItemsDto(items []dto.Inspecao
 				LocalDestino:          transferencia.LocalDestino,
 				DescricaoLocalDestino: descricaoDestino,
 				TipoTransferencia:     transferencia.TipoTransferencia,
-				OrdemFabricacao:       transferencia.OrdemFabricacao,
-				Lote:                  transferencia.Lote,
 			})
 		}
 
@@ -133,7 +130,7 @@ func (service *InspecaoEntradaHistoricoService) GetItemsDto(items []dto.Inspecao
 			QuantidadeReprovada: item.QuantidadeReprovada,
 			Inspetor:            item.Inspetor,
 			Resultado:           item.Resultado,
-			DataInspecao:        utils.SetDateTimeZone(item.DataInspecao),
+			DataInspecao:        item.DataInspecao,
 			Transferencias:      transferencias,
 			IdRnc:               item.IdRnc,
 		})

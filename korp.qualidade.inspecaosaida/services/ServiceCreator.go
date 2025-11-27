@@ -73,18 +73,8 @@ func GetInspecaoSaidaService(ctx *fiber.Ctx) (interfaces.IInspecaoSaidaService, 
 		return nil, err
 	}
 
-	impressaoService, err := NewImpressaoService(baseParams)
-	if err != nil {
-		return nil, err
-	}
-
-	empresaRepository, err := repositories.NewEmpresaRepository(uow, baseParams)
-	if err != nil {
-		return nil, err
-	}
-
 	service := NewInspecaoSaidaService(uow, inspecaoSaidaRepository, inspecaoSaidaItemRepository, ordemProducaoRepository,
-		planosInspecaoRepository, baseParams, impressaoService, empresaRepository)
+		planosInspecaoRepository, baseParams)
 
 	return service, nil
 }
@@ -208,26 +198,6 @@ func GetProdutoService(ctx *fiber.Ctx) (interfaces.IProdutoService, error) {
 	return service, nil
 }
 
-func GetEngenhariaService(ctx *fiber.Ctx) (interfaces.IEngenhariaService, error) {
-	uow, err := GetUnitOfWork(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	baseParams, err := getBaseParams(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	engenhariaRepository, err := repositories.NewEngenhariaRepository(uow, baseParams)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewEngenhariaService(engenhariaRepository)
-	return service, nil
-}
-
 func GetLocalService(ctx *fiber.Ctx) (interfaces.ILocalService, error) {
 	uow, err := GetUnitOfWork(ctx)
 	if err != nil {
@@ -245,26 +215,6 @@ func GetLocalService(ctx *fiber.Ctx) (interfaces.ILocalService, error) {
 	}
 
 	service := NewLocalService(localRepository)
-	return service, nil
-}
-
-func GetConfiguracaoService(ctx *fiber.Ctx) (interfaces.IConfiguracaoService, error) {
-	uow, err := GetUnitOfWork(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	baseParams, err := getBaseParams(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	configuracaoRepository, err := repositories.NewConfiguracaoRepository(uow, baseParams)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewConfiguracaoService(configuracaoRepository)
 	return service, nil
 }
 
@@ -295,15 +245,5 @@ func GetInspecaoSaidaHistoricoService(ctx *fiber.Ctx) (interfaces.IInspecaoSaida
 
 	service := NewInspecaoSaidaHistoricoService(uow, inspecaoSaidaHistoricoRepository, baseParams, externalSagaService,
 		inspecaoSaidaExecutadoWebRepository, localRepository)
-	return service, nil
-}
-
-func GetFileProviderProxyService(ctx *fiber.Ctx) (interfaces.IFileProviderProxyService, error) {
-	baseParams, err := getBaseParams(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	service := NewFileProviderProxyService(baseParams, ctx)
 	return service, nil
 }

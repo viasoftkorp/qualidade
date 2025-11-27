@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	dto "bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
-	models "bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -51,18 +50,18 @@ func (mr *MockIExternalInspecaoSaidaSagaServiceMockRecorder) BuscarSaga(arg0 int
 }
 
 // BuscarSagas mocks base method.
-func (m *MockIExternalInspecaoSaidaSagaService) BuscarSagas(arg0 *models.BaseFilter, arg1 *dto.ProcessamentoInspecaoSaidaFilters, arg2 bool) (*dto.GetAllSagaInspecaoSaidaOutput, error) {
+func (m *MockIExternalInspecaoSaidaSagaService) BuscarSagas(arg0, arg1 int, arg2 *dto.ProcessamentoInspecaoSaidaFilters, arg3 bool) (*dto.GetAllSagaInspecaoSaidaOutput, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarSagas", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "BuscarSagas", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*dto.GetAllSagaInspecaoSaidaOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarSagas indicates an expected call of BuscarSagas.
-func (mr *MockIExternalInspecaoSaidaSagaServiceMockRecorder) BuscarSagas(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockIExternalInspecaoSaidaSagaServiceMockRecorder) BuscarSagas(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarSagas", reflect.TypeOf((*MockIExternalInspecaoSaidaSagaService)(nil).BuscarSagas), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarSagas", reflect.TypeOf((*MockIExternalInspecaoSaidaSagaService)(nil).BuscarSagas), arg0, arg1, arg2, arg3)
 }
 
 // PublicarSaga mocks base method.

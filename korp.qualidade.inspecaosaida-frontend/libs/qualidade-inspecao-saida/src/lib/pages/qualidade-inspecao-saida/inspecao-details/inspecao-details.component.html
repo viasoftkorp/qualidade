@@ -9,7 +9,7 @@
     <vs-form>
       <form [formGroup]="form">
         <br group-4/>
-        <vs-input formControlName="odfApontada" placeholder="QualidadeInspecaoSaida.Odf"></vs-input>
+        <vs-input formControlName="odf" placeholder="QualidadeInspecaoSaida.Odf"></vs-input>
         <vs-input formControlName="codProduto" placeholder="QualidadeInspecaoSaida.InspecaoDetails.CodProduto">
         </vs-input>
         <vs-input *ngIf="inspecaoDetalhes.novaInspecao" formControlName="quantidadeInspecionada"
@@ -21,21 +21,12 @@
         <vs-input formControlName="quantidadeInspecao"
           placeholder="QualidadeInspecaoSaida.InspecaoDetails.QuantidadeInspecao" type="number"></vs-input>
         <br group-1/>
-        <vs-label *ngIf="mostrarErroQuantidadeInspecao"
+        <vs-label *ngIf="form.get('quantidadeInspecao').value > form.get('quantidadeInspecionar').value"
           [label]="'QualidadeInspecaoSaida.InspecaoDetails.QuantidadeInspecaoValidacao' | translate" model="error">
         </vs-label>
       </form>
     </vs-form>
-
-  <vs-tab-group (tabIndexChanged)="onSelectedTabIndexChanged($event)">
-    <div *vsTabLabel="{title: 'Métricas'}">
-      <vs-grid *ngIf="!loadingGrid" [options]="gridOptions"></vs-grid>
-    </div>
-    <div *vsTabLabel="{title: 'Arquivos', disabled: inspecaoDetalhes.novaInspecao}">
-      <inspecao-saida-arquivos-inspecao-saida [idInspecao]="inspecaoDetalhes.id" [tabIndex]="1" [selectedTab]="selectedTab"></inspecao-saida-arquivos-inspecao-saida>
-    </div>
-  </vs-tab-group>
-
+    <vs-grid *ngIf="!loadingGrid" [options]="gridOptions"></vs-grid>
   </div>
   <div footer>
     <vs-button type="save" label="QualidadeInspecaoSaida.InspecaoDetails.Salvar" [disabled]="salvarDesabilitado"

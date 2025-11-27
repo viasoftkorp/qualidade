@@ -1,15 +1,12 @@
 package repositories
 
 import (
-	"database/sql"
-	"strings"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/queries"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
+	"database/sql"
 	"github.com/google/uuid"
 )
 
@@ -28,17 +25,12 @@ func NewInspecaoEntradaItemRepository(uow unit_of_work.UnitOfWork) (
 func (repo *InspecaoEntradaItemRepository) BuscarInspecaoEntradaItensPeloCodigo(codigoProduto string, codigoInspecao int, filter *models.BaseFilter) ([]models.InspecaoEntradaItem, error) {
 	var result []models.InspecaoEntradaItem
 
-	if filter.Sorting == "" {
-		filter.Sorting = "PLANOINS.SEQUENCIA ASC"
-	}
-
 	res := repo.Uow.GetDb().
 		Table(entities.InspecaoEntradaItem{}.TableName()).
 		Select(queries.GetInspecaoItensSelect).
-		Joins(queries.GetInspecaoItensPlanoJoin, sql.Named(queries.NamedProdutoCodigo, codigoProduto)).
+		Joins(queries.GetInspecaoItensJoin, sql.Named(queries.NamedProdutoCodigo, codigoProduto)).
 		Where("QA_ITEM_INSPECAO_ENTRADA.CODINSPECAO = ?", codigoInspecao).
-		Where(utils.ApplyAdvancedFilter(filter.AdvancedFilter)).
-		Order(filter.Sorting).
+		Order("QA_ITEM_INSPECAO_ENTRADA.SEQUENCIA").
 		Limit(filter.PageSize).
 		Offset(filter.Skip).
 		Find(&result)
@@ -60,9 +52,6 @@ func (repo *InspecaoEntradaItemRepository) BuscarInspecaoEntradaItensEntitiesPel
 	var result []*entities.InspecaoEntradaItem
 
 	res := repo.Uow.GetDb().
-		Table(entities.InspecaoEntradaItem{}.TableName()).
-		Select(queries.GetInspecaoItensSelect).
-		Joins(queries.GetInspecaoItensInspecaoJoin).
 		Where(&entities.InspecaoEntradaItem{
 			CodigoInspecao: codigoInspecao,
 		}).
@@ -87,7 +76,6 @@ func (repo *InspecaoEntradaItemRepository) CriarItensInspecao(itensModels []mode
 	for _, itemModel := range itensModels {
 		itemEntity := &entities.InspecaoEntradaItem{
 			Id:                     uuid.New(),
-			LegacyIdPlanoInspecao:  itemModel.LegacyIdPlanoInspecao,
 			Plano:                  itemModel.Plano,
 			Descricao:              itemModel.Descricao,
 			Metodo:                 itemModel.Metodo,
@@ -108,25 +96,6 @@ func (repo *InspecaoEntradaItemRepository) CriarItensInspecao(itensModels []mode
 }
 
 func (repo *InspecaoEntradaItemRepository) AtualizarInspecaoEntradaItens(itens []*entities.InspecaoEntradaItem) error {
-	var query = ""
-
-	for _, item := range itens {
-		query += `
-			UPDATE QA_ITEM_INSPECAO_ENTRADA
-			SET MAIORVALOR = @MaiorValor,
-			MENORVALOR = @MenorValor,
-			RESULTADO = @Resultado,
-			OBSERVACAO = @Observacao
-			WHERE Id = @Id
-		`
-
-		query = strings.ReplaceAll(query, "@MaiorValor", item.MaiorValorInspecionado.String())
-		query = strings.ReplaceAll(query, "@MenorValor", item.MenorValorInspecionado.String())
-		query = strings.ReplaceAll(query, "@Resultado", "'"+item.Resultado+"'")
-		query = strings.ReplaceAll(query, "@Observacao", "'"+item.Observacao+"'")
-		query = strings.ReplaceAll(query, "@Id", "'"+item.Id.String()+"'")
-	}
-
-	res := repo.Uow.GetDb().Exec(query)
+	res := repo.Uow.GetDb().Save(itens)
 	return res.Error
 }

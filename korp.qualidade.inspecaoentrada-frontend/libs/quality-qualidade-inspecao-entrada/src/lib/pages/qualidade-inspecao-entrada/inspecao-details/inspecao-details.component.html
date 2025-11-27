@@ -28,7 +28,7 @@
         <vs-input formControlName="quantidadeInspecao"
           placeholder="QualidadeInspecaoEntrada.InspecaoDetails.QuantidadeInspecao" type="number"></vs-input>
         <ng-container *ngIf="this.inspecaoDetalhes.novaInspecao">
-          <vs-label *ngIf="mostrarErroQuantidadeInspecao"
+          <vs-label *ngIf="form.get('quantidadeInspecao').value > form.get('quantidadeInspecionar').value"
             [label]="'QualidadeInspecaoEntrada.InspecaoDetails.QuantidadeInspecaoValidacao' | translate" model="error">
           </vs-label>
         </ng-container>

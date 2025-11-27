@@ -37,7 +37,7 @@ func (repo *LocaisRepository) BuscarLocaisPrincipais(codigoProduto string) ([]dt
 		query = query + "\n" + "WHERE LOCAIS.EMPRESA_RECNO = ?"
 
 		queryResult := repo.Uow.GetDb().
-			Raw(query, repo.BaseParams.LegacyCompanyId).
+			Raw(query, repo.BaseParams.CompanyRecno).
 			Scan(&locais)
 		if queryResult.Error != nil {
 			return nil, queryResult.Error
@@ -51,7 +51,7 @@ func (repo *LocaisRepository) BuscarLocaisPrincipais(codigoProduto string) ([]dt
 	query := `SELECT CAST(LOCAIS.Id AS VARCHAR(36)) AS Id, LOCAIS.CODIGO AS Codigo, LOCAIS.DESCRICAO AS Descricao FROM LOCAIS`
 	query = query + "\n" + "WHERE LOCAL_PRINCIPAL = 'S' AND EMPRESA_RECNO = ?"
 	queryResult := repo.Uow.GetDb().
-		Raw(query, repo.BaseParams.LegacyCompanyId).
+		Raw(query, repo.BaseParams.CompanyRecno).
 		Scan(&locais)
 	if queryResult.Error != nil {
 		return nil, queryResult.Error
@@ -66,7 +66,7 @@ func (repo *LocaisRepository) BuscarLocaisReprovados() ([]dto.LocalOutput, error
 	queryResult := repo.Uow.GetDb().
 		Table("LOCAIS").
 		Where("LOCAL_REPROVADO = 'S'").
-		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.LegacyCompanyId)).
+		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.CompanyRecno)).
 		Select("CAST(LOCAIS.Id AS VARCHAR(36)) AS Id, CODIGO AS Codigo, DESCRICAO AS Descricao").
 		Scan(&locais)
 
@@ -83,7 +83,7 @@ func (repo *LocaisRepository) BuscarLocalReprovado() (int, error) {
 	queryResult := repo.Uow.GetDb().
 		Table("LOCAIS").
 		Where("LOCAL_REPROVADO = 'S'").
-		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.LegacyCompanyId)).
+		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.CompanyRecno)).
 		Select("CODIGO AS localReprovado").
 		Limit(1).
 		Scan(&localReprovado)
@@ -110,7 +110,7 @@ func (repo *LocaisRepository) BuscarLocalEntrada() (int, error) {
 	queryResult := repo.Uow.GetDb().
 		Table("LOCAIS").
 		Where("LOCAL_CQ_ENTRADA = 'S'").
-		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.LegacyCompanyId)).
+		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.CompanyRecno)).
 		Select("CODIGO AS localAcabado").
 		Limit(1).
 		Scan(&localEntrada)
@@ -128,7 +128,7 @@ func (repo *LocaisRepository) BuscarLocalDescricao(codigoLocal int) (string, err
 	queryResult := repo.Uow.GetDb().
 		Table("LOCAIS").
 		Where("CODIGO = " + strconv.Itoa(codigoLocal)).
-		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.LegacyCompanyId)).
+		Where(fmt.Sprintf("EMPRESA_RECNO = %d", repo.BaseParams.CompanyRecno)).
 		Select("DESCRICAO AS descricao").
 		Limit(1).
 		Scan(&descricao)
@@ -151,7 +151,7 @@ func (repo *LocaisRepository) BuscarLocalPeloCodigo(codigoLocal int) (*dto.Local
 	res = repo.Uow.GetDb().WithContext(ctx).
 		Raw(query,
 			sql.Named(queries.NamedLocal, strconv.Itoa(codigoLocal)),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 		).
 		Scan(&local)
 
@@ -183,7 +183,7 @@ func (repo *LocaisRepository) BuscarLocais(filterInput *models.BaseFilter) ([]dt
 		Raw(query,
 			sql.Named(queries.NamedPageSize, filterInput.PageSize),
 			sql.Named(queries.NamedSkip, filterInput.Skip),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 			sql.Named(queries.NamedFilter, "%"+filterInput.Filter+"%")).
 		Scan(&locais)
 
@@ -211,7 +211,7 @@ func (repo *LocaisRepository) BuscarLocaisTotalCount(filterInput *models.BaseFil
 		Raw(query,
 			sql.Named(queries.NamedPageSize, filterInput.PageSize),
 			sql.Named(queries.NamedSkip, filterInput.Skip),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 			sql.Named(queries.NamedFilter, "%"+filterInput.Filter+"%")).
 		Count(&count)
 

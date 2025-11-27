@@ -1,23 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
+
+import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import {
-  IPagedResultOutputDto,
-  JQQB_COND_OR,
-  JQQB_NUMBER_OPERATORS, JQQB_OP_CONTAINS,
-  JQQB_OP_EQUAL,
-  JQQB_OP_GREATER_OR_EQUAL,
-  VsStorageService,
-  VsSubscriptionManager
-} from '@viasoft/common';
+
+import { VsStorageService, VsSubscriptionManager } from '@viasoft/common';
 import {
   VsDialog,
-  VsFilterGetItemsInput,
-  VsFilterGetItemsOutput,
-  VsFilterItem,
-  VsFilterOptions,
   VsGridDateTimeColumn,
   VsGridGetInput,
   VsGridGetResult,
@@ -32,19 +23,16 @@ import {
   GetAllProcessamentoInspecaoSaidaOutput,
   MovimentarInspecaoStatus,
   ProcessamentoInspecaoSaidaFilters,
-  ProcessamentoInspecaoSaidaOutput,
-  ResultadosInspecao
+  ProcessamentoInspecaoSaidaOutput
 } from '../../../../tokens';
 import { ProcessamentoInspecaoService } from '../../processamento-inspecao.service';
 import { ProcessamentoInspecaoViewService } from '../processamento-inspecao-view.service';
 import { ProcessamentoInspecaoDetailsModalComponent } from '../../processamento-inspecao-details-modal/processamento-inspecao-details-modal.component';
-import { UserAutocompleteService, UserOutput } from '@viasoft/administration';
 
 @Component({
   selector: 'qa-processamento-inspecao-grid',
   templateUrl: './processamento-inspecao-grid.component.html',
-  styleUrls: ['./processamento-inspecao-grid.component.scss'],
-  providers: [UserAutocompleteService]
+  styleUrls: ['./processamento-inspecao-grid.component.scss']
 })
 export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy {
   @Input() private estorno: boolean;
@@ -57,7 +45,7 @@ export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy 
   constructor(private processamentoInspecaoService: ProcessamentoInspecaoService,
     private service: ProcessamentoInspecaoViewService, private decimalPipe: DecimalPipe,
     private vsDialog: VsDialog, private storageService: VsStorageService,
-    private translateService: TranslateService, private userAutocompleteService: UserAutocompleteService) {
+    private translateService: TranslateService) {
     this.iniciarGrid();
   }
 
@@ -72,24 +60,21 @@ export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy 
   }
 
   private iniciarGrid(): void {
-    this.gridOptions.id = '7AC3E739-23B5-4D55-9A0B-EB0B944CEE45';
+    this.gridOptions.id = '1B87A3DE-66F9-4AD0-A793-FDAEF5A48D81';
+    this.gridOptions.enableSorting = false;
+    this.gridOptions.enableQuickFilter = false;
+    this.gridOptions.enableFilter = false;
     this.gridOptions.sizeColumnsToFit = false;
 
     this.gridOptions.columns = [
       new VsGridTagColumn({
         headerName: 'ProcessamentoInspecao.Status',
         field: 'statusTag',
-        width: 130,
-        kind: 'number',
-        filterOptions: this.statusFilterOptions,
-        sorting: {
-          disable: true
-        }
+        width: 130
       }),
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.Resultado',
-        field: 'resultado',
-        filterOptions: this.resultadoFilterOptions
+        field: 'resultado'
       }),
       new VsGridNumberColumn({
         headerName: 'ProcessamentoInspecao.QuantidadeTotal',
@@ -100,13 +85,7 @@ export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy 
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.Produto',
         field: 'descricaoProduto',
-        width: 500,
-        filterOptions: {
-          useField: 'codigoProduto'
-        },
-        sorting: {
-          useField: 'codigoProduto'
-        }
+        width: 500
       }),
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.Lote',
@@ -116,27 +95,12 @@ export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy 
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.Odf',
         field: 'odf',
-        width: 130,
-        kind: 'number',
-        filterOptions: {
-          useField: 'ordemFabricacao',
-          operators: JQQB_NUMBER_OPERATORS
-        },
-        sorting: {
-          useField: 'ordemFabricacao'
-        }
+        width: 130
       }),
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.OdfRetrabalho',
         field: 'odfRetrabalho',
-        width: 130,
-        kind: 'number',
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        width: 130
       }),
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.Erro',
@@ -149,11 +113,7 @@ export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy 
       }),
       new VsGridSimpleColumn({
         headerName: 'ProcessamentoInspecao.UsuarioExecucao',
-        field: 'nomeUsuarioExecucao',
-        filterOptions: this.nomeUsuarioExecucaoFilterOptions,
-        sorting: {
-          disable: true
-        }
+        field: 'nomeUsuarioExecucao'
       }),
       new VsGridDateTimeColumn({
         headerName: 'ProcessamentoInspecao.DataExecucao',
@@ -231,94 +191,5 @@ export class ProcessamentoInspecaoGridComponent implements OnChanges, OnDestroy 
       .subscribe(() => {
         this.gridOptions.refresh();
       }));
-  }
-
-  private get statusFilterOptions(): VsFilterOptions {
-    return {
-      operators: [JQQB_OP_EQUAL],
-      conditions: [JQQB_COND_OR],
-      blockInput: true,
-      useField: 'status',
-      mode: 'selection',
-      multiple: true,
-      getItems: () => of({
-        items: [
-          {
-            key: MovimentarInspecaoStatus.Inicio.toString(),
-            value: `ProcessamentoInspecao.MovimentarInspecaoStatus.${MovimentarInspecaoStatus[MovimentarInspecaoStatus.Inicio]}`,
-          },
-          {
-            key: MovimentarInspecaoStatus.EmProcesso.toString(),
-            value: `ProcessamentoInspecao.MovimentarInspecaoStatus.${MovimentarInspecaoStatus[MovimentarInspecaoStatus.EmProcesso]}`,
-          },
-          {
-            key: MovimentarInspecaoStatus.Falha.toString(),
-            value: `ProcessamentoInspecao.MovimentarInspecaoStatus.${MovimentarInspecaoStatus[MovimentarInspecaoStatus.Falha]}`,
-          },
-          {
-            key: MovimentarInspecaoStatus.Sucesso.toString(),
-            value: `ProcessamentoInspecao.MovimentarInspecaoStatus.${MovimentarInspecaoStatus[MovimentarInspecaoStatus.Sucesso]}`,
-          }
-        ],
-        totalCount: 4
-      })
-    };
-  }
-
-  private get resultadoFilterOptions(): VsFilterOptions {
-    return {
-      operators: [JQQB_OP_EQUAL],
-      conditions: [JQQB_COND_OR],
-      blockInput: true,
-      mode: 'selection',
-      multiple: true,
-      getItems: () => of({
-        items: [
-          {
-            key: ResultadosInspecao.Aprovado.toString(),
-            value: `ProcessamentoInspecao.Resultados.Aprovado`,
-          },
-          {
-            key: ResultadosInspecao.ParcialmenteAprovado.toString(),
-            value: `ProcessamentoInspecao.Resultados.ParcialmenteAprovado`,
-          },
-          {
-            key: ResultadosInspecao.NaoAplicavel.toString(),
-            value: `ProcessamentoInspecao.Resultados.NaoAplicavel`,
-          },
-          {
-            key: ResultadosInspecao.NaoConforme.toString(),
-            value: `ProcessamentoInspecao.Resultados.NaoConforme`,
-          }
-        ],
-        totalCount: 4
-      })
-    };
-  }
-
-  private get nomeUsuarioExecucaoFilterOptions(): VsFilterOptions {
-    return {
-      useField: 'idUsuarioExecucao',
-      mode: 'selection',
-      blockInput: true,
-      getItemsFilterFields: ['firstName', 'secondName'],
-      getItemsFilterOperator: JQQB_OP_CONTAINS,
-      operators: [JQQB_OP_EQUAL],
-      conditions: [JQQB_COND_OR],
-      multiple: true,
-      getItems: (input: VsFilterGetItemsInput) => this.userAutocompleteService
-        .getAll({
-          maxResultCount: input.maxResultCount,
-          skipCount: input.skipCount,
-          advancedFilter: input.filter
-        } as VsGridGetInput)
-        .pipe(map((pagedResult: IPagedResultOutputDto<UserOutput>): VsFilterGetItemsOutput => ({
-          items: pagedResult.items.map((user) => ({
-            key: user.id,
-            value: user.login
-          } as VsFilterItem)),
-          totalCount: pagedResult.totalCount
-        })))
-    };
   }
 }

@@ -9,7 +9,6 @@ import (
 	"context"
 	"database/sql"
 	"gorm.io/gorm"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -82,7 +81,7 @@ func (repo *ProdutoRepository) BuscarProdutos(filterInput *models.BaseFilter) ([
 		Raw(query,
 			sql.Named(queries.NamedPageSize, filterInput.PageSize),
 			sql.Named(queries.NamedSkip, filterInput.Skip),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 			sql.Named(queries.NamedFilter, "%"+filterInput.Filter+"%")).
 		Scan(&produtos)
 
@@ -108,7 +107,7 @@ func (repo *ProdutoRepository) BuscarProdutosTotalCount(filterInput *models.Base
 		Raw(query,
 			sql.Named(queries.NamedPageSize, filterInput.PageSize),
 			sql.Named(queries.NamedSkip, filterInput.Skip),
-			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId),
+			sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno),
 			sql.Named(queries.NamedFilter, "%"+filterInput.Filter+"%")).
 		Count(&count)
 
@@ -117,25 +116,4 @@ func (repo *ProdutoRepository) BuscarProdutosTotalCount(filterInput *models.Base
 	}
 
 	return count, nil
-}
-
-func (repo *ProdutoRepository) GetRecnoFormulaLote(codigo string) (*int, error) {
-	var recnoFormulaLote int
-	var res *gorm.DB
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	query := queries.GetRecnoFormulaLoteProduto
-	query = strings.Replace(query, "@EMPRESA_RECNO", strconv.Itoa(repo.BaseParams.LegacyCompanyId), 1)
-
-	res = repo.Uow.GetDb().WithContext(ctx).
-		Raw(query, sql.Named(queries.NamedProdutoCodigo, codigo)).
-		Scan(&recnoFormulaLote)
-
-	if res.Error != nil {
-		return nil, res.Error
-	}
-
-	return &recnoFormulaLote, nil
 }

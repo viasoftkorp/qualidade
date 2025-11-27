@@ -10,7 +10,6 @@ export interface HistoricoInspecaoSaidaOutput {
   descricaoProduto: string;
   quantidadeLote: number;
   quantidadeInspecao: number;
-  codigoInspecao: number;
 }
 
 export interface GetAllHistoricoInspecaoSaidaItensOutput {
@@ -19,7 +18,6 @@ export interface GetAllHistoricoInspecaoSaidaItensOutput {
 }
 
 export interface HistoricoInspecaoSaidaItensOutput {
-  idInspecao: string;
   codigoInspecao: number;
   recnoInspecao: number;
   odfApontada: number;
@@ -42,7 +40,6 @@ export interface HistoricoInspecaoSaidaItensOutput {
 
 export interface HistoricoInspecaoSaidaTransferenciaOutput {
   ordemFabricacao: number;
-  odfApontada: number;
   quantidade: number;
   numeroPedido: string;
   localOrigem: number;

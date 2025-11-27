@@ -51,18 +51,18 @@ func (mr *MockIInspecaoEntradaRepositoryMockRecorder) AtualizarQuantidadeInspeca
 }
 
 // BuscarInformacoesPreenchimentoRNC mocks base method.
-func (m *MockIInspecaoEntradaRepository) BuscarInformacoesPreenchimentoRNC(arg0, arg1 int, arg2 string, arg3 string) (*dto.RncDetailsOutputDTO, error) {
+func (m *MockIInspecaoEntradaRepository) BuscarInformacoesPreenchimentoRNC(arg0, arg1 int, arg2 string) (*dto.RncDetailsOutputDTO, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarInformacoesPreenchimentoRNC", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "BuscarInformacoesPreenchimentoRNC", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*dto.RncDetailsOutputDTO)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarInformacoesPreenchimentoRNC indicates an expected call of BuscarInformacoesPreenchimentoRNC.
-func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarInformacoesPreenchimentoRNC(arg0, arg1, arg2 interface{}, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarInformacoesPreenchimentoRNC(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInformacoesPreenchimentoRNC", reflect.TypeOf((*MockIInspecaoEntradaRepository)(nil).BuscarInformacoesPreenchimentoRNC), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInformacoesPreenchimentoRNC", reflect.TypeOf((*MockIInspecaoEntradaRepository)(nil).BuscarInformacoesPreenchimentoRNC), arg0, arg1, arg2)
 }
 
 // BuscarInspecaoEntradaDetalhesPeloCodigo mocks base method.
@@ -126,18 +126,18 @@ func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarInspecaoEntradaPeloR
 }
 
 // BuscarInspecoesEntrada mocks base method.
-func (m *MockIInspecaoEntradaRepository) BuscarInspecoesEntrada(arg0 int, arg1 string, arg2 *models.BaseFilter, arg3 *dto.InspecaoEntradaFilters) ([]entities.InspecaoEntrada, error) {
+func (m *MockIInspecaoEntradaRepository) BuscarInspecoesEntrada(arg0 int, arg1 string, arg2 *models.BaseFilter) ([]entities.InspecaoEntrada, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarInspecoesEntrada", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "BuscarInspecoesEntrada", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]entities.InspecaoEntrada)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarInspecoesEntrada indicates an expected call of BuscarInspecoesEntrada.
-func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarInspecoesEntrada(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarInspecoesEntrada(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesEntrada", reflect.TypeOf((*MockIInspecaoEntradaRepository)(nil).BuscarInspecoesEntrada), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesEntrada", reflect.TypeOf((*MockIInspecaoEntradaRepository)(nil).BuscarInspecoesEntrada), arg0, arg1, arg2)
 }
 
 // BuscarNovoCodigoInspecao mocks base method.
@@ -155,18 +155,18 @@ func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarNovoCodigoInspecao()
 }
 
 // BuscarQuantidadeInspecoesEntrada mocks base method.
-func (m *MockIInspecaoEntradaRepository) BuscarQuantidadeInspecoesEntrada(arg0 int, arg1 string, arg2 *models.BaseFilter, arg3 *dto.InspecaoEntradaFilters) (int64, error) {
+func (m *MockIInspecaoEntradaRepository) BuscarQuantidadeInspecoesEntrada(arg0 int, arg1 string) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarQuantidadeInspecoesEntrada", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "BuscarQuantidadeInspecoesEntrada", arg0, arg1)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarQuantidadeInspecoesEntrada indicates an expected call of BuscarQuantidadeInspecoesEntrada.
-func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarQuantidadeInspecoesEntrada(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaRepositoryMockRecorder) BuscarQuantidadeInspecoesEntrada(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarQuantidadeInspecoesEntrada", reflect.TypeOf((*MockIInspecaoEntradaRepository)(nil).BuscarQuantidadeInspecoesEntrada), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarQuantidadeInspecoesEntrada", reflect.TypeOf((*MockIInspecaoEntradaRepository)(nil).BuscarQuantidadeInspecoesEntrada), arg0, arg1)
 }
 
 // CriarInspecao mocks base method.

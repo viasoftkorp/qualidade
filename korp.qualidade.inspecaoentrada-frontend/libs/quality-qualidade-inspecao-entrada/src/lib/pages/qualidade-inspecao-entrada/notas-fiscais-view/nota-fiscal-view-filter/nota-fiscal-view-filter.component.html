@@ -1,0 +1,50 @@
+<vs-dialog>
+  <vs-icon
+    icon="filter">
+  </vs-icon>
+  <vs-label
+    title
+    label="QualidadeInspecaoEntrada.Filtros">
+  </vs-label>
+
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <vs-input
+          formControlName="lote"
+          placeholder="QualidadeInspecaoEntrada.Lote">
+        </vs-input>
+
+        <vs-input
+          formControlName="notaFiscal"
+          placeholder="QualidadeInspecaoEntrada.NotaFiscal"
+          type="number">
+        </vs-input>
+
+        <vs-input
+          formControlName="fornecedor"
+          placeholder="QualidadeInspecaoEntrada.NotaFiscalGrid.DescricaoForneced">
+        </vs-input>
+
+        <qa-produto-autocomplete-select
+          controlName="codigoProduto"
+          placeholder="QualidadeInspecaoEntrada.Produto">
+        </qa-produto-autocomplete-select>
+
+        <vs-datepicker
+          controlName="dataEntrada"
+          placeholder="QualidadeInspecaoEntrada.NotaFiscalGrid.DataEntrada">
+        </vs-datepicker>
+
+      </form>
+    </vs-form>
+  </div>
+
+  <div footer>
+    <vs-button
+      type="save"
+      label="QualidadeInspecaoEntrada.Filtrar"
+      (click)="filtrar()"
+    ></vs-button>
+  </div>
+</vs-dialog>

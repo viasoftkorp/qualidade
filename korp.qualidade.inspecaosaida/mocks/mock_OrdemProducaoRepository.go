@@ -36,34 +36,17 @@ func (m *MockIOrdemProducaoRepository) EXPECT() *MockIOrdemProducaoRepositoryMoc
 }
 
 // BuscarOrdem mocks base method.
-func (m *MockIOrdemProducaoRepository) BuscarOrdem(arg0 int, arg1 string) *models.OrdemProducao {
+func (m *MockIOrdemProducaoRepository) BuscarOrdem(arg0 int) *models.OrdemProducao {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarOrdem", arg0, arg1)
+	ret := m.ctrl.Call(m, "BuscarOrdem", arg0)
 	ret0, _ := ret[0].(*models.OrdemProducao)
 	return ret0
-}
-
-// BuscarHisrealRelatorio mocks base method.
-func (m *MockIOrdemProducaoRepository) BuscarHisrealRelatorio(arg0 int, arg1 *string) *models.OrdemProducao {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarHisrealRelatorio", arg0, arg1)
-	ret0, _ := ret[0].(*models.OrdemProducao)
-	return ret0
-}
-
-// BuscarClienteRelatorio mocks base method.
-func (m *MockIOrdemProducaoRepository) BuscarClienteRelatorio(arg0 int) (*string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarClienteRelatorio", arg0)
-	ret0, _ := ret[0].(*string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
 }
 
 // BuscarOrdem indicates an expected call of BuscarOrdem.
-func (mr *MockIOrdemProducaoRepositoryMockRecorder) BuscarOrdem(arg0 interface{}, arg1 interface{}) *gomock.Call {
+func (mr *MockIOrdemProducaoRepositoryMockRecorder) BuscarOrdem(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarOrdem", reflect.TypeOf((*MockIOrdemProducaoRepository)(nil).BuscarOrdem), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarOrdem", reflect.TypeOf((*MockIOrdemProducaoRepository)(nil).BuscarOrdem), arg0)
 }
 
 // BuscarOrdemPaiHistoricoMovimentacao mocks base method.

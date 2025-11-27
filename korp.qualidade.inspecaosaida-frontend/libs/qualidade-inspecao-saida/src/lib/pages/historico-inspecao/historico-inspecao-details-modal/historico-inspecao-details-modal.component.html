@@ -1,0 +1,27 @@
+<div class="div-flex">
+  <vs-dialog>
+    <div icon>
+      <vs-icon icon="tasks"></vs-icon>
+    </div>
+    <div title>
+      <vs-label label="HistoricoInspecao.Transferencias"></vs-label>
+    </div>
+
+    <div content>
+      <vs-grid *ngIf="gridOptions" [options]="gridOptions"></vs-grid>
+    </div>
+  </vs-dialog>
+
+  <vs-dialog>
+    <div icon>
+      <vs-icon icon="pen"></vs-icon>
+    </div>
+    <div title>
+      <vs-label label="HistoricoInspecao.Metricas"></vs-label>
+    </div>
+
+    <div content>
+      <vs-grid *ngIf="gridMetricasOptions" [options]="gridMetricasOptions"></vs-grid>
+    </div>
+  </vs-dialog>
+</div>

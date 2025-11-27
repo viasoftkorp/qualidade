@@ -22,7 +22,6 @@ export interface QualidadeInspecaoSaidaI18N extends IKeyTranslate {
       QuantidadeReprovada: string;
       EditarInspecao: string;
       ExcluirInspecao: string;
-      ImprimirInspecao: string;
     };
     InspecaoDetails: {
       QuantidadePedidoVenda: string;
@@ -51,7 +50,6 @@ export interface QualidadeInspecaoSaidaI18N extends IKeyTranslate {
         Aprovado: string;
         NaoAplicavel: string;
         NaoConforme: string;
-        ParcialmenteAprovado: string;
         Alterar: string;
       };
       FinalizarInspecaoModal: {
@@ -101,12 +99,6 @@ export interface QualidadeInspecaoSaidaI18N extends IKeyTranslate {
       DataEmissao: string;
       DataNegociada: string;
       NovaInspecao: string;
-    };
-    Resultados: {
-      Aprovado: string;
-      NaoAplicavel: string;
-      NaoConforme: string;
-      ParcialmenteAprovado: string;
     };
   };
   HistoricoInspecao: {
@@ -166,12 +158,5 @@ export interface QualidadeInspecaoSaidaI18N extends IKeyTranslate {
       DescricaoLocalDestino: string;
       NumeroPedido: string;
     }
-  };
-  FiltrosInspecao: {
-    Filtrar: string;
-    Metricas: string;
-    Observacao: string;
-    Aplicar: string;
-    Limpar: string;
   };
 }

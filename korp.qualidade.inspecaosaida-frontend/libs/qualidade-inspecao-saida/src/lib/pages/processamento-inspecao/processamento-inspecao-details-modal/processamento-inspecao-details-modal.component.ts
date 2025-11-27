@@ -34,7 +34,7 @@ export class ProcessamentoInspecaoDetailsModalComponent {
 
   private iniciarGrid(utilizarReservaPedido: boolean): void {
     this.gridOptions = new VsGridOptions();
-    this.gridOptions.id = 'D4F5F5FB-DE07-4255-9136-539E0F299E5E';
+    this.gridOptions.id = '9d2f445d-df73-4d2f-9363-f3756355f494';
     this.gridOptions.enableSorting = false;
     this.gridOptions.enableQuickFilter = false;
     this.gridOptions.enableFilter = false;

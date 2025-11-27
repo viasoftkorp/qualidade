@@ -43,11 +43,11 @@ export class ProcessamentoInspecaoViewFilterComponent {
       status: [this.filtros.status],
       resultado: [this.filtros.resultado],
       quantidadeTotal: [this.filtros.quantidadeTotal],
-      codigoProduto: [this.filtros.codigoProduto],
+      codigoProduto: [this.filtros.codigoProduto ? { value: this.filtros.codigoProduto, key: '' } : null],
       notaFiscal: [this.filtros.notaFiscal],
       erro: [this.filtros.erro],
       numeroExecucoes: [this.filtros.numeroExecucoes],
-      idUsuarioExecucao: [this.filtros.idUsuarioExecucao],
+      idUsuarioExecucao: [this.filtros.idUsuarioExecucao ? { value: this.filtros.idUsuarioExecucao, key: '' } : null],
       dataExecucao: [this.filtros.dataExecucao],
     });
   }

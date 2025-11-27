@@ -16,10 +16,9 @@ type GetAllInspecaoEntradaHistoricoCabecalhoDTO struct {
 }
 
 type InspecaoEntradaHistoricoCabecalhoFilters struct {
-	NotaFiscal          *int     `json:"notaFiscal"`
-	CodigoProduto       *string  `json:"codigoProduto"`
-	Lote                *string  `json:"lote"`
-	ObservacoesMetricas []string `json:"observacoesMetricas"`
+	NotaFiscal    *int    `json:"notaFiscal"`
+	CodigoProduto *string `json:"codigoProduto"`
+	Lote          *string `json:"lote"`
 }
 
 type InspecaoEntradaHistoricoItems struct {
@@ -40,7 +39,7 @@ type InspecaoEntradaHistoricoItems struct {
 type InspecaoEntradaHistoricoItemsDTO struct {
 	RecnoInspecao       int                                           `json:"recnoInspecao"`
 	CodigoInspecao      int                                           `json:"codigoInspecao"`
-	NotaFiscal          int                                           `json:"notaFiscal"`
+	NotaFiscal          int                                           `json:"ordemFabricacao"`
 	CodigoProduto       string                                        `json:"codigoProduto"`
 	DescricaoProduto    string                                        `json:"descricaoProduto"`
 	QuantidadeInspecao  float64                                       `json:"quantidadeInspecao"`
@@ -59,7 +58,7 @@ type GetAllInspecaoEntradaHistoricoItemsDTO struct {
 }
 
 type HistoricoInspecaoEntradaTransferenciaOutput struct {
-	NotaFiscal            int     `json:"notaFiscal"`
+	NotaFiscal            int     `json:"ordemFabricacao"`
 	Quantidade            float64 `json:"quantidade"`
 	NumeroPedido          string  `json:"numeroPedido"`
 	LocalOrigem           int     `json:"localOrigem"`
@@ -67,6 +66,4 @@ type HistoricoInspecaoEntradaTransferenciaOutput struct {
 	LocalDestino          int     `json:"localDestino"`
 	DescricaoLocalDestino string  `json:"descricaoLocalDestino"`
 	TipoTransferencia     int     `json:"tipoTransferencia"`
-	OrdemFabricacao       int     `json:"ordemFabricacao"`
-	Lote                  string  `json:"lote"`
 }

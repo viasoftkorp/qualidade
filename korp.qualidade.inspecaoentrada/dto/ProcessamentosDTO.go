@@ -34,8 +34,6 @@ type ProcessamentoInspecaoEntradaTransferenciaOutput struct {
 	LocalDestino          int     `json:"localDestino"`
 	DescricaoLocalDestino string  `json:"descricaoLocalDestino"`
 	TipoTransferencia     int     `json:"tipoTransferencia"`
-	Lote                  string  `json:"lote"`
-	LoteOrigem            string  `json:"loteOrigem"`
 }
 
 type ProcessamentoInspecaoEntradaFilters struct {

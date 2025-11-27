@@ -4,7 +4,6 @@ import {
   VsAutocompleteModule,
   VsButtonModule,
   VsCheckboxModule,
-  VsChipListModule,
   VsDatepickerModule,
   VsDialogModule,
   VsFormModule,
@@ -32,24 +31,17 @@ import { QualidadeInspecaoEntradaComponent } from './qualidade-inspecao-entrada.
 import {
   AlterarDadosFinalizacaoModalComponent
 } from './inspecao-details/finalizar-inspecao-modal/alterar-dados-finalizacao-modal/alterar-dados-finalizacao-modal.component';
+import {
+  NotaFiscalViewFilterComponent
+} from './notas-fiscais-view/nota-fiscal-view-filter/nota-fiscal-view-filter.component';
 import { ComponentsModule } from '../../components/components.module';
-import { HistoricoService } from '../../services/historico.service';
-import { HistoricoInspecaoViewService } from './historico/inspecao-historico-view/historico-inspecao-view.service';
-import { DecimalPipe } from '@angular/common';
+import {InspecaoHistoricoViewComponent} from "../historico/inspecao-historico-view/inspecao-historico-view.component";
+import {HistoricoService} from "../../services/historico.service";
+import {HistoricoInspecaoViewService} from "../historico/inspecao-historico-view/historico-inspecao-view.service";
+import {DecimalPipe} from "@angular/common";
 import { RncLibModule } from '@viasoft/rnc-lib';
 import { PersonLibStartupModule } from '@viasoft/person-lib';
 import { FileProviderTagStartupModule } from '@viasoft/custom-file-provider-tag';
-import { HistoricoModule } from './historico/historico.module';
-import { InspecoesAbertasComponent } from './inspecoes-abertas/inspecoes-abertas.component';
-import { ArquivosInspecaoEntradaModule } from './arquivos-inspecao-entrada/arquivos-inspecao-entrada.module';
-import { FormsModule } from '@angular/forms';
-import { QuebraLotesGridComponent } from './inspecao-details/finalizar-inspecao-modal/quebra-lotes-grid/quebra-lotes-grid.component';
-import { QuebraLoteEditorComponent } from './inspecao-details/finalizar-inspecao-modal/quebra-lotes-grid/quebra-lote-editor/quebra-lote-editor.component';
-import { QuebraLoteService } from './inspecao-details/finalizar-inspecao-modal/quebra-lotes-grid/quebra-lote.service';
-import { FiltrosInspecaoComponent } from './filtros-inspecao/filtros-inspecao.component';
-import {
-  FiltrosInspecaoModalComponent
-} from './filtros-inspecao/filtros-inspecao-modal/filtros-inspecao-modal.component';
 
 @NgModule({
   declarations: [
@@ -60,11 +52,8 @@ import {
     AlterarDadosInspecaoModalComponent,
     FinalizarInspecaoModalComponent,
     AlterarDadosFinalizacaoModalComponent,
-    InspecoesAbertasComponent,
-    QuebraLotesGridComponent,
-    QuebraLoteEditorComponent,
-    FiltrosInspecaoComponent,
-    FiltrosInspecaoModalComponent
+    NotaFiscalViewFilterComponent,
+    InspecaoHistoricoViewComponent
   ],
   imports: [
     VsCommonModule.forChild({
@@ -92,18 +81,13 @@ import {
     VsTextareaModule,
     RncLibModule,
     PersonLibStartupModule,
-    FileProviderTagStartupModule,
-    HistoricoModule,
-    ArquivosInspecaoEntradaModule,
-    FormsModule,
-    VsChipListModule
+    FileProviderTagStartupModule
   ],
   providers: [
     QualidadeInspecaoEntradaService,
     HistoricoService,
     HistoricoInspecaoViewService,
-    DecimalPipe,
-    QuebraLoteService
+    DecimalPipe
   ],
   exports: [
     QualidadeInspecaoEntradaComponent

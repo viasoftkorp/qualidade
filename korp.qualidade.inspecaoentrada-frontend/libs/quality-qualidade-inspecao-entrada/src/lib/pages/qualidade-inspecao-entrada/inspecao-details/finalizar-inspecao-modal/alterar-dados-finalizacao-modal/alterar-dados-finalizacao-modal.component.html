@@ -6,26 +6,14 @@
     <vs-label label="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.Titulo"></vs-label>
   </div>
   <div content>
-    <vs-form *ngIf="form">
-      <form [formGroup]="form" group-2>
+    <vs-form>
+      <form *ngIf="form" [formGroup]="form" group-2>
         <vs-input formControlName="pedido"
           placeholder="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.NumeroPedido">
         </vs-input>
-        <vs-input formControlName="numeroOdf"
-          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.Odf">
-        </vs-input>
-
-        <br group-3/>
-        <vs-input formControlName="quantidadeInspecao" type="number"
-          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.QuantidadeInspecao">
-        </vs-input>
         <vs-input formControlName="quantidadeAlocadaPedido" type="number"
-          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.QuantidadePedido">
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.QuantidadeAlocadaPedido">
         </vs-input>
-        <vs-input formControlName="quantidadeRestanteInspecionar" type="number"
-          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.AlterarDadosFinalizacaoModal.SaldoInspecionar">
-        </vs-input>
-
         <vs-input
           formControlName="quantidadeAprovada"
           type="number"
@@ -53,7 +41,6 @@
         <vs-label *ngIf="formCustomValidatorMessage" [label]="formCustomValidatorMessage" model="error">
         </vs-label>
       </form>
-      <inspecao-entrada-quebra-lotes-grid [utilizaReserva]="true" [recnoInspecao]="recnoInspecao" [inspecaoDto]="inspecaoDto" [codigoProduto]="codigoProduto"></inspecao-entrada-quebra-lotes-grid>
     </vs-form>
   </div>
   <div footer>

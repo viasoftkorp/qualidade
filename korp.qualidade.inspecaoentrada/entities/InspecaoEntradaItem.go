@@ -8,8 +8,7 @@ import (
 type InspecaoEntradaItem struct {
 	Recno                  int             `gorm:"primaryKey;column:R_E_C_N_O_"`
 	Id                     uuid.UUID       `gorm:"column:Id"`
-	LegacyIdPlanoInspecao  int             `gorm:"column:RECNO_PLANO_INSPECAO"`
-	Plano                  string          `gorm:"column:PLANO"`
+	Plano                  int             `gorm:"column:PLANO"`
 	Descricao              string          `gorm:"column:DESCRICAO_PLANO"`
 	Metodo                 string          `gorm:"column:METODO"`
 	Sequencia              string          `gorm:"column:SEQUENCIA"`

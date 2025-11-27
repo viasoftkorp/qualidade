@@ -20,7 +20,7 @@ func NewPlanosInspecaoRepository(uow unit_of_work.UnitOfWork) (
 	}, nil
 }
 
-func (repo *PlanosInspecaoRepository) BuscarPlanosNovaInspecao(plano string, codigoProduto string, filter *models.BaseFilter) (
+func (repo *PlanosInspecaoRepository) BuscarPlanosNovaInspecao(plano int, codigoProduto string, filter *models.BaseFilter) (
 	[]models.PlanoInspecao, error) {
 	var result []models.PlanoInspecao
 
@@ -34,7 +34,7 @@ func (repo *PlanosInspecaoRepository) BuscarPlanosNovaInspecao(plano string, cod
 	return result, res.Error
 }
 
-func (repo *PlanosInspecaoRepository) BuscarQuantidadePlanosNovaInspecao(plano string, codigoProduto string) (
+func (repo *PlanosInspecaoRepository) BuscarQuantidadePlanosNovaInspecao(plano int, codigoProduto string) (
 	int64, error) {
 	var result int64
 
@@ -46,7 +46,7 @@ func (repo *PlanosInspecaoRepository) BuscarQuantidadePlanosNovaInspecao(plano s
 	return result, res.Error
 }
 
-func (repo *PlanosInspecaoRepository) BuscarTodosPlanosNotaFiscalProduto(plano string, codigoProduto string) ([]models.PlanoInspecao, error) {
+func (repo *PlanosInspecaoRepository) BuscarTodosPlanosNotaFiscalProduto(plano int, codigoProduto string) ([]models.PlanoInspecao, error) {
 	var result []models.PlanoInspecao
 
 	res := repo.Uow.GetDb().Raw(queries.GetPlanosNovaInspecao,

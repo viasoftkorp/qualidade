@@ -43,8 +43,6 @@ def publishProduction  = true           // Caso seu serviço não rode em produ�
 
 def buildType = "frontend"
 
-def jnlpImageTag = "1.1.x"
-
 def data = """ {
     "serviceName": "${env.JOB_NAME.replaceFirst(/^([^\/]+?)\/.*$/, '$1')}",
     "buildNumber": "${env.BUILD_NUMBER}",
@@ -77,8 +75,7 @@ def data = """ {
     "skipTests": ${skipTests},
     "runAsContainer": ${runAsContainer},
     "shouldLogEnvVariables": ${shouldLogEnvVariables},
-    "shouldLogVersions": ${shouldLogVersions},
-    "jnlpImageTag": "${jnlpImageTag}"
+    "shouldLogVersions": ${shouldLogVersions}
 }
 """
 

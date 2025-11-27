@@ -1,19 +1,16 @@
 package services
 
 import (
-	"encoding/base64"
-	"strconv"
-	"strings"
-	"time"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/consts"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/mappers"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
 	"github.com/shopspring/decimal"
+	"strconv"
+	"strings"
+	"time"
 )
 
 type InspecaoEntradaService struct {
@@ -27,8 +24,6 @@ type InspecaoEntradaService struct {
 	LocaisRepository              interfaces.ILocaisRepository
 	EstoquePedidoVendaRepository  interfaces.IEstoquePedidoVendaRepository
 	ExternalMovimentacaoService   interfaces.IExternalMovimentacaoService
-	ImpressaoService              interfaces.IImpressaoService
-	EmpresaRepository             interfaces.IEmpresaRepository
 	BaseParams                    *models.BaseParams
 }
 
@@ -42,9 +37,7 @@ func NewInspecaoEntradaService(
 	locaisRepository interfaces.ILocaisRepository,
 	estoquePedidoVendaRepository interfaces.IEstoquePedidoVendaRepository,
 	externalMovimentacaoService interfaces.IExternalMovimentacaoService,
-	baseParams *models.BaseParams,
-	impressaoService interfaces.IImpressaoService,
-	empresaRepository interfaces.IEmpresaRepository) interfaces.IInspecaoEntradaService {
+	baseParams *models.BaseParams) interfaces.IInspecaoEntradaService {
 	return &InspecaoEntradaService{
 		Uow:                           uow,
 		InspecaoEntradaRepository:     inspecaoEntradaRepository,
@@ -56,18 +49,16 @@ func NewInspecaoEntradaService(
 		LocaisRepository:              locaisRepository,
 		EstoquePedidoVendaRepository:  estoquePedidoVendaRepository,
 		ExternalMovimentacaoService:   externalMovimentacaoService,
-		ImpressaoService:              impressaoService,
-		EmpresaRepository:             empresaRepository,
 	}
 }
 
-func (service *InspecaoEntradaService) BuscarInspecoesEntrada(notaFiscal int, lote string, baseFilters *models.BaseFilter, filters *dto.InspecaoEntradaFilters) (*dto.GetInspecaoEntradaDTO, *dto.ValidacaoDTO, error) {
-	inspecoes, err := service.InspecaoEntradaRepository.BuscarInspecoesEntrada(notaFiscal, lote, baseFilters, filters)
+func (service *InspecaoEntradaService) BuscarInspecoesEntrada(notaFiscal int, lote string, filter *models.BaseFilter) (*dto.GetInspecaoEntradaDTO, *dto.ValidacaoDTO, error) {
+	inspecoes, err := service.InspecaoEntradaRepository.BuscarInspecoesEntrada(notaFiscal, lote, filter)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	quantidadeInspecoes, err := service.InspecaoEntradaRepository.BuscarQuantidadeInspecoesEntrada(notaFiscal, lote, baseFilters, filters)
+	quantidadeInspecoes, err := service.InspecaoEntradaRepository.BuscarQuantidadeInspecoesEntrada(notaFiscal, lote)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -78,7 +69,7 @@ func (service *InspecaoEntradaService) BuscarInspecoesEntrada(notaFiscal int, lo
 	}, nil, nil
 }
 
-func (service *InspecaoEntradaService) BuscarPlanosNovaInspecao(plano string, codigoProduto string, filter *models.BaseFilter) (*dto.GetPlanosInspecaoDTO, *dto.ValidacaoDTO, error) {
+func (service *InspecaoEntradaService) BuscarPlanosNovaInspecao(plano int, codigoProduto string, filter *models.BaseFilter) (*dto.GetPlanosInspecaoDTO, *dto.ValidacaoDTO, error) {
 	planos, err := service.PlanosInspecaoRepository.BuscarPlanosNovaInspecao(plano, codigoProduto, filter)
 	if err != nil {
 		return nil, nil, err
@@ -96,7 +87,7 @@ func (service *InspecaoEntradaService) BuscarPlanosNovaInspecao(plano string, co
 }
 
 func (service *InspecaoEntradaService) CriarInspecao(input *dto.NovaInspecaoInput) (int, *dto.ValidacaoDTO, error) {
-	notaFiscal, err := service.NotaFiscalRepository.BuscarNotaFiscal(input.RecnoItemNotaFiscal, input.NotaFiscal, input.Lote)
+	notaFiscal, err := service.NotaFiscalRepository.BuscarNotaFiscal(input.NotaFiscal, input.Lote)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -108,18 +99,15 @@ func (service *InspecaoEntradaService) CriarInspecao(input *dto.NovaInspecaoInpu
 	}
 
 	inspecaoModel := &models.InspecaoEntrada{
-		CodigoInspecao:      service.InspecaoEntradaRepository.BuscarNovoCodigoInspecao(),
-		DataInspecao:        time.Now().Format("20060102"),
-		NotaFiscal:          notaFiscal.NotaFiscal,
-		Fornecedor:          notaFiscal.DescricaoForneced,
-		Inspetor:            service.BaseParams.UserLogin,
-		QuantidadeInspecao:  decimal.NewFromFloat(input.Quantidade),
-		Lote:                notaFiscal.Lote,
-		QuantidadeLote:      notaFiscal.Quantidade,
-		IdEmpresa:           service.BaseParams.LegacyCompanyId,
-		SerieNotaFiscal:     notaFiscal.Serie,
-		RecnoItemNotaFiscal: notaFiscal.Recno,
-		CodigoProduto:       notaFiscal.CodigoProduto,
+		CodigoInspecao:     service.InspecaoEntradaRepository.BuscarNovoCodigoInspecao(),
+		DataInspecao:       time.Now().Format("20060102"),
+		NotaFiscal:         notaFiscal.NotaFiscal,
+		Fornecedor:         notaFiscal.DescricaoForneced,
+		Inspetor:           service.BaseParams.UserLogin,
+		QuantidadeInspecao: decimal.NewFromFloat(input.Quantidade),
+		Lote:               input.Lote,
+		QuantidadeLote:     notaFiscal.Quantidade,
+		IdEmpresa:          service.BaseParams.CompanyRecno,
 	}
 
 	_ = service.Uow.Begin()
@@ -150,7 +138,6 @@ func (service *InspecaoEntradaService) CriarInspecao(input *dto.NovaInspecaoInpu
 
 		if planoAlterado != nil && planoAlterado.Id != "" {
 			item = models.InspecaoEntradaItem{
-				LegacyIdPlanoInspecao:  plano.LegacyId,
 				Plano:                  input.Plano,
 				Descricao:              planoAlterado.Descricao,
 				Metodo:                 planoAlterado.Metodo,
@@ -163,7 +150,6 @@ func (service *InspecaoEntradaService) CriarInspecao(input *dto.NovaInspecaoInpu
 			}
 		} else {
 			item = models.InspecaoEntradaItem{
-				LegacyIdPlanoInspecao:  plano.LegacyId,
 				Plano:                  input.Plano,
 				Descricao:              plano.Descricao,
 				Metodo:                 plano.Metodo,
@@ -277,16 +263,16 @@ func (service *InspecaoEntradaService) AtualizarInspecao(input *dto.AtualizarIns
 		}, nil
 	}
 
-	itensEntities, err := service.InspecaoEntradaItemRepository.BuscarInspecaoEntradaItensEntitiesPeloCodigo(input.CodigoInspecao)
+	_ = service.Uow.Begin()
+	defer service.Uow.UnitOfWorkGuard()
+
+	err = service.InspecaoEntradaRepository.AtualizarQuantidadeInspecaoPeloCodigo(input.CodigoInspecao, input.QuantidadeInspecao)
 	if err != nil {
 		_ = service.Uow.Rollback()
 		return nil, err
 	}
 
-	_ = service.Uow.Begin()
-	defer service.Uow.UnitOfWorkGuard()
-
-	err = service.InspecaoEntradaRepository.AtualizarQuantidadeInspecaoPeloCodigo(input.CodigoInspecao, input.QuantidadeInspecao)
+	itensEntities, err := service.InspecaoEntradaItemRepository.BuscarInspecaoEntradaItensEntitiesPeloCodigo(input.CodigoInspecao)
 	if err != nil {
 		_ = service.Uow.Rollback()
 		return nil, err
@@ -330,143 +316,4 @@ func (service *InspecaoEntradaService) BuscarResultadoInspecao(codigoInspecao in
 
 func (service *InspecaoEntradaService) BuscarValorParametro(chaveParametro, secao string) (bool, error) {
 	return service.ParametrosRepository.BuscarValorParametro(chaveParametro, secao)
-}
-
-func (service *InspecaoEntradaService) ImprimirInspecaoEntrada(codigoInspecao int) ([]byte, *dto.ValidacaoDTO) {
-	inspecao, err := service.InspecaoEntradaRepository.BuscarInspecaoEntradaPeloCodigo(codigoInspecao)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	nota, err := service.NotaFiscalRepository.BuscarNotaFiscal(inspecao.RecnoItemNotaFiscal, inspecao.NotaFiscal, inspecao.Lote)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	dataFabricacao, err := convertStringToDate(nota.DataFabricacao)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	dataValidade, err := convertStringToDate(nota.DataValidade)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	dataInspecao, err := convertStringToDate(inspecao.DataInspecao)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	itensInspecao, err := service.InspecaoEntradaItemRepository.BuscarInspecaoEntradaItensPeloCodigo(nota.CodigoProduto, codigoInspecao, &models.BaseFilter{
-		Filter:         "",
-		AdvancedFilter: "",
-		Sorting:        "",
-		Skip:           0,
-		PageSize:       0,
-	})
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	logoEmpresa, err := service.EmpresaRepository.BuscarLogo(nota.IdEmpresa)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	itensInspecaoRelatorio := make([]dto.ItemInspecaoRelatorio, len(itensInspecao))
-
-	for i, itemInspecao := range itensInspecao {
-		itensInspecaoRelatorio[i] = dto.ItemInspecaoRelatorio{
-			Id:             itemInspecao.Id,
-			CodigoInspecao: itemInspecao.CodigoInspecao,
-			Descricao:      itemInspecao.Descricao,
-			Metodo:         itemInspecao.Metodo,
-			Sequencia:      itemInspecao.Sequencia,
-			Resultado:      itemInspecao.Resultado,
-			MaiorValor:     itemInspecao.MaiorValorInspecionado,
-			MenorValor:     itemInspecao.MenorValorInspecionado,
-			MaiorValorBase: itemInspecao.MaiorValorBase,
-			MenorValorBase: itemInspecao.MenorValorBase,
-			Observacao:     itemInspecao.Observacao,
-		}
-	}
-
-	timeNow := time.Now().UTC()
-	dataEmissao := utils.SetReportingDateTimeZone(&timeNow).Format("2006-01-02 15:04:05")
-
-	exportReportInput := dto.ExportarRelatorioInput{
-		Data: &dto.ExportarRelatorioData{
-			Inspecao: &dto.InspecaoDataSource{
-				Inspecao: []dto.InspecaoRelatorio{
-					{
-						LogoEmpresa:         base64.StdEncoding.EncodeToString(logoEmpresa),
-						DataEmissao:         dataEmissao,
-						CodigoProduto:       nota.CodigoProduto,
-						DescricaoProduto:    nota.DescricaoProduto,
-						DataFabricacao:      dataFabricacao,
-						DataValidade:        dataValidade,
-						IdEmpresa:           nota.IdEmpresa,
-						Usuario:             service.BaseParams.UserLogin,
-						Recno:               inspecao.Recno,
-						CodigoInspecao:      inspecao.CodigoInspecao,
-						NotaFiscal:          nota.NotaFiscal,
-						SerieNotaFiscal:     nota.Serie,
-						Inspecionado:        inspecao.Inspecionado,
-						DataInspecao:        dataInspecao,
-						Inspetor:            inspecao.Inspetor,
-						Resultado:           inspecao.Resultado,
-						Lote:                inspecao.Lote,
-						QuantidadeInspecao:  inspecao.QuantidadeInspecao,
-						QuantidadeLote:      inspecao.QuantidadeLote,
-						QuantidadeAceita:    inspecao.QuantidadeAceita,
-						QuantidadeAprovada:  inspecao.QuantidadeAprovada,
-						QuantidadeReprovada: inspecao.QuantidadeReprovada,
-						Id:                  inspecao.Id,
-					},
-				},
-			},
-			ItemInspecao: &dto.ItemInspecaoDataSource{
-				ItemInspecao: itensInspecaoRelatorio,
-			},
-		},
-		ReportingOutputType: "pdf",
-	}
-
-	reportOutput, err := service.ImpressaoService.ExportReportStimulsoft(exportReportInput, consts.InspecaoReportId)
-	if err != nil {
-		return nil, &dto.ValidacaoDTO{
-			Message: err.Error(),
-		}
-	}
-
-	return reportOutput, nil
-}
-
-func convertStringToDate(dateStr string) (*time.Time, error) {
-	if dateStr == "" {
-		return nil, nil
-	}
-	layout := "20060102" // Formato: yyyyMMdd
-
-	date, err := time.Parse(layout, dateStr)
-	if err != nil {
-		return nil, err
-	}
-
-	return &date, nil
 }

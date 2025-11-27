@@ -7,8 +7,7 @@ import (
 
 type InspecaoEntradaItem struct {
 	Id                     uuid.UUID
-	LegacyIdPlanoInspecao  int
-	Plano                  string
+	Plano                  int
 	Descricao              string
 	Metodo                 string
 	Sequencia              string

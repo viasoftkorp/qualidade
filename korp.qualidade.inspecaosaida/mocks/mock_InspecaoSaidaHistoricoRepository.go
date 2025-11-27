@@ -51,18 +51,18 @@ func (mr *MockIInspecaoSaidaHistoricoRepositoryMockRecorder) CountInspecaoSaidaH
 }
 
 // CountInspecaoSaidaHistoricoItems mocks base method.
-func (m *MockIInspecaoSaidaHistoricoRepository) CountInspecaoSaidaHistoricoItems(arg0 *models.BaseFilter, arg1 *dto.InspecaoSaidaHistoricoCabecalhoFilters, arg2, arg3 int) (int64, error) {
+func (m *MockIInspecaoSaidaHistoricoRepository) CountInspecaoSaidaHistoricoItems(arg0 *models.BaseFilter, arg1 int) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountInspecaoSaidaHistoricoItems", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "CountInspecaoSaidaHistoricoItems", arg0, arg1)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CountInspecaoSaidaHistoricoItems indicates an expected call of CountInspecaoSaidaHistoricoItems.
-func (mr *MockIInspecaoSaidaHistoricoRepositoryMockRecorder) CountInspecaoSaidaHistoricoItems(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoSaidaHistoricoRepositoryMockRecorder) CountInspecaoSaidaHistoricoItems(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountInspecaoSaidaHistoricoItems", reflect.TypeOf((*MockIInspecaoSaidaHistoricoRepository)(nil).CountInspecaoSaidaHistoricoItems), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountInspecaoSaidaHistoricoItems", reflect.TypeOf((*MockIInspecaoSaidaHistoricoRepository)(nil).CountInspecaoSaidaHistoricoItems), arg0, arg1)
 }
 
 // GetAllInspecaoSaidaHistoricoCabecalho mocks base method.
@@ -81,16 +81,16 @@ func (mr *MockIInspecaoSaidaHistoricoRepositoryMockRecorder) GetAllInspecaoSaida
 }
 
 // GetAllInspecaoSaidaHistoricoItems mocks base method.
-func (m *MockIInspecaoSaidaHistoricoRepository) GetAllInspecaoSaidaHistoricoItems(arg0 *models.BaseFilter, arg1 *dto.InspecaoSaidaHistoricoCabecalhoFilters, arg2, arg3 int) ([]dto.InspecaoSaidaHistoricoItems, error) {
+func (m *MockIInspecaoSaidaHistoricoRepository) GetAllInspecaoSaidaHistoricoItems(arg0 *models.BaseFilter, arg1 int) ([]dto.InspecaoSaidaHistoricoItems, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllInspecaoSaidaHistoricoItems", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "GetAllInspecaoSaidaHistoricoItems", arg0, arg1)
 	ret0, _ := ret[0].([]dto.InspecaoSaidaHistoricoItems)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAllInspecaoSaidaHistoricoItems indicates an expected call of GetAllInspecaoSaidaHistoricoItems.
-func (mr *MockIInspecaoSaidaHistoricoRepositoryMockRecorder) GetAllInspecaoSaidaHistoricoItems(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoSaidaHistoricoRepositoryMockRecorder) GetAllInspecaoSaidaHistoricoItems(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllInspecaoSaidaHistoricoItems", reflect.TypeOf((*MockIInspecaoSaidaHistoricoRepository)(nil).GetAllInspecaoSaidaHistoricoItems), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllInspecaoSaidaHistoricoItems", reflect.TypeOf((*MockIInspecaoSaidaHistoricoRepository)(nil).GetAllInspecaoSaidaHistoricoItems), arg0, arg1)
 }

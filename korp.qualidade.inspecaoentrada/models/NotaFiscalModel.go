@@ -1,17 +1,12 @@
 package models
 
-import (
-	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
-)
+import "github.com/shopspring/decimal"
 
 type NotaFiscalModel struct {
-	Id                     uuid.UUID       `json:"id"`
-	Recno                  int             `json:"recno"`
+	IdNotaFiscal           int             `json:"idNotaFiscal"`
 	NotaFiscal             int             `json:"notaFiscal"`
-	Plano                  string          `json:"plano"`
+	Plano                  int             `json:"plano"`
 	Lote                   string          `json:"lote"`
-	CodigoForneced         string          `json:"codigoForneced"`
 	DescricaoForneced      string          `json:"descricaoForneced"`
 	CodigoProduto          string          `json:"codigoProduto"`
 	DescricaoProduto       string          `json:"descricaoProduto"`
@@ -23,22 +18,9 @@ type NotaFiscalModel struct {
 	RecnoRateioLote        int             `json:"recnoRateioLote"`
 	DescricaoPlano         string          `json:"descricaoPlano"`
 	CodigoLocal            int             `json:"codigoLocal"`
-	Serie                  string          `json:"serie"`
-	Observacao             string          `json:"observacao"`
-	DataFabricacao         string          `json:"dataFabricacao"`
-	DataValidade           string          `json:"dataValidade"`
-	IdEmpresa              int             `json:"idEmpresa"`
 }
 
 type GetNotasFiscaisOutput struct {
 	Items      []NotaFiscalModel `json:"items"`
 	TotalCount int64             `json:"totalCount"`
-}
-
-type CaracteristicaItemNotaFiscalModel struct {
-	Dimensao1  decimal.Decimal `json:"dimensao1"`
-	Dimensao2  decimal.Decimal `json:"dimensao2"`
-	Dimensao3  decimal.Decimal `json:"dimensao3"`
-	Diferenca  decimal.Decimal `json:"diferenca"`
-	Quantidade int             `json:"quantidade"`
 }

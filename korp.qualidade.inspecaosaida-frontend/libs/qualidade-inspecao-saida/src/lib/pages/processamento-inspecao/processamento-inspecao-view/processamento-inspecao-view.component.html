@@ -1,3 +1,13 @@
+<ng-template #actions>
+  <span class="flex-auto"></span>
+  <vs-button icon="eraser" label="ProcessamentoInspecao.Limpar" (clickEvent)="limparFiltros()"
+    [disabled]="!possuiFiltros">
+  </vs-button>
+  <vs-button icon="filter" label="ProcessamentoInspecao.Filtrar" (clickEvent)="abrirFiltros()"
+    [ngClass]="possuiFiltros ? 'possuiFiltros' : ''">
+  </vs-button>
+</ng-template>
+
 <vs-tab-group>
   <div *vsTabLabel="{title: 'ProcessamentoInspecao.Inspecionados'}">
     <qa-processamento-inspecao-grid [estorno]="false" [filtros]="filtros"></qa-processamento-inspecao-grid>

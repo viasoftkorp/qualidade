@@ -1,11 +1,14 @@
 import {
-  Component, OnDestroy, OnInit
+  AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { JQQB_OP_EQUAL, VsSubscriptionManager } from '@viasoft/common';
+
+import { VsStorageService, VsSubscriptionManager } from '@viasoft/common';
 import {
   VsDialog,
   VsGridDateColumn,
@@ -15,16 +18,23 @@ import {
   VsGridOptions,
   VsGridSimpleColumn
 } from '@viasoft/components';
+
 import {
   formatNumberToDecimal,
-  GetOrdensProducaoDTO,
+  GetOrdensProducaoDTO, HistoricoInspecaoSaidaFilters,
   InspecaoDetailsDTO,
   OrdemProducaoDTO,
-  UTILIZAR_RESERVA_PEDIDO_LOCALIZACAO,
-  UTILIZAR_RESERVA_PEDIDO_LOCALIZACAO_SECAO
+  OrdemProducaoFilters, UTILIZAR_RESERVA_PEDIDO_LOCALIZACAO, UTILIZAR_RESERVA_PEDIDO_LOCALIZACAO_SECAO,
 } from '../../../tokens';
 import { QualidadeInspecaoSaidaService } from '../../../services/qualidade-inspecao-saida.service';
 import { InspecaoDetailsComponent } from '../inspecao-details/inspecao-details.component';
+import { OrdemProducaoViewFilterComponent } from './ordem-producao-view-filter/ordem-producao-view-filter.component';
+import {
+  HistoricoInspecaoViewFilterComponent
+} from '../../historico-inspecao/historico-inspecao-view/historico-inspecao-view-filter/historico-inspecao-view-filter.component';
+import {
+  HistoricoInspecaoViewService
+} from '../../historico-inspecao/historico-inspecao-view/historico-inspecao-view.service';
 
 @Component({
   selector: 'qa-ordem-producao-view',
@@ -32,24 +42,45 @@ import { InspecaoDetailsComponent } from '../inspecao-details/inspecao-details.c
   styleUrls: ['./ordem-producao-view.component.scss'],
   providers: [DecimalPipe]
 })
-export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
+export class OrdemProducaoViewComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() private tab: string;
+  @ViewChild('actions') private actionsTemplate: TemplateRef<any>;
+
   public gridOptions: VsGridOptions;
   public utilizarReservaPedido = false;
+
+  private readonly ORDEM_PRODUCAO_FILTRO_KEY = 'OrdemProducaoInspecaoSaidaFiltros';
+
   private subs = new VsSubscriptionManager();
+  private filtros: OrdemProducaoFilters = {};
+
+  public get possuiFiltros(): boolean {
+    return Boolean(this.filtros) && (
+      Boolean(this.filtros.lote)
+      || Boolean(this.filtros.odf)
+      || Boolean(this.filtros.codigoProduto)
+      || Boolean(this.filtros.dataInicio)
+      || Boolean(this.filtros.dataEntrega)
+      || Boolean(this.filtros.dataEmissao));
+  }
 
   constructor(
     private vsDialog: VsDialog,
     private matDialog: MatDialog,
     private inspecaoSaidaService: QualidadeInspecaoSaidaService,
-    private decimalPipe: DecimalPipe
+    private router: Router,
+    private storageService: VsStorageService,
+    private decimalPipe: DecimalPipe,
+    private historicoInspecaoViewService: HistoricoInspecaoViewService
   ) {
   }
 
   async ngOnInit(): Promise<void> {
+
     this.subs.add('refresh-ordem-grid', this.inspecaoSaidaService
       .refreshOrdemGrid
       .subscribe(() => {
-        this.gridOptions.refresh();
+        this.gridOptions?.refresh();
       }));
 
     this.utilizarReservaPedido = await this.inspecaoSaidaService.getParametroBool(
@@ -59,13 +90,57 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
     this.initGrid();
   }
 
+  ngAfterViewInit(): void {
+    this.inspecaoSaidaService.actionsTemplate.next(this.actionsTemplate);
+  }
+
   ngOnDestroy(): void {
     this.subs.clear();
   }
 
+  public limparFiltros(): void {
+    this.filtros = {};
+    this.storageService.set(this.ORDEM_PRODUCAO_FILTRO_KEY, JSON.stringify(this.filtros));
+    this.gridOptions.refresh();
+  }
+
+  public abrirFiltros(): void {
+    if (this.tab == 'Historico') {
+      this.subs.add('open-filter-modal', this.vsDialog.open(
+        HistoricoInspecaoViewFilterComponent,
+        this.filtros,
+        { maxWidth: '30vw' }
+      ).afterClosed().subscribe((filtros: HistoricoInspecaoSaidaFilters) => {
+        if (!filtros) {
+          return;
+        }
+
+        this.filtros = filtros;
+        this.historicoInspecaoViewService.refreshGrid.next(this.filtros);
+      }));
+    } else {
+      this.subs.add('open-filter-modal', this.vsDialog.open(
+        OrdemProducaoViewFilterComponent,
+        this.filtros,
+        { maxWidth: '30vw' }
+      ).afterClosed().subscribe((filtros: OrdemProducaoFilters) => {
+        if (!filtros) {
+          return;
+        }
+
+        this.filtros = filtros;
+        this.storageService.set(this.ORDEM_PRODUCAO_FILTRO_KEY, JSON.stringify(filtros));
+        this.gridOptions.refresh();
+      }));
+    }
+  }
+
   private initGrid(): void {
     this.gridOptions = new VsGridOptions();
-    this.gridOptions.id = '9E03CB3F-3925-4FE1-B343-273C05CE2D8C';
+    this.gridOptions.id = '0a39beb1-bfbf-4bda-afcd-2764a3925f37';
+    this.gridOptions.enableFilter = false;
+    this.gridOptions.enableQuickFilter = false;
+    this.gridOptions.enableSorting = false;
 
     this.gridOptions.columns = [];
 
@@ -75,23 +150,11 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
           headerName: 'QualidadeInspecaoSaida.Cliente',
           field: 'cliente',
           width: 90,
-          filterOptions: {
-            operators: [JQQB_OP_EQUAL]
-          },
-          sorting: {
-            disable: true
-          }
         }),
         new VsGridSimpleColumn({
           headerName: 'QualidadeInspecaoSaida.NumeroPedido',
           field: 'numeroPedido',
           width: 110,
-          filterOptions: {
-            operators: [JQQB_OP_EQUAL]
-          },
-          sorting: {
-            disable: true
-          }
         }),
       ];
     }
@@ -101,68 +164,32 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.Plano',
         field: 'plano',
-        width: 110,
-        filterOptions: {
-          useField: 'PROCESSO.PLANO_INSP'
-        },
-        sorting: {
-          useField: 'PROCESSO.PLANO_INSP'
-        }
+        width: 110
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.DescricaoPlano',
         field: 'descricaoPlano',
-        width: 180,
-        filterOptions: {
-          useField: 'QA_PLANO_INS_SAIDA_CABECALHO.DESCRICAO'
-        },
-        sorting: {
-          useField: 'QA_PLANO_INS_SAIDA_CABECALHO.DESCRICAO'
-        }
+        width: 180
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.Odf',
         field: 'odfApontada',
-        width: 80,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
+        width: 80
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.CodigoProduto',
         field: 'codigoProduto',
-        width: 100,
-        filterOptions: {
-          useField: 'CTE_SALDO_CQ.CODIGO'
-        },
-        sorting: {
-          useField: 'CTE_SALDO_CQ.CODIGO'
-        }
+        width: 100
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.DescricaoProduto',
         field: 'descricaoProduto',
-        width: 200,
-        filterOptions: {
-          useField: 'ESTOQUE.DESCRI'
-        },
-        sorting: {
-          useField: 'ESTOQUE.DESCRI'
-        }
+        width: 200
       }),
       new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.Lote',
         field: 'lote',
-        width: 50,
-        filterOptions: {
-          useField: 'CTE_SALDO_CQ.LOTE'
-        },
-        sorting: {
-          useField: 'CTE_SALDO_CQ.LOTE'
-        }
+        width: 50
       }),
       /* new VsGridSimpleColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.Situacao',
@@ -173,104 +200,50 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.Revisao',
         field: 'revisao',
         width: 100,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.QuantidadeOrdem',
         field: 'quantidadeOrdem',
         width: 100,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.QuantidadeProduzida',
         field: 'quantidadeProduzida',
         width: 100,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          useField: 'CTE_SALDO_CQ.QTRECEB_ENTRADA'
-        },
-        sorting: {
-          useField: 'CTE_SALDO_CQ.QTRECEB_ENTRADA'
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.QuantidadeInspecionada',
         field: 'quantidadeInspecionada',
         width: 120,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridNumberColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.QuantidadeInspecionar',
         field: 'quantidadeInspecionar',
         width: 110,
-        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade),
-        filterOptions: {
-          disable: true
-        },
-        sorting: {
-          disable: true
-        }
+        format: (quantidade: number) => formatNumberToDecimal(this.decimalPipe, quantidade)
       }),
       new VsGridDateColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.DataInicio',
         field: 'dataInicio',
-        width: 100,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
+        width: 100
       }),
       new VsGridDateColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.DataEntrega',
         field: 'dataEntrega',
-        width: 100,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
+        width: 100
       }),
       new VsGridDateColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.DataEmissao',
         field: 'dataEmissao',
-        width: 100,
-        filterOptions: {
-          operators: [JQQB_OP_EQUAL]
-        },
-        sorting: {
-          disable: true
-        }
+        width: 100
       }),
       new VsGridDateColumn({
         headerName: 'QualidadeInspecaoSaida.OrdemProducaoGrid.DataNegociada',
         field: 'dataNegociada',
-        width: 110,
-        filterOptions: {
-          useField: 'PPEDLISE.DTNEGO'
-        },
-        sorting: {
-          useField: 'PPEDLISE.DTNEGO'
-        }
+        width: 110
       })
     ];
 
@@ -285,7 +258,6 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
         const openedDialog = this.matDialog.open(InspecaoDetailsComponent, {
           data: {
             odf: data.odf,
-            odfApontada: data.odfApontada,
             codProduto: data.codigoProduto,
             plano: data.plano,
             novaInspecao: true,
@@ -302,20 +274,14 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
           position: { top: `${positionTop}px`, right: '0px', bottom: '0px' },
           panelClass: 'vs-dialog-panel'
         });
-        return openedDialog.afterClosed().toPromise().then(() => {
-          this.inspecaoSaidaService.ordemSelecionada.next(data);
-          this.inspecaoSaidaService.refreshInspecoesOrdemGrid.next();
-          this.gridOptions.refresh();
-        });
+        return openedDialog.afterClosed().toPromise().then(() => this.inspecaoSaidaService.ordemSelecionada.next(data));
       }
     }];
   }
 
   private getGridData(input: VsGridGetInput): Observable<VsGridGetResult> {
-    const filtros = this.inspecaoSaidaService.getFiltros();
-
     return this.inspecaoSaidaService
-      .getOrdensInspecao(input, filtros)
+      .getOrdensInspecao(input, this.filtros)
       .pipe(
         map((r: GetOrdensProducaoDTO) => new VsGridGetResult(r.items, r.totalCount))
       );
@@ -323,6 +289,5 @@ export class OrdemProducaoViewComponent implements OnInit, OnDestroy {
 
   private ordemSelecionada(odf: OrdemProducaoDTO): void {
     this.inspecaoSaidaService.ordemSelecionada.next(odf);
-    this.inspecaoSaidaService.refreshInspecoesOrdemGrid.next();
   }
 }

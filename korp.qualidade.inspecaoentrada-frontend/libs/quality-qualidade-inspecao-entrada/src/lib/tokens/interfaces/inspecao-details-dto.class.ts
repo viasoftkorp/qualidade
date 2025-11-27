@@ -5,5 +5,4 @@ export interface InspecaoDetailsDTO {
   codigoInspecao: number;
   novaInspecao: boolean;
   codigoProduto: string;
-  codigoFornecedor: string;
 }

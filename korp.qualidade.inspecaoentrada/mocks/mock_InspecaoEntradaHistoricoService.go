@@ -51,16 +51,16 @@ func (mr *MockIInspecaoEntradaHistoricoServiceMockRecorder) GetAllInspecaoEntrad
 }
 
 // GetAllInspecaoEntradaHistoricoItems mocks base method.
-func (m *MockIInspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoItems(arg0 int, arg1 string, arg2 *models.BaseFilter, arg3 *dto.InspecaoEntradaHistoricoCabecalhoFilters) (*dto.GetAllInspecaoEntradaHistoricoItemsDTO, error) {
+func (m *MockIInspecaoEntradaHistoricoService) GetAllInspecaoEntradaHistoricoItems(arg0 int, arg1 string, arg2 *models.BaseFilter) (*dto.GetAllInspecaoEntradaHistoricoItemsDTO, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllInspecaoEntradaHistoricoItems", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "GetAllInspecaoEntradaHistoricoItems", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*dto.GetAllInspecaoEntradaHistoricoItemsDTO)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAllInspecaoEntradaHistoricoItems indicates an expected call of GetAllInspecaoEntradaHistoricoItems.
-func (mr *MockIInspecaoEntradaHistoricoServiceMockRecorder) GetAllInspecaoEntradaHistoricoItems(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaHistoricoServiceMockRecorder) GetAllInspecaoEntradaHistoricoItems(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllInspecaoEntradaHistoricoItems", reflect.TypeOf((*MockIInspecaoEntradaHistoricoService)(nil).GetAllInspecaoEntradaHistoricoItems), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllInspecaoEntradaHistoricoItems", reflect.TypeOf((*MockIInspecaoEntradaHistoricoService)(nil).GetAllInspecaoEntradaHistoricoItems), arg0, arg1, arg2)
 }

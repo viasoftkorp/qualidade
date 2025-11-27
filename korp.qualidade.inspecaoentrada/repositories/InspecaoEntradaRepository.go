@@ -1,27 +1,21 @@
 package repositories
 
 import (
-	"context"
-	"database/sql"
-	"time"
-
-	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/entities"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/queries"
-	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
+	"context"
+	"database/sql"
 	"github.com/google/uuid"
+	"time"
 )
 
 type InspecaoEntradaRepository struct {
 	interfaces.IInspecaoEntradaRepository
 	Uow unit_of_work.UnitOfWork
-	Ctx fiber.Ctx
 }
 
 func NewInspecaoEntradaRepository(uow unit_of_work.UnitOfWork) (
@@ -31,64 +25,31 @@ func NewInspecaoEntradaRepository(uow unit_of_work.UnitOfWork) (
 	}, nil
 }
 
-func (repo *InspecaoEntradaRepository) BuscarInspecoesEntrada(notaFiscal int, lote string, baseFilters *models.BaseFilter, filters *dto.InspecaoEntradaFilters) ([]entities.InspecaoEntrada, error) {
+func (repo *InspecaoEntradaRepository) BuscarInspecoesEntrada(notaFiscal int, lote string, filter *models.BaseFilter) ([]entities.InspecaoEntrada, error) {
 	var result []entities.InspecaoEntrada
-
-	if baseFilters.Sorting == "" {
-		baseFilters.Sorting = "QA_INSPECAO_ENTRADA.DATAINSP DESC"
-	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-
-	res := repo.Uow.GetDb().WithContext(ctx).
-		Table(entities.InspecaoEntrada{}.TableName()).
-		Select(
-			"QA_INSPECAO_ENTRADA.COD_INSP",
-			"QA_INSPECAO_ENTRADA.CODNOTA",
-			"QA_INSPECAO_ENTRADA.CODSERIE",
-			"QA_INSPECAO_ENTRADA.INSPECIONADO",
-			"QA_INSPECAO_ENTRADA.DATAINSP",
-			"QA_INSPECAO_ENTRADA.INSPETOR",
-			"QA_INSPECAO_ENTRADA.RESULTADO",
-			"QA_INSPECAO_ENTRADA.LOTE",
-			"QA_INSPECAO_ENTRADA.QTD_INSPECAO",
-			"QA_INSPECAO_ENTRADA.QTD_LOTE",
-			"QA_INSPECAO_ENTRADA.QTD_ACEITO",
-			"QA_INSPECAO_ENTRADA.QTD_APROVADO",
-			"QA_INSPECAO_ENTRADA.QTD_REJEITADO").
-		Distinct()
-
-	res = repo.AplicarFiltros(res, baseFilters, filters)
-
-	res = res.
-		Where(entities.InspecaoEntrada{
-			NotaFiscal: notaFiscal,
-			Lote:       lote,
-		}).
-		Where("QA_INSPECAO_ENTRADA.R_E_C_N_O_ NOT IN (SELECT DISTINCT RECNO_INSPECAO_ENTRADA FROM InspecaoEntradaExecutadoWeb)").
-		Order(baseFilters.Sorting).
-		Limit(baseFilters.PageSize).
-		Offset(baseFilters.Skip).
+	res := repo.Uow.GetDb().WithContext(ctx).Table(entities.InspecaoEntrada{}.TableName()).Where(entities.InspecaoEntrada{
+		NotaFiscal: notaFiscal,
+		Lote:       lote,
+	}).
+		Where("R_E_C_N_O_ NOT IN (SELECT DISTINCT RECNO_INSPECAO_ENTRADA FROM InspecaoEntradaExecutadoWeb)").
+		Limit(filter.PageSize).
+		Offset(filter.Skip).
 		Scan(&result)
 
 	return result, res.Error
 }
 
-func (repo *InspecaoEntradaRepository) BuscarQuantidadeInspecoesEntrada(notaFiscal int, lote string, baseFilters *models.BaseFilter, filters *dto.InspecaoEntradaFilters) (int64, error) {
+func (repo *InspecaoEntradaRepository) BuscarQuantidadeInspecoesEntrada(notaFiscal int, lote string) (int64, error) {
 	var result int64
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	res := repo.Uow.GetDb().WithContext(ctx).Table(entities.InspecaoEntrada{}.TableName()).
-		Distinct()
-
-	res = repo.AplicarFiltros(res, baseFilters, filters)
-
-	res = res.
-		Where(entities.InspecaoEntrada{
-			NotaFiscal: notaFiscal,
-			Lote:       lote,
-		}).
+	res := repo.Uow.GetDb().WithContext(ctx).Table(entities.InspecaoEntrada{}.TableName()).Where(entities.InspecaoEntrada{
+		NotaFiscal: notaFiscal,
+		Lote:       lote,
+	}).
 		Count(&result)
 
 	return result, res.Error
@@ -165,17 +126,14 @@ func (repo *InspecaoEntradaRepository) BuscarNovoCodigoInspecao() int {
 
 func (repo *InspecaoEntradaRepository) CriarInspecao(inspecaoModel *models.InspecaoEntrada) error {
 	entity := &entities.InspecaoEntrada{
-		Id:                  uuid.New(),
-		Lote:                inspecaoModel.Lote,
-		NotaFiscal:          inspecaoModel.NotaFiscal,
-		CodigoInspecao:      inspecaoModel.CodigoInspecao,
-		DataInspecao:        inspecaoModel.DataInspecao,
-		Inspetor:            inspecaoModel.Inspetor,
-		QuantidadeInspecao:  inspecaoModel.QuantidadeInspecao,
-		QuantidadeLote:      inspecaoModel.QuantidadeLote,
-		SerieNotaFiscal:     inspecaoModel.SerieNotaFiscal,
-		RecnoItemNotaFiscal: inspecaoModel.RecnoItemNotaFiscal,
-		CodigoProduto:       inspecaoModel.CodigoProduto,
+		Id:                 uuid.New(),
+		Lote:               inspecaoModel.Lote,
+		NotaFiscal:         inspecaoModel.NotaFiscal,
+		CodigoInspecao:     inspecaoModel.CodigoInspecao,
+		DataInspecao:       inspecaoModel.DataInspecao,
+		Inspetor:           inspecaoModel.Inspetor,
+		QuantidadeInspecao: inspecaoModel.QuantidadeInspecao,
+		QuantidadeLote:     inspecaoModel.QuantidadeLote,
 	}
 
 	res := repo.Uow.GetDb().Create(&entity)
@@ -203,7 +161,7 @@ type RncDetailsEstoqueLocal struct {
 	SaldoLote      float64
 }
 
-func (repo *InspecaoEntradaRepository) BuscarInformacoesPreenchimentoRNC(recnoInspecao, recnoEmpresa int, codigoProduto string, codigoFornecedor string) (*dto.RncDetailsOutputDTO, error) {
+func (repo *InspecaoEntradaRepository) BuscarInformacoesPreenchimentoRNC(recnoInspecao, recnoEmpresa int, codigoProduto string) (*dto.RncDetailsOutputDTO, error) {
 	output := dto.RncDetailsOutputDTO{}
 
 	insp, err := repo.BuscarInspecaoEntradaPeloRecno(recnoInspecao)
@@ -212,7 +170,7 @@ func (repo *InspecaoEntradaRepository) BuscarInformacoesPreenchimentoRNC(recnoIn
 	}
 
 	var detailsNota RncDetailsNota
-	res := repo.Uow.GetDb().Raw(`SELECT cast(Id as varchar(36)) AS IdNotaFiscal, NFISCAL AS NumeroNota, CODFOR AS CodigoFornecedor FROM HISTLISE_FOR WHERE NFISCAL = ? AND SERIE = ? AND CODFOR = ? AND EMPRESA_RECNO = ?`, insp.NotaFiscal, insp.SerieNotaFiscal, codigoFornecedor, recnoEmpresa).First(&detailsNota)
+	res := repo.Uow.GetDb().Raw(`SELECT cast(Id as varchar(36)) AS IdNotaFiscal, NFISCAL AS NumeroNota, CODFOR AS CodigoFornecedor FROM HISTLISE_FOR WHERE NFISCAL = ? AND EMPRESA_RECNO = ?`, insp.NotaFiscal, recnoEmpresa).First(&detailsNota)
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -257,32 +215,4 @@ func (repo *InspecaoEntradaRepository) BuscarInformacoesPreenchimentoRNC(recnoIn
 	output.QuantidadeTotalLote = detailsEstoqueLocal.SaldoLote
 
 	return &output, nil
-}
-
-func (repo *InspecaoEntradaRepository) AplicarFiltros(query *gorm.DB, baseFilters *models.BaseFilter, filters *dto.InspecaoEntradaFilters) (result *gorm.DB) {
-	if len(filters.ObservacoesMetricas) > 0 {
-		var observacoesLikeQuery = ""
-
-		for index, observacao := range filters.ObservacoesMetricas {
-			if index == 0 {
-				observacoesLikeQuery += "("
-			}
-
-			observacoesLikeQuery += "QA_ITEM_INSPECAO_ENTRADA.OBSERVACAO LIKE '%" + observacao + "%'"
-
-			if index == len(filters.ObservacoesMetricas)-1 {
-				observacoesLikeQuery += ")"
-			} else {
-				observacoesLikeQuery += " OR "
-			}
-		}
-
-		query = query.
-			Joins("JOIN QA_ITEM_INSPECAO_ENTRADA ON QA_ITEM_INSPECAO_ENTRADA.CODINSPECAO = QA_INSPECAO_ENTRADA.COD_INSP AND " + observacoesLikeQuery)
-	}
-
-	query = query.
-		Where(utils.ApplyAdvancedFilter(baseFilters.AdvancedFilter))
-
-	return query
 }

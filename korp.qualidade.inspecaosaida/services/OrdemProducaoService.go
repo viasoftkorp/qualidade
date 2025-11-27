@@ -27,8 +27,16 @@ func (service *OrdemProducaoService) BuscarOrdensInspecao(baseFilters *models.Ba
 		}
 	}
 
+	qtdOrdens, err := service.OrdemProducaoRepository.BuscarQuantidadeOrdensInspecao(baseFilters, filters)
+	if err != nil {
+		return nil, &dto.ValidacaoDTO{
+			Code:    2,
+			Message: err.Error(),
+		}
+	}
+
 	return &dto.GetOrdemProducaoDTO{
 		Items:      mappers.MapOrdemProducaoEntitiesToDTOs(ordens),
-		TotalCount: int64(0),
+		TotalCount: qtdOrdens,
 	}, nil
 }

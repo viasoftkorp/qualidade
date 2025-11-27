@@ -12,23 +12,18 @@ func MapNotaModelToDTO(notaModel *models.NotaFiscalModel) *dto.NotaFiscalDTO {
 	}
 
 	return &dto.NotaFiscalDTO{
-		Id:                     notaModel.Id,
-		Recno:                  notaModel.Recno,
 		NotaFiscal:             notaModel.NotaFiscal,
 		Plano:                  notaModel.Plano,
 		Lote:                   notaModel.Lote,
-		CodigoForneced:         notaModel.CodigoForneced,
 		DescricaoForneced:      notaModel.DescricaoForneced,
 		CodigoProduto:          notaModel.CodigoProduto,
 		DescricaoProduto:       notaModel.DescricaoProduto,
 		DataEntrada:            utils.StringToTime(notaModel.DataEntrada),
 		Quantidade:             utils.DecimalToFloat64(notaModel.Quantidade),
 		QuantidadeInspecionada: utils.DecimalToFloat64(notaModel.QuantidadeInspecionada),
-		QuantidadeInspecionar:  utils.DecimalToFloat64(notaModel.Quantidade.Sub(notaModel.QuantidadeInspecionada)),
+		QuantidadeInspecionar:  utils.DecimalToFloat64(notaModel.Quantidade),
 		RecnoRateioLote:        notaModel.RecnoRateioLote,
 		DescricaoPlano:         notaModel.DescricaoPlano,
-		Serie:                  notaModel.Serie,
-		Observacao:             notaModel.Observacao,
 	}
 }
 

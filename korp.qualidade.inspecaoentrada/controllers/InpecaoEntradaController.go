@@ -1,18 +1,16 @@
 package controllers
 
 import (
-	"errors"
-	"strconv"
-	"strings"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/services"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoEntrada/utils"
+	"errors"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 )
 
 func GetInspecoesEntrada(ctx *fiber.Ctx) error {
-	baseFilters, err := utils.GetInputBaseFilterFromCtx(ctx)
+	filter, err := utils.GetInputBaseFilterFromCtx(ctx)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -23,23 +21,13 @@ func GetInspecoesEntrada(ctx *fiber.Ctx) error {
 	}
 
 	lote := ctx.Params("lote")
-	containsScape := strings.Contains(lote, "%3A")
-	if containsScape {
-		lote = strings.ReplaceAll(lote, "%3A", "/")
-	}
-
-	var filters dto.InspecaoEntradaFilters
-	err = ctx.QueryParser(&filters)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
 
 	InspecaoEntradaService, err := services.GetInspecaoEntradaService(ctx)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	inspecoes, validacaoDTO, err := InspecaoEntradaService.BuscarInspecoesEntrada(notaFiscal, lote, baseFilters, &filters)
+	inspecoes, validacaoDTO, err := InspecaoEntradaService.BuscarInspecoesEntrada(notaFiscal, lote, filter)
 
 	if validacaoDTO != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(validacaoDTO)
@@ -51,9 +39,9 @@ func GetInspecoesEntrada(ctx *fiber.Ctx) error {
 }
 
 func GetItensPlanoNovaInspecao(ctx *fiber.Ctx) error {
-	codigoPlano := ctx.Params("codigoPlano")
-	if codigoPlano == "" {
-		return errors.New("codigoPlano missing")
+	codigoPlano, err := strconv.Atoi(ctx.Params("codigoPlano", ""))
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	codigoProduto := ctx.Query("codigoProduto")
@@ -237,25 +225,5 @@ func GetValorParametro(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	} else {
 		return ctx.Status(fiber.StatusOK).JSON(result)
-	}
-}
-
-func ImprimirInspecaoEntrada(ctx *fiber.Ctx) error {
-	codigoInspecao, err := strconv.Atoi(ctx.Params("codigoInspecao", ""))
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	inspecaoEntradaService, err := services.GetInspecaoEntradaService(ctx)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	relatorio, validacaoDTO := inspecaoEntradaService.ImprimirInspecaoEntrada(codigoInspecao)
-
-	if validacaoDTO != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(validacaoDTO)
-	} else {
-		return ctx.Status(fiber.StatusOK).JSON(relatorio)
 	}
 }

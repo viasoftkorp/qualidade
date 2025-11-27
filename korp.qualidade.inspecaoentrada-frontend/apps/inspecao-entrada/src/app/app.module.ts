@@ -11,7 +11,7 @@ import {
 import {
   DEFAULT_NAV_CONFIG,
   VsAuthService,
-  VsUserService
+  UserService
 } from '@viasoft/common';
 import { VsAppCoreModule } from '@viasoft/app-core';
 import { NAVIGATION_MENU_ITEMS } from '@viasoft/inspecao-entrada/app/tokens/consts/navigation.const';
@@ -70,7 +70,25 @@ import { AuthorizationProvider } from './services/authorization-provider.service
     { provide: VS_API_PREFIX, useFactory: () => `${AppConsts.appVersion()}/qualidade/inspecao-entrada` },
     { provide: VS_BACKEND_URL, useFactory: AppConsts.apiGateway },
     { provide: AUTHORIZATION_PROVIDER, useClass: AuthorizationProvider },
+    { provide: VS_API_PREFIX, useFactory: () => `${AppConsts.appVersion()}/qualidade/inspecao-entrada` },
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(authService: VsAuthService, userService: UserService, jwt: VsJwtProviderService) {
+    userService.userUpdatedSubject.subscribe((user) => {
+      LogRocket.identify(
+        user.id,
+        {
+          name: user.name,
+          email: user.email,
+          'Environment ID': jwt.getEnvironmentIdFromJwt(),
+          'Environment Name': jwt.getEnvironmentNameFromJwt(),
+          'Organization ID': jwt.getEnvironmentOrganizationIdFromJwt(),
+          'Organization Unit ID': jwt.getEnvironmentOrganizationUnitIdFromJwt(),
+          'Tenant ID': jwt.getTenantIdFromJwt()
+        }
+      );
+    });
+  }
+}

@@ -16,14 +16,9 @@ type InspecaoEntradaDTO struct {
 	QuantidadeAceita    float64    `json:"quantidadeAceita,omitempty"`
 	QuantidadeAprovada  float64    `json:"quantidadeAprovada,omitempty"`
 	QuantidadeReprovada float64    `json:"quantidadeReprovada,omitempty"`
-	Observacao          string     `json:"observacao,omitempty"`
 }
 
 type GetInspecaoEntradaDTO struct {
 	Items      []InspecaoEntradaDTO `json:"items"`
 	TotalCount int64                `json:"totalCount"`
-}
-
-type InspecaoEntradaFilters struct {
-	ObservacoesMetricas []string `json:"observacoesMetricas"`
 }

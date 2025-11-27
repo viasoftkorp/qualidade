@@ -1,4 +1,3 @@
-import { ensureTrailingSlash } from '@viasoft/http';
 import { IItemMenuOptions } from '@viasoft/navigation';
 
 export const NAVIGATION_MENU_ITEMS: IItemMenuOptions[] = [
@@ -22,13 +21,6 @@ export const NAVIGATION_MENU_ITEMS: IItemMenuOptions[] = [
         label: 'InspecaoEntrada.Navigation.PlanoAmostragem',
         path: '/configuracoes-plano-amostragem',
         icon: 'ballot',
-      },
-      {
-        label: 'InspecaoEntrada.Navigation.AlterarRelatorio',
-        icon: 'sign-out-alt',
-        cta: () => {
-          window.open(`${ensureTrailingSlash(window.location.origin)}relatorios/reports`, '_blank', 'noopener noreferrer');
-        }
       }
     ]
   }

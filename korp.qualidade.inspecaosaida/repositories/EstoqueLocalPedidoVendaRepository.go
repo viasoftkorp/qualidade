@@ -1,12 +1,11 @@
 package repositories
 
 import (
-	"database/sql"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/interfaces"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/queries"
 	unit_of_work "bitbucket.org/viasoftkorp/korp.sdk/unit-of-work"
+	"database/sql"
 )
 
 type EstoqueLocalPedidoVendaRepository struct {
@@ -30,7 +29,7 @@ func (repo *EstoqueLocalPedidoVendaRepository) BuscarEstoqueLocalValoresPorProdu
 		sql.Named(queries.NamedLote, lote),
 		sql.Named(queries.NamedOdf, odf),
 		sql.Named(queries.NamedLocal, codigoLocal),
-		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.LegacyCompanyId)).
+		sql.Named(queries.NamedEmpresaRecno, repo.BaseParams.CompanyRecno)).
 		Scan(&estoqueLocalValores)
 
 	if itemsQueryResult.Error != nil {

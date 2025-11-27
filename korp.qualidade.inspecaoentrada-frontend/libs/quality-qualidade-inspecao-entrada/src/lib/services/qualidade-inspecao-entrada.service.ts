@@ -13,61 +13,34 @@ import {
   GetNotasFiscaisDTO,
   GetPlanosInspecaoDTO,
   InspecaoEntradaDTO,
-  NotaFiscalDadosAdicionaisDTO,
   NotaFiscalDTO,
-  FiltrosInspecaoDto,
+  NotaFiscalFilters,
   NovaInspecaoInput,
   PedidoVendaInput,
 } from '../tokens';
 import { PlanoAmostragem } from '../tokens/interfaces/planos-amostragem-dto.interface';
 import { SessionService } from './session.service';
-import { VsStorageService } from '@viasoft/common';
 
 @Injectable()
 export class QualidadeInspecaoEntradaService {
+  public actionsTemplate: Subject<any> = new Subject();
+  public pesquisaAlterada = new BehaviorSubject<string>('');
   public notaFiscalSelecionada = new BehaviorSubject<NotaFiscalDTO>(null);
-  public notaFiscalHistoricoSelecionada = new BehaviorSubject<NotaFiscalDTO>(null);
-  public refreshNotaFiscalGrid = new Subject<void>();
-  public refreshHistoricoGrid = new Subject<void>();
-  public refreshInspecoesNotaFiscalGrid = new Subject<void>();
-  public refreshInspecoesHistoricoGrid = new Subject<void>();
-  private readonly filtrosCacheKey = '06332A18-D9A4-45B8-8FA1-4D4CC43ECC49';
+  public refreshNotaFiscalGrid = new BehaviorSubject<NotaFiscalDTO>(null);
 
   private get baseUrl(): string {
     return `${ensureTrailingSlash(this.sessionService.currentBaseUrl)}`;
   }
 
   constructor(
-    private readonly httpClient: HttpClient,
-    private readonly sessionService: SessionService,
-    private readonly storageService: VsStorageService
+    private httpClient: HttpClient,
+    private sessionService: SessionService
   ) { }
-
-  public setFiltros(filtros: FiltrosInspecaoDto): void {
-    const filtrosSerializados = JSON.stringify(filtros);
-    this.storageService.set(this.filtrosCacheKey, filtrosSerializados);
-  }
-
-  public getFiltros(): FiltrosInspecaoDto {
-    const filtrosSerializados = this.storageService.get(this.filtrosCacheKey);
-
-    if (filtrosSerializados) {
-      return JSON.parse(filtrosSerializados) as FiltrosInspecaoDto;
-    }
-
-    return new FiltrosInspecaoDto();
-  }
 
   private static setVsGridGetInputParams(input: VsGridGetInput): HttpParams {
     let params = new HttpParams();
     if (input.filter !== undefined && input.filter !== null && input.filter !== '') {
       params = params.set('filter', input.filter);
-    }
-    if (input.advancedFilter !== undefined && input.advancedFilter !== null && input.advancedFilter !== '') {
-        params = params.set('advancedFilter', input.advancedFilter);
-    }
-    if (input.sorting !== undefined && input.sorting !== null && input.sorting !== '') {
-        params = params.set('sorting', input.sorting);
     }
     if (input.skipCount !== undefined && input.skipCount !== null) {
       params = params.set('skip', input.skipCount.toString());
@@ -79,16 +52,26 @@ export class QualidadeInspecaoEntradaService {
     return params;
   }
 
-  public getNotasFiscais(input: VsGridGetInput, filtros: FiltrosInspecaoDto): Observable<GetNotasFiscaisDTO> {
+  public getNotasFiscais(input: VsGridGetInput, filtros: NotaFiscalFilters): Observable<GetNotasFiscaisDTO> {
     const route = `${this.baseUrl}notas-fiscais`;
 
     let queryParams = QualidadeInspecaoEntradaService.setVsGridGetInputParams(input);
 
-    filtros.observacoesMetricas.forEach((observacao) => {
-      if (observacao) {
-        queryParams = queryParams.append('observacoesMetricas', observacao);
-      }
-    });
+    if (filtros.lote) {
+      queryParams = queryParams.set('lote', filtros.lote);
+    }
+    if (filtros.notaFiscal) {
+      queryParams = queryParams.set('notaFiscal', filtros.notaFiscal);
+    }
+    if (filtros.codigoProduto) {
+      queryParams = queryParams.set('codigoProduto', filtros.codigoProduto);
+    }
+    if (filtros.fornecedor) {
+      queryParams = queryParams.set('fornecedor', filtros.fornecedor);
+    }
+    if (filtros.dataEntrada) {
+      queryParams = queryParams.set('dataEntrega', new Date(filtros.dataEntrada).toISOString());
+    }
 
     return this.httpClient.get(route, {
       params: queryParams,
@@ -96,18 +79,10 @@ export class QualidadeInspecaoEntradaService {
     }) as Observable<GetNotasFiscaisDTO>;
   }
 
-  public getInspecoesEntrada(input: VsGridGetInput, filtros: FiltrosInspecaoDto, notaFiscal: number, lote: string): Observable<GetInspecaoEntradaDTO> {
-    const regex = new RegExp("/", 'g');
-    lote = lote.replace(regex, "%3A");
+  public getInspecoesEntrada(input: VsGridGetInput, notaFiscal: number, lote: string): Observable<GetInspecaoEntradaDTO> {
     const route = `${this.baseUrl}inspecoes/${notaFiscal}/lotes/${lote}`;
 
-    let params = QualidadeInspecaoEntradaService.setVsGridGetInputParams(input);
-
-    filtros.observacoesMetricas.forEach((observacao) => {
-      if (observacao) {
-        params = params.append('observacoesMetricas', observacao);
-      }
-    });
+    const params = QualidadeInspecaoEntradaService.setVsGridGetInputParams(input);
 
     return this.httpClient.get(route, {
       params,
@@ -115,7 +90,7 @@ export class QualidadeInspecaoEntradaService {
     }) as Observable<GetInspecaoEntradaDTO>;
   }
 
-  public getPlanosNovaInspecao(input: VsGridGetInput, codigoPlano: string, codigoProduto: string): Observable<GetPlanosInspecaoDTO> {
+  public getPlanosNovaInspecao(input: VsGridGetInput, codigoPlano: number, codigoProduto: string): Observable<GetPlanosInspecaoDTO> {
     const route = `${this.baseUrl}planos/${codigoPlano}`;
 
     let params = QualidadeInspecaoEntradaService.setVsGridGetInputParams(input);
@@ -213,7 +188,6 @@ export class QualidadeInspecaoEntradaService {
       headers: this.sessionService.defaultHttpHeaders
     }) as Observable<GetAllEstoqueLocalPedidoVendaAlocacaoDTO>;
   }
-
   public getQuantidadeTotalAlocadaPedido(recnoInspecao: number): Promise<{ quantidadeTotalAlocada: number, quantidadeReprovada: number, quantidadeAprovada: number }> {
     const route = `${this.baseUrl}inspecoes/${recnoInspecao}/pedidos-venda/quantidade-alocada`;
 
@@ -229,7 +203,7 @@ export class QualidadeInspecaoEntradaService {
     }).toPromise();
   }
 
-  public getInformacoesRNC(recnoInspecao: number, codigoProduto: string, codigoFornecedor: string): Promise<{
+  public getInformacoesRNC(recnoInspecao: number, codigoProduto: string): Promise<{
     idNotaFiscal: string,
     idFornecedor: string,
     numeroNota: string,
@@ -241,7 +215,6 @@ export class QualidadeInspecaoEntradaService {
   }> {
     let params = new HttpParams();
     params = params.set('codigoProduto', codigoProduto);
-    params = params.set('codigoFornecedor', codigoFornecedor);
     const route = `${this.baseUrl}inspecoes/${recnoInspecao}/rnc`;
     return this.httpClient.get(route, {
       params,
@@ -257,19 +230,5 @@ export class QualidadeInspecaoEntradaService {
       params,
       headers: this.sessionService.defaultHttpHeaders
     }).toPromise();
-  }
-
-  public updateNotaFiscalDadosAdicionais(idNotaFiscal: string, nota: NotaFiscalDadosAdicionaisDTO): Observable<never> {
-    return this.httpClient.put<never>(`${this.baseUrl}notas-fiscais/${idNotaFiscal}/dados-adicionais`, nota, {
-      headers: this.sessionService.defaultHttpHeaders
-    });
-  }
-
-  public imprimirInspecaoSaida(codigo: number) : Observable<unknown> {
-    const route = `${this.baseUrl}inspecoes/${codigo}/imprimir`;
-
-    return this.httpClient.get<ArrayBuffer>(route, {
-      headers: this.sessionService.defaultHttpHeaders
-    }) as Observable<unknown>;
   }
 }

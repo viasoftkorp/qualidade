@@ -10,7 +10,7 @@ def data = """ {
     "shouldPublishDevelopment": ${publishDevelopment},
     "shouldPublishProduction": ${publishProduction},
     "composeName": "${composeName}",
-    "publishServerIp": "${env.IP_PROCESS_1_ARM}"
+    "publishServerIp": "${env.IP_PROCESS_3}"
 }
 """
 request = httpRequest httpMode: 'POST',

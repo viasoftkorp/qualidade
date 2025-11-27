@@ -1,14 +1,18 @@
 <vs-tabs-view-template>
   <ng-container actions>
-    <qa-filtros-inspecao></qa-filtros-inspecao>
+    <ng-container *ngIf="actionsTemplate">
+      <ng-template [ngTemplateOutlet]="actionsTemplate"></ng-template>
+    </ng-container>
   </ng-container>
 
   <vs-tab-group (selectedItemChanged)="onTabChanged($event)">
     <div *vsTabLabel="{title: 'Inspeções Abertas'}">
-      <inspecao-saida-inspecoes-abertas></inspecao-saida-inspecoes-abertas>
+      <qa-ordem-producao-view [tab]="tab"></qa-ordem-producao-view>
+      <qa-inspecao-view></qa-inspecao-view>
     </div>
-    <div *vsTabLabel="{title: 'Inspeções Finalizadas'}">
+    <div *vsTabLabel="{title: 'Historico'}">
       <qa-historico-inspecao-view></qa-historico-inspecao-view>
     </div>
   </vs-tab-group>
+
 </vs-tabs-view-template>

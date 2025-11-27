@@ -8,5 +8,5 @@ import (
 //go:generate mockgen -destination=../mocks/mock_InspecaoSaidaHistoricoService.go -package=mocks bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/interfaces IInspecaoSaidaHistoricoService
 type IInspecaoSaidaHistoricoService interface {
 	GetAllInspecaoSaidaHistoricoCabecalho(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters) (*dto.GetAllInspecaoSaidaHistoricoCabecalhoDTO, error)
-	GetAllInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, filters *dto.InspecaoSaidaHistoricoCabecalhoFilters, odf int, codigoInspecao int) (*dto.GetAllInspecaoSaidaHistoricoItemsDTO, error)
+	GetAllInspecaoSaidaHistoricoItems(baseFilters *models.BaseFilter, odf int) (*dto.GetAllInspecaoSaidaHistoricoItemsDTO, error)
 }

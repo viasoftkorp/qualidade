@@ -36,18 +36,18 @@ func (m *MockIInspecaoEntradaHistoricoRepository) EXPECT() *MockIInspecaoEntrada
 }
 
 // BuscarInspecoesEntradaHistorico mocks base method.
-func (m *MockIInspecaoEntradaHistoricoRepository) BuscarInspecoesEntradaHistorico(arg0 int, arg1 string, arg2 *models.BaseFilter, arg3 *dto.InspecaoEntradaHistoricoCabecalhoFilters) ([]dto.InspecaoEntradaHistoricoItems, error) {
+func (m *MockIInspecaoEntradaHistoricoRepository) BuscarInspecoesEntradaHistorico(arg0 int, arg1 string, arg2 *models.BaseFilter) ([]dto.InspecaoEntradaHistoricoItems, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarInspecoesEntradaHistorico", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "BuscarInspecoesEntradaHistorico", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]dto.InspecaoEntradaHistoricoItems)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarInspecoesEntradaHistorico indicates an expected call of BuscarInspecoesEntradaHistorico.
-func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarInspecoesEntradaHistorico(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarInspecoesEntradaHistorico(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesEntradaHistorico", reflect.TypeOf((*MockIInspecaoEntradaHistoricoRepository)(nil).BuscarInspecoesEntradaHistorico), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarInspecoesEntradaHistorico", reflect.TypeOf((*MockIInspecaoEntradaHistoricoRepository)(nil).BuscarInspecoesEntradaHistorico), arg0, arg1, arg2)
 }
 
 // BuscarNotasFiscaisHistorico mocks base method.
@@ -66,31 +66,31 @@ func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarNotasFiscai
 }
 
 // BuscarNotasFiscaisHistoricoTotalCount mocks base method.
-func (m *MockIInspecaoEntradaHistoricoRepository) BuscarNotasFiscaisHistoricoTotalCount(arg0 *models.BaseFilter, arg1 *dto.InspecaoEntradaHistoricoCabecalhoFilters) (int64, error) {
+func (m *MockIInspecaoEntradaHistoricoRepository) BuscarNotasFiscaisHistoricoTotalCount(arg0 *dto.InspecaoEntradaHistoricoCabecalhoFilters) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarNotasFiscaisHistoricoTotalCount", arg0, arg1)
+	ret := m.ctrl.Call(m, "BuscarNotasFiscaisHistoricoTotalCount", arg0)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarNotasFiscaisHistoricoTotalCount indicates an expected call of BuscarNotasFiscaisHistoricoTotalCount.
-func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarNotasFiscaisHistoricoTotalCount(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarNotasFiscaisHistoricoTotalCount(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotasFiscaisHistoricoTotalCount", reflect.TypeOf((*MockIInspecaoEntradaHistoricoRepository)(nil).BuscarNotasFiscaisHistoricoTotalCount), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarNotasFiscaisHistoricoTotalCount", reflect.TypeOf((*MockIInspecaoEntradaHistoricoRepository)(nil).BuscarNotasFiscaisHistoricoTotalCount), arg0)
 }
 
 // BuscarQuantidadeInspecoesEntradaHistorico mocks base method.
-func (m *MockIInspecaoEntradaHistoricoRepository) BuscarQuantidadeInspecoesEntradaHistorico(arg0 int, arg1 string, arg2 *models.BaseFilter, arg3 *dto.InspecaoEntradaHistoricoCabecalhoFilters) (int64, error) {
+func (m *MockIInspecaoEntradaHistoricoRepository) BuscarQuantidadeInspecoesEntradaHistorico(arg0 int, arg1 string) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuscarQuantidadeInspecoesEntradaHistorico", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "BuscarQuantidadeInspecoesEntradaHistorico", arg0, arg1)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BuscarQuantidadeInspecoesEntradaHistorico indicates an expected call of BuscarQuantidadeInspecoesEntradaHistorico.
-func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarQuantidadeInspecoesEntradaHistorico(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockIInspecaoEntradaHistoricoRepositoryMockRecorder) BuscarQuantidadeInspecoesEntradaHistorico(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarQuantidadeInspecoesEntradaHistorico", reflect.TypeOf((*MockIInspecaoEntradaHistoricoRepository)(nil).BuscarQuantidadeInspecoesEntradaHistorico), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuscarQuantidadeInspecoesEntradaHistorico", reflect.TypeOf((*MockIInspecaoEntradaHistoricoRepository)(nil).BuscarQuantidadeInspecoesEntradaHistorico), arg0, arg1)
 }

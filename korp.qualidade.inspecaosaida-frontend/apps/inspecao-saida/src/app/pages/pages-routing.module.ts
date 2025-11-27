@@ -11,10 +11,6 @@ const routes: Routes = [
     loadChildren: () => import('@viasoft/qualidade-inspecao-saida').then((m) => m.HistoricoInspecaoModule),
   },
   {
-    path: 'configuracoes',
-    loadChildren: () => import('@viasoft/qualidade-inspecao-saida').then((m) => m.ConfiguracoesModule),
-  },
-  {
     path: '',
     loadChildren: () => import('@viasoft/qualidade-inspecao-saida').then((m) => m.QualidadeInspecaoSaidaModule),
   },

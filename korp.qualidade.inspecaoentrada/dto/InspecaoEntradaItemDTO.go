@@ -2,8 +2,7 @@ package dto
 
 type InspecaoEntradaItemDTO struct {
 	Id                     string  `json:"id"`
-	LegacyIdPlanoInspecao  int     `json:"legacyIdPlanoInspecao"`
-	CodigoPlano            string  `json:"codigoPlano"`
+	CodigoProduto          int     `json:"codigoProduto"`
 	Descricao              string  `json:"descricao"`
 	Metodo                 string  `json:"metodo"`
 	Sequencia              string  `json:"sequencia"`

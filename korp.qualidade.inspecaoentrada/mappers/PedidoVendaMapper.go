@@ -12,19 +12,16 @@ func MapPedidoVendaModelToDTO(pedidoVendaModel *models.EstoqueLocalPedidoVendaAl
 	}
 
 	return &dto.EstoqueLocalPedidoVendaAlocacaoDTO{
-		NumeroPedido:                 pedidoVendaModel.NumeroPedido,
-		NumeroOdf:                    pedidoVendaModel.NumeroOdf,
-		QuantidadeTotalPedido:        utils.DecimalToFloat64(pedidoVendaModel.QuantidadeTotalPedido),
-		QuantidadeAlocadaLoteLocal:   utils.DecimalToFloat64(pedidoVendaModel.QuantidadeAlocadaLoteLocal),
-		QuantidadeEntrada:            utils.DecimalToFloat64(pedidoVendaModel.QuantidadeEntrada),
-		QuantidadeRestanteInspecionar: utils.DecimalToFloat64(pedidoVendaModel.QuantidadeRestanteInspecionar),
-		DescricaoProduto:             pedidoVendaModel.DescricaoProduto,
-		DescricaoLocalReprovado:      pedidoVendaModel.DescricaoLocalReprovado,
-		DescricaoLocalAprovado:       pedidoVendaModel.DescricaoLocalAprovado,
-		CodigoLocalReprovado:         pedidoVendaModel.CodigoLocalReprovado,
-		CodigoLocalAprovado:          pedidoVendaModel.CodigoLocalAprovado,
-		QuantidadeAprovada:           utils.DecimalToFloat64(pedidoVendaModel.QuantidadeAprovada),
-		QuantidadeReprovada:          utils.DecimalToFloat64(pedidoVendaModel.QuantidadeReprovada),
+		NumeroPedido:               pedidoVendaModel.NumeroPedido,
+		QuantidadeTotalPedido:      utils.DecimalToFloat64(pedidoVendaModel.QuantidadeTotalPedido),
+		QuantidadeAlocadaLoteLocal: utils.DecimalToFloat64(pedidoVendaModel.QuantidadeAlocadaLoteLocal),
+		DescricaoProduto:           pedidoVendaModel.DescricaoProduto,
+		DescricaoLocalReprovado:    pedidoVendaModel.DescricaoLocalReprovado,
+		DescricaoLocalAprovado:     pedidoVendaModel.DescricaoLocalAprovado,
+		CodigoLocalReprovado:       pedidoVendaModel.CodigoLocalReprovado,
+		CodigoLocalAprovado:        pedidoVendaModel.CodigoLocalAprovado,
+		QuantidadeAprovada:         utils.DecimalToFloat64(pedidoVendaModel.QuantidadeAprovada),
+		QuantidadeReprovada:        utils.DecimalToFloat64(pedidoVendaModel.QuantidadeReprovada),
 	}
 }
 

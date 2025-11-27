@@ -11,5 +11,4 @@ type IProdutoRepository interface {
 	BuscarProdutoPeloCodigo(codigoProduto string) (*dto.ProdutoOutput, error)
 	BuscarProdutos(filterInput *models.BaseFilter) ([]dto.ProdutoOutput, error)
 	BuscarProdutosTotalCount(filterInput *models.BaseFilter) (int64, error)
-	GetRecnoFormulaLote(codigo string) (*int, error)
 }

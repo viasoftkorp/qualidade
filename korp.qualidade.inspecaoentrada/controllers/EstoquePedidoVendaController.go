@@ -44,7 +44,7 @@ func AtualizarDistribuicaoInspecaoEstoquePedidoVenda(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	var input dto.EstoqueLocalPedidoVendaAlocacaoInput
+	var input dto.EstoqueLocalPedidoVendaAlocacaoDTO
 
 	err = ctx.BodyParser(&input)
 	if err != nil {
@@ -79,25 +79,6 @@ func BuscarQuantidadeTotalAlocadaPedidoVenda(ctx *fiber.Ctx) error {
 	}
 
 	result, err := service.BuscarQuantidadeTotalAlocadaPedidoVenda(recnoInspecao)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	} else {
-		return ctx.Status(fiber.StatusOK).JSON(result)
-	}
-}
-
-func BuscarPedidoVendaLotes(ctx *fiber.Ctx) error {
-	idPedidoVendaLote, err := uuid.Parse(ctx.Params("id"))
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	service, err := services.GetEstoquePedidoVendaService(ctx)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	result, err := service.BuscarPedidoVendaLotes(idPedidoVendaLote)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	} else {

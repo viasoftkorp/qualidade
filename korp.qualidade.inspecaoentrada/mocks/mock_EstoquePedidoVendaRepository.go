@@ -38,7 +38,7 @@ func (m *MockIEstoquePedidoVendaRepository) EXPECT() *MockIEstoquePedidoVendaRep
 }
 
 // AtualizarDistribuicaoInspecaoEstoquePedidoVenda mocks base method.
-func (m *MockIEstoquePedidoVendaRepository) AtualizarDistribuicaoInspecaoEstoquePedidoVenda(arg0 uuid.UUID, arg1 dto.EstoqueLocalPedidoVendaAlocacaoInput) error {
+func (m *MockIEstoquePedidoVendaRepository) AtualizarDistribuicaoInspecaoEstoquePedidoVenda(arg0 uuid.UUID, arg1 dto.EstoqueLocalPedidoVendaAlocacaoDTO) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AtualizarDistribuicaoInspecaoEstoquePedidoVenda", arg0, arg1)
 	ret0, _ := ret[0].(error)

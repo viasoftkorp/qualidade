@@ -32,22 +32,14 @@ func GetInspecoesSaidaHistoricoCabecalho(ctx *fiber.Ctx) error {
 
 func GetInspecoesSaidaHistoricoItems(ctx *fiber.Ctx) error {
 	baseFilters, err := utils.GetInputBaseFilterFromCtx(ctx)
-
 	odf, _ := strconv.Atoi(ctx.Params("odf"))
-	codigoInspecao, _ := strconv.Atoi(ctx.Query("codigoInspecao"))
 
 	service, err := services.GetInspecaoSaidaHistoricoService(ctx)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	var filters dto.InspecaoSaidaHistoricoCabecalhoFilters
-	err = ctx.QueryParser(&filters)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	result, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilters, &filters, odf, codigoInspecao)
+	result, err := service.GetAllInspecaoSaidaHistoricoItems(baseFilters, odf)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	} else {

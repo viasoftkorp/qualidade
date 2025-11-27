@@ -1,5 +1,4 @@
 export interface InspecaoSaidaDTO {
-  id: string;
   codigoInspecao: number;
   odf: number;
   odfApontada: number;

@@ -7,11 +7,8 @@ import (
 
 type InspecaoEntrada struct {
 	Recno               int             `gorm:"primaryKey;column:R_E_C_N_O_"`
-	RecnoItemNotaFiscal int             `gorm:"column:RECNO_HISTLISE"`
 	CodigoInspecao      int             `gorm:"column:COD_INSP"`
 	NotaFiscal          int             `gorm:"column:CODNOTA"`
-	CodigoProduto       string          `gorm:"column:CODIGO_PRODUTO"`
-	SerieNotaFiscal     string          `gorm:"column:CODSERIE"`
 	Inspecionado        string          `gorm:"column:INSPECIONADO"`
 	DataInspecao        string          `gorm:"column:DATAINSP"`
 	Inspetor            string          `gorm:"column:INSPETOR"`

@@ -29,12 +29,6 @@ export const PROCESSAMENTO_INSPECAO_I18N_PT: ProcessamentoInspecaoI18N = {
       Falha: 'Falha',
       Sucesso: 'Sucesso',
     },
-    Resultados: {
-      Aprovado: 'Aprovado',
-      NaoAplicavel: 'Não aplicável',
-      NaoConforme: 'Não conforme',
-      ParcialmenteAprovado: 'Parcialmente Aprov.'
-    },
     Reprocessar: 'Reprocessar',
     Inspecionados: 'Inspecionados',
     Estornados: 'Estornados',

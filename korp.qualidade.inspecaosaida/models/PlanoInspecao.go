@@ -4,7 +4,6 @@ import "github.com/google/uuid"
 
 type PlanoInspecao struct {
 	Id             uuid.UUID
-	LegacyId       int
 	CodProduto     string
 	Sequencia      string
 	Descricao      string

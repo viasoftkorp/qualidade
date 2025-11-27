@@ -8,6 +8,8 @@ import { LocalOutput } from './local-output.class';
 
 @Injectable()
 export class LocalAutocompleteSelectService {
+  private readonly headers = this.sessionService.defaultHttpHeaders;
+
   constructor(
     protected httpClient: HttpClient,
     private sessionService: SessionService
@@ -31,12 +33,12 @@ export class LocalAutocompleteSelectService {
 
     return this.httpClient.get<IPagedResultOutputDto<LocalOutput>>(this.basePath, {
       params: queryParameters,
-      headers: this.sessionService.defaultHttpHeaders
+      headers: this.headers
     });
   }
 
-  public get(id: string): Observable<LocalOutput> {
-    return this.httpClient.get<LocalOutput>(`${this.basePath}/codigo/${id}`, { headers: this.sessionService.defaultHttpHeaders });
+  public get(id: number): Observable<LocalOutput> {
+    return this.httpClient.get<LocalOutput>(`${this.basePath}/codigo/${id}`, { headers: this.headers });
   }
 
   private get basePath(): string {

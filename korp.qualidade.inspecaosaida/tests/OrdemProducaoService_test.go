@@ -1,17 +1,16 @@
 package tests
 
 import (
-	"errors"
-	"testing"
-
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/dto"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/mappers"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/mocks"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/models"
 	"bitbucket.org/viasoftkorp/Korp.Qualidade.InspecaoSaida/services"
+	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func InstanciarOrdensProducao() []models.OrdemProducao {
@@ -53,7 +52,7 @@ func TestBuscarOrdensInspecao(t *testing.T) {
 	var expectedValidacaoDTO *dto.ValidacaoDTO
 	expectedOutput := &dto.GetOrdemProducaoDTO{
 		Items:      mappers.MapOrdemProducaoEntitiesToDTOs(ordens),
-		TotalCount: int64(0),
+		TotalCount: int64(14),
 	}
 	t.Run("ErroBuscarOrdensInspecao", func(t1 *testing.T) {
 		mockOrdemProdRepo.EXPECT().
@@ -66,9 +65,28 @@ func TestBuscarOrdensInspecao(t *testing.T) {
 		assert.Equal(t1, expectedValidacaoDTO, err)
 	})
 
+	t.Run("BuscarQuantidadeOrdensInspecao", func(t2 *testing.T) {
+		mockOrdemProdRepo.EXPECT().
+			BuscarOrdensInspecao(baseFilter, ordemProducaoFilter).
+			Return(ordens, nil).
+			Times(1)
+		mockOrdemProdRepo.EXPECT().
+			BuscarQuantidadeOrdensInspecao(baseFilter, ordemProducaoFilter).
+			Return(int64(14), errors.New("Test 2")).
+			Times(1)
+		actualOutput, err := service.BuscarOrdensInspecao(baseFilter, ordemProducaoFilter)
+		expectedValidacaoDTO = InstanciarValidacaoDTO(2, "Test 2")
+		assert.Nil(t2, actualOutput)
+		assert.Equal(t2, expectedValidacaoDTO, err)
+	})
+
 	mockOrdemProdRepo.EXPECT().
 		BuscarOrdensInspecao(baseFilter, ordemProducaoFilter).
 		Return(ordens, nil).
+		Times(1)
+	mockOrdemProdRepo.EXPECT().
+		BuscarQuantidadeOrdensInspecao(baseFilter, ordemProducaoFilter).
+		Return(int64(14), nil).
 		Times(1)
 	actualOutput, err := service.BuscarOrdensInspecao(baseFilter, ordemProducaoFilter)
 	assert.Nil(t, err)

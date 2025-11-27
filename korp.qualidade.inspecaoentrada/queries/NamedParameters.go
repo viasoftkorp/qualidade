@@ -1,7 +1,6 @@
 package queries
 
 const (
-	NamedRecnoItemNotaFiscal   = "RecnoItemNotaFiscal"
 	NamedEmpresaRecno          = "EmpresaRecno"
 	NamedNotaFiscal            = "NotaFiscal"
 	NamedCodigoInspecaoEntrada = "CodigoInspecaoEntrada"
@@ -13,5 +12,4 @@ const (
 	NamedSkip                  = "Skip"
 	NamedPageSize              = "PageSize"
 	NamedLocal                 = "Local"
-	NamedQuantidade            = "Quantidade"
 )
