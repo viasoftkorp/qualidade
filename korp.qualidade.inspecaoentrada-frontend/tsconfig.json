@@ -1,0 +1,42 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@viasoft/inspecao-entrada": [
+        "apps/inspecao-entrada/src"
+      ],
+      "@viasoft/inspecao-entrada/*": [
+        "apps/inspecao-entrada/src/*"
+      ],
+      "@viasoft/quality-qualidade-inspecao-entrada": [
+        "libs/quality-qualidade-inspecao-entrada/src"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  },
+  "exclude": [
+    "./cypress/**"
+  ]
+}

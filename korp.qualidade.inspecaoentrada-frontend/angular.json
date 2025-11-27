@@ -1,0 +1,321 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "libs",
+  "projects": {
+    "inspecao-entrada": {
+      "root": "apps/inspecao-entrada",
+      "sourceRoot": "apps/inspecao-entrada/src",
+      "projectType": "application",
+      "prefix": "inspecao",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/inspecao-entrada",
+            "index": "apps/inspecao-entrada/src/index.html",
+            "main": "apps/inspecao-entrada/src/main.ts",
+            "polyfills": "apps/inspecao-entrada/src/polyfills.ts",
+            "tsConfig": "apps/inspecao-entrada/tsconfig.app.json",
+            "assets": [
+              "apps/inspecao-entrada/src/favicon.ico",
+              "apps/inspecao-entrada/src/assets"
+            ],
+            "styles": [
+              "apps/inspecao-entrada/src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
+            ],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "dev-env": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/inspecao-entrada/src/environments/environment.ts",
+                  "with": "apps/inspecao-entrada/src/environments/environment.dev-env.ts"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/inspecao-entrada/src/environments/environment.ts",
+                  "with": "apps/inspecao-entrada/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "inspecao-entrada:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "inspecao-entrada:build:production"
+            },
+            "dev-env": {
+              "buildTarget": "inspecao-entrada:build:dev-env"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "inspecao-entrada:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/inspecao-entrada/src/test.ts",
+            "polyfills": "apps/inspecao-entrada/src/polyfills.ts",
+            "tsConfig": "apps/inspecao-entrada/tsconfig.spec.json",
+            "karmaConfig": "apps/inspecao-entrada/karma.conf.js",
+            "assets": [
+              "apps/inspecao-entrada/src/favicon.ico",
+              "apps/inspecao-entrada/src/assets"
+            ],
+            "styles": [
+              "apps/inspecao-entrada/src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/inspecao-entrada/**/*.ts",
+              "apps/inspecao-entrada/**/*.html"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/inspecao-entrada/e2e/protractor.conf.js",
+            "devServerTarget": "inspecao-entrada:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "inspecao-entrada:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "inspecao-entrada-portal": {
+      "root": "apps/inspecao-entrada",
+      "sourceRoot": "apps/inspecao-entrada/src",
+      "projectType": "application",
+      "prefix": "inspecao",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "outputPath": "dist/inspecao-entrada",
+            "index": "apps/inspecao-entrada/src/index.html",
+            "main": "apps/inspecao-entrada/src/main.single-spa.ts",
+            "polyfills": "apps/inspecao-entrada/src/polyfills.ts",
+            "tsConfig": "apps/inspecao-entrada/tsconfig.app.json",
+            "assets": [
+              "apps/inspecao-entrada/src/favicon.ico",
+              "apps/inspecao-entrada/src/assets"
+            ],
+            "styles": [
+              "apps/inspecao-entrada/src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
+            ],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "customWebpackConfig": {
+              "path": "apps/inspecao-entrada/extra-webpack.config.js"
+            }
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/inspecao-entrada/src/environments/environment.ts",
+                  "with": "apps/inspecao-entrada/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "buildTarget": "inspecao-entrada-portal:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "inspecao-entrada-portal:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "inspecao-entrada-portal:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/inspecao-entrada/src/test.ts",
+            "polyfills": "apps/inspecao-entrada/src/polyfills.ts",
+            "tsConfig": "apps/inspecao-entrada/tsconfig.spec.json",
+            "karmaConfig": "apps/inspecao-entrada/karma.conf.js",
+            "assets": [
+              "apps/inspecao-entrada/src/favicon.ico",
+              "apps/inspecao-entrada/src/assets"
+            ],
+            "styles": [
+              "apps/inspecao-entrada/src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/inspecao-entrada/tsconfig.app.json",
+              "apps/inspecao-entrada/tsconfig.spec.json",
+              "apps/inspecao-entrada/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/inspecao-entrada/e2e/protractor.conf.js",
+            "devServerTarget": "inspecao-entrada:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "inspecao-entrada:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "quality-qualidade-inspecao-entrada": {
+      "projectType": "library",
+      "root": "libs/quality-qualidade-inspecao-entrada",
+      "sourceRoot": "libs/quality-qualidade-inspecao-entrada/src",
+      "prefix": "inspecao-entrada",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "libs/quality-qualidade-inspecao-entrada/tsconfig.lib.json",
+            "project": "libs/quality-qualidade-inspecao-entrada/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/quality-qualidade-inspecao-entrada/src/test.ts",
+            "tsConfig": "libs/quality-qualidade-inspecao-entrada/tsconfig.spec.json",
+            "karmaConfig": "libs/quality-qualidade-inspecao-entrada/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/quality-qualidade-inspecao-entrada/tsconfig.lib.json",
+              "libs/quality-qualidade-inspecao-entrada/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "inspecao-entrada"
+}
