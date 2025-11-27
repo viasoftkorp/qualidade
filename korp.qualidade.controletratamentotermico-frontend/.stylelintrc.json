@@ -1,0 +1,78 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-prettier",
+    "stylelint-config-standard-scss"
+  ],
+  "ignoreFiles": [
+    "node_modules/**/*",
+    "cypress/**/*",
+    "dist/**/*",
+    "**/*.ts",
+    "**/*.js",
+    "**/*.html",
+    "**/*.json"
+  ],
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "selector-type-no-unknown": null,
+    "no-empty-source": null,
+    "rule-empty-line-before": [
+      "always",
+      {
+        "ignore": [
+          "after-comment",
+          "first-nested"
+        ],
+        "severity": "warning"
+      }
+    ],
+    "font-family-no-missing-generic-family-keyword": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": [
+          "/^ng-/"
+        ]
+      }
+    ],
+    "indentation": 2,
+    "declaration-no-important": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+    "block-no-empty": true,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "function",
+          "if",
+          "each",
+          "include",
+          "mixin"
+        ]
+      }
+    ],
+    "scss/at-mixin-argumentless-call-parentheses": "always",
+    "scss/at-mixin-named-arguments": [
+      "always",
+      {
+        "ignore": [
+          "single-argument"
+        ]
+      }
+    ],
+    "scss/at-mixin-parentheses-space-before": "never",
+    "scss/dollar-variable-colon-space-after": "always-single-line"
+  }
+}
