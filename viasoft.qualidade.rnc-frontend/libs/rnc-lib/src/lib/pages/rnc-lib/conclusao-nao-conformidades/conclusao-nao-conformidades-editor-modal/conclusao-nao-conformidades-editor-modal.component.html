@@ -1,0 +1,47 @@
+<vs-dialog>
+  <vs-label title label="NaoConformidades.ConclusoesModal.Title"></vs-label>
+  <div content>
+    <vs-form *ngIf="loaded">
+      <form [formGroup]="form" group-1>
+        <admin-user-autocomplete-select
+          [required]="camposObrigatorios.idAuditor"
+          [formControlName]="formControls.idAuditor"
+          placeholder="NaoConformidades.ConclusoesModal.Auditor"
+        >
+        </admin-user-autocomplete-select>
+        <vs-input
+          [formControlName]="formControls.evidencia"
+          placeholder="NaoConformidades.ConclusoesModal.Evidencia"
+        ></vs-input>
+        <vs-input
+          [formControlName]="formControls.cicloDeTempo"
+          placeholder="NaoConformidades.ConclusoesModal.CicloDeTempo"
+        ></vs-input>
+        <vs-datepicker
+          [required]="camposObrigatorios.dataVerificacao"
+          [controlName]="formControls.dataVerificacao"
+          placeholder="NaoConformidades.ConclusoesModal.DataVerificacao"
+        >
+        </vs-datepicker>
+        <vs-datepicker
+          [required]="camposObrigatorios.dateReuniao"
+          [controlName]="formControls.dataReuniao"
+          placeholder="NaoConformidades.ConclusoesModal.DataReuniao"
+        >
+        </vs-datepicker>
+
+        <vs-checkbox [formControlName]="formControls.novaReuniao" label="NaoConformidades.ConclusoesModal.NovaReuniao">
+        </vs-checkbox>
+        <vs-checkbox [formControlName]="formControls.eficaz" label="NaoConformidades.ConclusoesModal.Eficaz"> </vs-checkbox>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="NaoConformidades.ConclusoesModal.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+  </div>
+</vs-dialog>

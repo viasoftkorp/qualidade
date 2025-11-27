@@ -1,0 +1,8 @@
+vs-tabs-view-template div[content] {
+  display: flex;
+  height: 100%;
+
+  vs-grid {
+    height: 100%;
+  }
+}

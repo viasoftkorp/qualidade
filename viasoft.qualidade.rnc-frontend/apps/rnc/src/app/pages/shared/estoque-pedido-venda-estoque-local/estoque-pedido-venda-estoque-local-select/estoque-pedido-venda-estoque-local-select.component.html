@@ -1,0 +1,9 @@
+<vs-search-input
+  [formGroup]="form"
+  controlName="internalDescriptionControl"
+  [placeholder]="placeholder"
+  [required]="required"
+  [disabled]="disabled"
+  (search)="openSearchModal()"
+  (searchCleaned)="searchCleaned()"
+></vs-search-input>

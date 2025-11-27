@@ -1,0 +1,6 @@
+<vs-tabs-view-template *ngIf="loaded">
+  <ng-container>
+    <vs-button [disabled]="!canEditSolucaoNaoConformidades" icon="plus" (clickEvent)="novo()" class="fix-button"></vs-button>
+  </ng-container>
+  <vs-grid [options]="gridOptions"></vs-grid>
+</vs-tabs-view-template>

@@ -1,4 +1,0 @@
-package consts
-
-const UtilizarReservaDePedidoNaLocalizacaoDeEstoque = "UtilizarReservaDePedidoNaLocalizacaoDeEstoque"
-const UtilizarReservaDePedidoNaLocalizacaoDeEstoqueSecao = "Logistica"

@@ -1,2 +1,0 @@
-cd .\infrastructures\migrations\
-goose create "add_ ..." sql
