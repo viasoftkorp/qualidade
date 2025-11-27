@@ -1,0 +1,755 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="1">
+      <Default_Connection Ref="2" type="Stimulsoft.Report.Dictionary.StiSqlDatabase" isKey="true">
+        <Alias>Default_Connection</Alias>
+        <ConnectionStringEncrypted>48j3KWZUUc15E+gExXRuE9VU+8tNBfP14k2hhWZE6OvE8lMJ715RvEJY6L3oTCljwDpPbWlco/VsS9006QBiHslU/UjFWUtt7UXRjGQEJGPRVPEJ5V2rHexJofRFBCKvgsTRy9Za89HpWinx6xDgP/V6ZUthXEvxa1jcpQ==</ConnectionStringEncrypted>
+        <Name>Default_Connection</Name>
+      </Default_Connection>
+    </Databases>
+    <DataSources isList="true" count="2">
+      <Inspecao Ref="3" type="DataTableSource" isKey="true">
+        <Alias>Inspecao</Alias>
+        <Columns isList="true" count="27">
+          <value>LogoEmpresa,Stimulsoft.Drawing.Image</value>
+          <value>DataEmissao,System.DateTime</value>
+          <value>DescricaoProduto,System.String</value>
+          <value>Lote,System.String</value>
+          <value>DataFabricacao,System.DateTime</value>
+          <value>DataValidade,System.DateTime</value>
+          <value>CodigoProduto,System.String</value>
+          <value>Recno,System.Int32</value>
+          <value>Id,System.String</value>
+          <value>CodigoInspecao,System.Int32</value>
+          <value>Odf,System.Int32</value>
+          <value>Cliente,System.String</value>
+          <value>Pedido,System.String</value>
+          <value>IsoTs,System.String</value>
+          <value>Inspecionado,System.String</value>
+          <value>DataInspecao,System.Nullable`1[System.DateTime]</value>
+          <value>TipoInspecao,System.String</value>
+          <value>Inspetor,System.String</value>
+          <value>Resultado,System.String</value>
+          <value>QuantidadeInspecao,System.Decimal</value>
+          <value>QuantidadeLote,System.Decimal</value>
+          <value>QuantidadeAceita,System.Decimal</value>
+          <value>QuantidadeRetrabalhada,System.Decimal</value>
+          <value>QuantidadeAprovada,System.Decimal</value>
+          <value>QuantidadeReprovada,System.Decimal</value>
+          <value>IdEmpresa,System.Int32</value>
+          <value>Usuario,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Key>e7837f6f5d634954843a3be7b78da7af</Key>
+        <Name>Inspecao</Name>
+        <NameInSource>Inspecao</NameInSource>
+      </Inspecao>
+      <ItemInspecao Ref="4" type="DataTableSource" isKey="true">
+        <Alias>ItemInspecao</Alias>
+        <Columns isList="true" count="15">
+          <value>Id,System.String</value>
+          <value>LegacyIdPlanoInspecao,System.Int32</value>
+          <value>Plano,System.String</value>
+          <value>Odf,System.Int32</value>
+          <value>Descricao,System.String</value>
+          <value>Metodo,System.String</value>
+          <value>Sequencia,System.String</value>
+          <value>Resultado,System.String</value>
+          <value>MaiorValor,System.Decimal</value>
+          <value>MenorValor,System.Decimal</value>
+          <value>MaiorValorBase,System.Decimal</value>
+          <value>MenorValorBase,System.Decimal</value>
+          <value>CodigoInspecao,System.Int32</value>
+          <value>IdEmpresa,System.Int32</value>
+          <value>Observacao,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Key>60daf669ca714c75a589c72ede04d473</Key>
+        <Name>ItemInspecao</Name>
+        <NameInSource>ItemInspecao</NameInSource>
+      </ItemInspecao>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Resources isList="true" count="0" />
+    <UserFunctions isList="true" count="0" />
+    <Variables isList="true" count="0" />
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Key>2899505c1d994bab8403d8de70e3a8f9</Key>
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="5" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="3">
+        <DataBand2 Ref="6" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
+          <ClientRectangle>0,0.4,19,6.79</ClientRectangle>
+          <Components isList="true" count="18">
+            <Image1 Ref="7" type="Image" isKey="true">
+              <AspectRatio>True</AspectRatio>
+              <Border>None;[0:0:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>EmptyBrush</Brush>
+              <ClientRectangle>0,0,6.4,2.79</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <DataColumn>Inspecao.LogoEmpresa</DataColumn>
+              <Expressions isList="true" count="0" />
+              <Guid>35a9625d1ccd4e58816a4157763857ac</Guid>
+              <IconColor>68, 114, 196</IconColor>
+              <Name>Image1</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Stretch>True</Stretch>
+              <VertAlignment>Center</VertAlignment>
+            </Image1>
+            <Text2 Ref="8" type="Text" isKey="true">
+              <Border>Bottom;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>7.41,0.41,11.58,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,11,Bold</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Name>Text2</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Korp Sistema de Gestão</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text3 Ref="9" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.4,0.99,1.4,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,9</Font>
+              <Name>Text3</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Emissão:</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text3>
+            <Text4 Ref="10" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>14.8,0.99,2,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,9</Font>
+              <Guid>606e81bfe5754b8baf063eeb6b1870b5</Guid>
+              <Name>Text4</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.DataEmissao}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextFormat Ref="11" type="CustomFormat" isKey="true">
+                <StringFormat>dd/MM/yyyy</StringFormat>
+              </TextFormat>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text4>
+            <Text5 Ref="12" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.8,0.99,0.79,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,9</Font>
+              <Guid>467cf32a32644225a0c6eb502c0136c3</Guid>
+              <Name>Text5</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Hora:</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text5>
+            <Text6 Ref="13" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>17.59,0.99,1.4,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,9</Font>
+              <Guid>afde0adeb85b41d1a6b2f0bc82c11ffe</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Name>Text6</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.DataEmissao}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextFormat Ref="14" type="CustomFormat" isKey="true">
+                <StringFormat>HH:mm:ss</StringFormat>
+              </TextFormat>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text6>
+            <Text25 Ref="15" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.41,1.6,5.58,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Enabled>False</Enabled>
+              <Expressions isList="true" count="1">
+                <value>Enabled,_x0028_Inspecao.Usuario_x0020__x0021__x003D__x0020_null_x0020__x0026__x0026__x0020_Inspecao.Usuario_x0020__x0021__x003D__x0020__x0022__x0022__x0029_</value>
+              </Expressions>
+              <Font>Arial,9</Font>
+              <Guid>20ae2c9a17a447cd8509174f0de098ce</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Name>Text25</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Usuario: {Inspecao.Usuario}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text25>
+            <Text1 Ref="16" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,3.2,18.99,1.19</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,22,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text1</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Certificado de Análise</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text1>
+            <Text7 Ref="17" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,4.6,2.21,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,13,Bold</Font>
+              <Name>Text7</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Produto:</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text7>
+            <Text14 Ref="18" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>2.21,4.6,16.78,0.61</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,13</Font>
+              <Guid>4b7f9e952aa5498181556ddcec68abcf</Guid>
+              <Name>Text14</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.CodigoProduto} - {Inspecao.DescricaoProduto}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text14>
+            <Text8 Ref="19" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,5.41,1.19,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,12,Bold</Font>
+              <Guid>16c1fb228d1a4c93bcf8dec62fdd29fc</Guid>
+              <Name>Text8</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Lote:</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text8>
+            <Text13 Ref="20" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.19,5.41,5.41,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,12</Font>
+              <Guid>3f5d03aa0eaa45d9b7a288cd27a7ab7f</Guid>
+              <Name>Text13</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.Lote}</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text13>
+            <Text9 Ref="21" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.6,5.41,2.6,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Enabled>False</Enabled>
+              <Expressions isList="true" count="1">
+                <value>Enabled,Inspecao.DataFabricacao_x0020__x0021__x003D__x0020_null</value>
+              </Expressions>
+              <Font>Arial,12,Bold</Font>
+              <Guid>fedec215766d4260aeeb5e31e99afa02</Guid>
+              <Name>Text9</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Fabricação:</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text9>
+            <Text11 Ref="22" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>9.2,5.41,3.8,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,12</Font>
+              <Guid>bfc049603fb2493fafc76377757518e7</Guid>
+              <Name>Text11</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.DataFabricacao}</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <TextFormat Ref="23" type="CustomFormat" isKey="true">
+                <StringFormat>dd/MM/yyyy</StringFormat>
+              </TextFormat>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text11>
+            <Text12 Ref="24" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.01,5.41,3.98,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,12</Font>
+              <Guid>b3e8932d01524a06b8728a42e264aea3</Guid>
+              <Name>Text12</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.DataValidade}</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <TextFormat Ref="25" type="CustomFormat" isKey="true">
+                <StringFormat>dd/MM/yyyy</StringFormat>
+              </TextFormat>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text10 Ref="26" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13,5.41,2.01,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Enabled>False</Enabled>
+              <Expressions isList="true" count="1">
+                <value>Enabled,Inspecao.DataValidade_x0020__x0021__x003D__x0020_null</value>
+              </Expressions>
+              <Font>Arial,12,Bold</Font>
+              <Guid>88559d8fd03f477497f77fc0e9563c56</Guid>
+              <Name>Text10</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Validade:</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text10>
+            <Text26 Ref="27" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,6.2,4.99,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,12,Bold</Font>
+              <Guid>fcb6508245564988b418381c0f322fcc</Guid>
+              <Name>Text26</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>Quantidade de Inspeção:</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text26>
+            <Text27 Ref="28" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>4.99,6.2,4.41,0.58</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,12</Font>
+              <Guid>e90f16c4ae884d058e91f1a3685a1d29</Guid>
+              <Name>Text27</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{Inspecao.QuantidadeInspecao}</Text>
+              <TextBrush>[38:38:38]</TextBrush>
+              <TextFormat Ref="29" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <DecimalSeparator>,</DecimalSeparator>
+                <GroupSeparator>.</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <State>DecimalDigits, DecimalSeparator</State>
+              </TextFormat>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text27>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataRelationName isNull="true" />
+          <DataSourceName>Inspecao</DataSourceName>
+          <Expressions isList="true" count="0" />
+          <Filters isList="true" count="0" />
+          <Name>DataBand2</Name>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+          <Sort isList="true" count="0" />
+        </DataBand2>
+        <ColumnHeaderBand1 Ref="30" type="Stimulsoft.Report.Components.StiColumnHeaderBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,7.99,19,0.98</ClientRectangle>
+          <Components isList="true" count="6">
+            <Text16 Ref="31" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>11.8,0.4,2.19,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10,Bold</Font>
+              <Guid>4f910bdf99d2478d81e061ec9d1eed53</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text16</Name>
+              <Page isRef="5" />
+              <Parent isRef="30" />
+              <Text>Limite Inf.</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text16>
+            <Text17 Ref="32" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.99,0.4,2.22,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10,Bold</Font>
+              <Guid>26726608704249f6a6615a4d66311e83</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text17</Name>
+              <Page isRef="5" />
+              <Parent isRef="30" />
+              <Text>Limite Sup.</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text17>
+            <Text19 Ref="33" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.2,0.4,2.79,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10,Bold</Font>
+              <Guid>e2a3c5e07d224bafa2c8f0b8598e7633</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text19</Name>
+              <Page isRef="5" />
+              <Parent isRef="30" />
+              <Text>Status</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text19>
+            <Text15 Ref="34" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0.4,6.2,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10,Bold</Font>
+              <Name>Text15</Name>
+              <Page isRef="5" />
+              <Parent isRef="30" />
+              <Text>Característica</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text15>
+            <Text18 Ref="35" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.2,0.41,2.79,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10,Bold</Font>
+              <Guid>51f8e96b95ae4cda83f4cb4a39a01b41</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text18</Name>
+              <Page isRef="5" />
+              <Parent isRef="30" />
+              <Text>Limite Inf. Base</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text18>
+            <Text23 Ref="36" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>9,0.41,2.82,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10,Bold</Font>
+              <Guid>db15e18491104290a381cb1b09e3aafe</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text23</Name>
+              <Page isRef="5" />
+              <Parent isRef="30" />
+              <Text>Limite Sup. Base</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text23>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Expressions isList="true" count="0" />
+          <Name>ColumnHeaderBand1</Name>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+        </ColumnHeaderBand1>
+        <DataBand1 Ref="37" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
+          <ClientRectangle>0,9.77,19,0.79</ClientRectangle>
+          <Components isList="true" count="6">
+            <Text21 Ref="38" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>11.8,0.2,2.19,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10</Font>
+              <Guid>10cb0d1962d14c6e9ff4c510f9200874</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text21</Name>
+              <Page isRef="5" />
+              <Parent isRef="37" />
+              <Text>{ItemInspecao.MenorValor}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextFormat Ref="39" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <DecimalSeparator>,</DecimalSeparator>
+                <GroupSeparator>.</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <State>DecimalDigits, DecimalSeparator</State>
+              </TextFormat>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text21>
+            <Text22 Ref="40" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>13.99,0.2,2.22,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10</Font>
+              <Guid>8dfb9be2768946869774f22323f11cfe</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text22</Name>
+              <Page isRef="5" />
+              <Parent isRef="37" />
+              <Text>{ItemInspecao.MaiorValor}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextFormat Ref="41" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <DecimalSeparator>,</DecimalSeparator>
+                <GroupSeparator>.</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <State>DecimalDigits, DecimalSeparator</State>
+              </TextFormat>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text22>
+            <Text24 Ref="42" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>16.2,0.2,2.79,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10</Font>
+              <Guid>fc49053824d04cc4824e04c28ae1818d</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text24</Name>
+              <Page isRef="5" />
+              <Parent isRef="37" />
+              <Text>{ItemInspecao.Resultado}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text24>
+            <Text28 Ref="43" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>6.2,0.21,2.79,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10</Font>
+              <Guid>dca4c00e3ef345e08f78eb10d55a7754</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text28</Name>
+              <Page isRef="5" />
+              <Parent isRef="37" />
+              <Text>{ItemInspecao.MenorValorBase}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextFormat Ref="44" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <DecimalSeparator>,</DecimalSeparator>
+                <GroupSeparator>.</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <State>DecimalDigits, DecimalSeparator</State>
+              </TextFormat>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text28>
+            <Text29 Ref="45" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>8.99,0.21,2.82,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10</Font>
+              <Guid>f05cbfc6f90b435cbe1787ca9436d5f9</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Name>Text29</Name>
+              <Page isRef="5" />
+              <Parent isRef="37" />
+              <Text>{ItemInspecao.MaiorValorBase}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextFormat Ref="46" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <DecimalSeparator>,</DecimalSeparator>
+                <GroupSeparator>.</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <State>DecimalDigits, DecimalSeparator</State>
+              </TextFormat>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text29>
+            <Text20 Ref="47" type="Text" isKey="true">
+              <Border>None;[255:192:0];1;Solid;False;4;[0:0:0]</Border>
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>0,0.2,6.2,0.41</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Expressions isList="true" count="0" />
+              <Font>Arial,10</Font>
+              <Guid>94340f3ab02b422b9fdb37b62f996970</Guid>
+              <Name>Text20</Name>
+              <Page isRef="5" />
+              <Parent isRef="37" />
+              <Text>{ItemInspecao.Descricao}</Text>
+              <TextBrush>[0:0:0]</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text20>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataRelationName isNull="true" />
+          <DataSourceName>ItemInspecao</DataSourceName>
+          <Expressions isList="true" count="0" />
+          <Filters isList="true" count="0" />
+          <Name>DataBand1</Name>
+          <OddStyle>Estilo1</OddStyle>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+          <Sort isList="true" count="0" />
+        </DataBand1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Expressions isList="true" count="0" />
+      <Guid>f9cd05e3d1d74b0a970dd6bd8d40a663</Guid>
+      <Margins>1,1,1,1</Margins>
+      <Name>Page1</Name>
+      <PageHeight>29.7</PageHeight>
+      <PageWidth>21</PageWidth>
+      <PaperSize>A4</PaperSize>
+      <Report isRef="0" />
+    </Page1>
+  </Pages>
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>SYS_QUALIDADE_INSPECAO_SAIDA_INSPECAO_STIMULSOFT</ReportAlias>
+  <ReportChanged>10/16/2024 3:13:20 PM</ReportChanged>
+  <ReportCreated>10/16/2024 3:13:20 PM</ReportCreated>
+  <ReportGuid>54b2f34fed4a400a84e698687eea4c1a</ReportGuid>
+  <ReportName>SYS_QUALIDADE_INSPECAO_SAIDA_INSPECAO_STIMULSOFT</ReportName>
+  <ReportUnit>Centimeters</ReportUnit>
+  <ReportVersion>2024.3.4.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class SYS_QUALIDADE_INSPECAO_SAIDA_INSPECAO_STIMULSOFT : Stimulsoft.Report.StiReport
+    {
+        public SYS_QUALIDADE_INSPECAO_SAIDA_INSPECAO_STIMULSOFT()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="1">
+    <Estilo1 Ref="48" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Border>None;[0:0:0];1;Solid;False;4;[0:0:0]</Border>
+      <Brush>[231:230:230]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>Arial,8</Font>
+      <Name>Estilo1</Name>
+      <NegativeTextBrush>[255:0:0]</NegativeTextBrush>
+      <TextBrush>[0:0:0]</TextBrush>
+    </Estilo1>
+  </Styles>
+</StiSerializer>

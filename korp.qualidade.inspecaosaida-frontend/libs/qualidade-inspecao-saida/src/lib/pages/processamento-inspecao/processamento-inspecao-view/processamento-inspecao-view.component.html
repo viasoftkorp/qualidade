@@ -1,0 +1,8 @@
+<vs-tab-group>
+  <div *vsTabLabel="{title: 'ProcessamentoInspecao.Inspecionados'}">
+    <qa-processamento-inspecao-grid [estorno]="false" [filtros]="filtros"></qa-processamento-inspecao-grid>
+    </div>
+    <div *vsTabLabel="{title: 'ProcessamentoInspecao.Estornados'}">
+      <qa-processamento-inspecao-grid [estorno]="true" [filtros]="filtros"></qa-processamento-inspecao-grid>
+    </div>
+</vs-tab-group>

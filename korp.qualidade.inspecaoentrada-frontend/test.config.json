@@ -1,0 +1,9 @@
+{
+    "folder": "cypress/integration",
+    "groups": [
+        {
+            "title": "inspecao-entrada",
+            "value": "inspecao-entrada"
+        }
+    ]
+}

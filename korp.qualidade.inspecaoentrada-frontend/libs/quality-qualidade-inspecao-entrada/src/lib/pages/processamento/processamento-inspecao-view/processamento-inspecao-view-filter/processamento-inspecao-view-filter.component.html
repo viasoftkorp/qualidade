@@ -1,0 +1,73 @@
+<vs-dialog>
+  <vs-icon
+    icon="filter">
+  </vs-icon>
+  <vs-label
+    title
+    label="ProcessamentoInspecao.Filtros">
+  </vs-label>
+
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <vs-select
+          formControlName="status"
+          placeholder="ProcessamentoInspecao.Status"
+          [options]="opcoesStatus"
+          [cleanable]="true">
+        </vs-select>
+
+        <vs-input
+          formControlName="resultado"
+          placeholder="ProcessamentoInspecao.Resultado">
+        </vs-input>
+
+        <vs-input
+          formControlName="quantidadeTotal"
+          placeholder="ProcessamentoInspecao.QuantidadeTotal"
+          type="number">
+        </vs-input>
+
+        <qa-produto-autocomplete-select
+          formControlName="codigoProduto"
+          placeholder="ProcessamentoInspecao.Produto">
+        </qa-produto-autocomplete-select>
+
+        <vs-input
+          formControlName="notaFiscal"
+          placeholder="ProcessamentoInspecao.NotaFiscal"
+          type="number">
+        </vs-input>
+
+        <vs-input
+          formControlName="erro"
+          placeholder="ProcessamentoInspecao.Erro">
+        </vs-input>
+
+        <vs-input
+          formControlName="numeroExecucoes"
+          placeholder="ProcessamentoInspecao.NumeroExecucoes"
+          type="number">
+        </vs-input>
+
+        <qa-usuario-autocomplete-select
+          formControlName="idUsuarioExecucao"
+          placeholder="ProcessamentoInspecao.UsuarioExecucao">
+        </qa-usuario-autocomplete-select>
+
+        <vs-datepicker
+          controlName="dataExecucao"
+          placeholder="ProcessamentoInspecao.DataExecucao">
+        </vs-datepicker>
+      </form>
+    </vs-form>
+  </div>
+
+  <div footer>
+    <vs-button
+      type="save"
+      label="ProcessamentoInspecao.Filtrar"
+      (click)="filtrar()"
+    ></vs-button>
+  </div>
+</vs-dialog>
