@@ -1,0 +1,23 @@
+<div class="div-flex">
+  <vs-dialog>
+    <div icon>
+      <vs-icon icon="tasks"></vs-icon>
+    </div>
+    <div title>
+      <vs-label label="HistoricoInspecao.Transferencias"></vs-label>
+    </div>
+
+    <div content *ngIf="gridOptions">
+      <vs-grid [options]="gridOptions"></vs-grid>
+
+      <vs-tab-group (tabIndexChanged)="onSelectedTabIndexChanged($event)">
+        <div *vsTabLabel="{title: 'Métricas'}">
+          <vs-grid [options]="gridMetricasOptions"></vs-grid>
+        </div>
+        <div *vsTabLabel="{title: 'Arquivos'}">
+          <inspecao-saida-arquivos-inspecao-saida [idInspecao]="idInspecao" [tabIndex]="1" [selectedTab]="selectedTab"></inspecao-saida-arquivos-inspecao-saida>
+        </div>
+      </vs-tab-group>
+    </div>
+  </vs-dialog>
+</div>

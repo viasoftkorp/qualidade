@@ -1,0 +1,14 @@
+node_modules
+dist
+.idea
+.vscode
+__diff_output__
+cypress
+**/*.old
+**/*.json
+**/*.ts
+**/*.scss
+**/*.css
+**/*.less
+**/*.js
+**/*.md
