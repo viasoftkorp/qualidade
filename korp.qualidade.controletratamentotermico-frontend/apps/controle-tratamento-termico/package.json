@@ -1,0 +1,22 @@
+{
+  "name": "controle-tratamento-termico",
+  "version": "0.0.0",
+  "author": "Viasoft Korp",
+  "scripts": {
+    "start": "ng serve controle-tratamento-termico",
+    "build": "ng build controle-tratamento-termico --configuration production",
+    "lint": "ng lint"
+  },
+  "peerDependencies": {
+    "@angular/common": "^18.2.2",
+    "@angular/core": "^18.2.2",
+    "@viasoft/app-core": "9.0.0-beta.10",
+    "@viasoft/common": "9.0.0-beta.10",
+    "@viasoft/components": "9.0.0-beta.10",
+    "@viasoft/http": "9.0.0-beta.10",
+    "@viasoft/navigation": "9.0.0-beta.10",
+    "@viasoft/theming": "9.0.0-beta.10",
+    "@viasoft/view-template": "9.0.0-beta.10",
+    "@viasoft/authorization-management": "8.0.0"
+  }
+}

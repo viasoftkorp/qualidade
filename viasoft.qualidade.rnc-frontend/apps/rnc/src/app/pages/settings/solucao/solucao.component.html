@@ -1,0 +1,9 @@
+<vs-tabs-view-template>
+  <ng-container actions>
+    <vs-button *isGranted="policies.CreateSolucao" icon="plus" (clickEvent)="novo()" label="Configuracoes.Solucao.Novo"></vs-button>
+  </ng-container>
+  <vs-grid *ngIf="loaded" [options]="gridOptions"></vs-grid>
+</vs-tabs-view-template>
+
+
+

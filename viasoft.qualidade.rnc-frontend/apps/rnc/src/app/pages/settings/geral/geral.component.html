@@ -1,0 +1,32 @@
+<vs-tabs-view-template *ngIf="!isLoading">
+  <div actions>
+    <vs-button
+      model="icon"
+      icon="save"
+      label="Configuracoes.Gerais.Salvar"
+      [disabled]="!canSave"
+      (clickEvent)="save()"
+    ></vs-button>
+
+    <vs-button
+      class="vs-header-action"
+      icon="sign-out-alt"
+      label="Configuracoes.Gerais.AlterarRelatorio"
+      (clickEvent)="abirAplicativoRelatorios()"
+    ></vs-button>
+
+  </div>
+  <div content>
+    <vs-layout>
+        <vs-icon icon="wrench"></vs-icon>
+        <vs-label title model="title" label="Configuracoes.Gerais.OdfRetrabalho"></vs-label>
+      <div content>
+        <vs-form>
+          <form [formGroup]="form" group-4>
+            <vs-checkbox [formControlName]="this.formControls.considerarApenasSaldoApontado" label="Configuracoes.Gerais.ConsiderarApenasSaldoApontado"></vs-checkbox>
+          </form>
+        </vs-form>
+      </div>
+    </vs-layout>
+  </div>
+</vs-tabs-view-template>

@@ -1,0 +1,38 @@
+<vs-tabs-view-template>
+  <vs-layout>
+    <div content>
+      <vs-form *ngIf="loaded">
+        <form [formGroup]="form" group-3>
+          <admin-user-autocomplete-select
+          [formControlName]="formControls.idAuditor"
+          placeholder="NaoConformidades.ConclusoesModal.Auditor">
+          </admin-user-autocomplete-select>
+
+          <vs-input
+            [formControlName]="formControls.evidencia"
+            placeholder="NaoConformidades.ConclusoesModal.Evidencia"
+          ></vs-input>
+          <vs-input
+            [formControlName]="formControls.cicloDeTempo"
+            placeholder="NaoConformidades.ConclusoesModal.CicloDeTempo"
+          ></vs-input>
+          <vs-datepicker [controlName]="formControls.dataReuniao" placeholder="NaoConformidades.ConclusoesModal.DataReuniao">
+          </vs-datepicker>
+          <vs-datepicker
+            [controlName]="formControls.dataVerificacao"
+            placeholder="NaoConformidades.ConclusoesModal.DataVerificacao"
+          >
+          </vs-datepicker>
+          <span></span>
+
+          <div class="vertical">
+            <vs-checkbox [formControlName]="formControls.novaReuniao" label="NaoConformidades.ConclusoesModal.NovaReuniao">
+            </vs-checkbox>
+            <vs-checkbox [formControlName]="formControls.eficaz" label="NaoConformidades.ConclusoesModal.Eficaz">
+            </vs-checkbox>
+          </div>
+        </form>
+      </vs-form>
+    </div>
+  </vs-layout>
+</vs-tabs-view-template>
