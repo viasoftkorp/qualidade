@@ -5,9 +5,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Viasoft.Core.AmbientData;
-using Viasoft.Core.AmbientData.Extensions;
-using Viasoft.Core.Gateway;
 using Viasoft.Core.Identity.Abstractions;
 using Viasoft.Core.Identity.Abstractions.Store;
 using Viasoft.Core.IoC.Abstractions;
@@ -32,13 +29,11 @@ public class ExternalOrdemRetrabalhoService : IExternalOrdemRetrabalhoService, I
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<ExternalOrdemRetrabalhoService> _logger;
     private readonly ICurrentTenant _currentTenant;
-    private readonly IGatewayUriProvider _gatewayProvider;
-    private readonly IAmbientData _ambientData;
 
     public ExternalOrdemRetrabalhoService(ITenantDbDiscoveryService tenantDbDiscoveryService,
         IEnvironmentStore environmentStore, ICurrentEnvironment currentEnvironment, IUserStore userStore,
         ICurrentUser currentUser, ICurrentCompany currentCompany, IHttpClientFactory httpClientFactory,
-        ILogger<ExternalOrdemRetrabalhoService> logger, ICurrentTenant currentTenant, IGatewayUriProvider gatewayProvider, IAmbientData ambientData)
+        ILogger<ExternalOrdemRetrabalhoService> logger, ICurrentTenant currentTenant)
     {
         _tenantDbDiscoveryService = tenantDbDiscoveryService;
         _environmentStore = environmentStore;
@@ -49,8 +44,6 @@ public class ExternalOrdemRetrabalhoService : IExternalOrdemRetrabalhoService, I
         _httpClientFactory = httpClientFactory;
         _logger = logger;
         _currentTenant = currentTenant;
-        _gatewayProvider = gatewayProvider;
-        _ambientData = ambientData;
     }
 
     public async Task<ExternalGerarOrdemRetrabalhoOutput> GerarOrdemRetrabalho(ExternalGerarOrdemRetrabalhoInput input)
@@ -111,7 +104,7 @@ public class ExternalOrdemRetrabalhoService : IExternalOrdemRetrabalhoService, I
     private async Task<HttpResponseMessage> SendRequest(string body, bool estorno)
     {
         var endpoint = await GetEndpoint();
-        var currentUser = await _userStore.GetUserDetailsAsync(_ambientData.GetUserId());
+        var currentUser = await _userStore.GetUserDetailsAsync(_currentUser.Id);
 
         using (var client = _httpClientFactory.CreateClient())
         {
@@ -148,10 +141,11 @@ public class ExternalOrdemRetrabalhoService : IExternalOrdemRetrabalhoService, I
 
     private async Task<string> GetEndpoint()
     {
-        var gatewayUrl = _gatewayProvider.GetGatewayUri().ToString();
-        var environmentDetails = await _environmentStore.GetEnvironmentAsync( _ambientData.GetEnvironmentId());
+        var serverIp = await _tenantDbDiscoveryService.ServerIp();
+
+        var environmentDetails = await _environmentStore.GetEnvironmentAsync(_currentEnvironment.Id.Value);
 
         return
-            $"{gatewayUrl}korp/services/{environmentDetails.DesktopDatabaseVersion}/Logistica/{environmentDetails.DatabaseName}/ordem-producao";
+            $"{serverIp}/korp/services/{environmentDetails.DesktopDatabaseVersion}/logistica/{environmentDetails.DatabaseName}/ordem-producao";
     }
 }

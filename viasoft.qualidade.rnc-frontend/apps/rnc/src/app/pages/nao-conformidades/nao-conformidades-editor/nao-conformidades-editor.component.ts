@@ -438,8 +438,6 @@ export class NaoConformidadesEditorComponent implements OnInit, OnDestroy {
     this.form.get(NaoConformidadesFormControl.numeroOdfFaturamento).setValue(naoConformidade.numeroOdfFaturamento);
     this.form.get(NaoConformidadesFormControl.idProdutoFaturamento).setValue(naoConformidade.idProdutoFaturamento);
     this.form.get(NaoConformidadesFormControl.dataCriacao).setValue(naoConformidade.dataCriacao);
-
-    this.numeroOdf = Number(naoConformidade.numeroOdf);
   }
 
   private subscribeBloquearAtualizacaoNaoConformidade() {

@@ -5,9 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Viasoft.Core.AmbientData;
-using Viasoft.Core.AmbientData.Extensions;
-using Viasoft.Core.Gateway;
 using Viasoft.Core.Identity.Abstractions;
 using Viasoft.Core.Identity.Abstractions.Store;
 using Viasoft.Core.IoC.Abstractions;
@@ -31,12 +28,10 @@ public class ExternalMovimentacaoService : IExternalMovimentacaoService, ITransi
     private readonly ICurrentEnvironment _currentEnvironment;
     private readonly ILogger<ExternalMovimentacaoService> _logger;
     private readonly ICurrentTenant _currentTenant;
-    private readonly IGatewayUriProvider _gatewayProvider;
-    private readonly IAmbientData _ambientData;
 
     public ExternalMovimentacaoService(IUserStore userStore, IHttpClientFactory httpClientFactory, ICurrentUser currentUser,
         ICurrentCompany currentCompany, ITenantDbDiscoveryService tenantDbDiscoveryService, IEnvironmentStore environmentStore, 
-        ICurrentEnvironment currentEnvironment, ILogger<ExternalMovimentacaoService> logger, ICurrentTenant currentTenant, IGatewayUriProvider gatewayProvider, IAmbientData ambientData)
+        ICurrentEnvironment currentEnvironment, ILogger<ExternalMovimentacaoService> logger, ICurrentTenant currentTenant)
     {
         _userStore = userStore;
         _httpClientFactory = httpClientFactory;
@@ -47,8 +42,6 @@ public class ExternalMovimentacaoService : IExternalMovimentacaoService, ITransi
         _currentEnvironment = currentEnvironment;
         _logger = logger;
         _currentTenant = currentTenant;
-        _gatewayProvider = gatewayProvider;
-        _ambientData = ambientData;
     }
     public async Task<ExternalMovimentarEstoqueItemOutput> MovimentarEstoqueLista(ExternalMovimentarEstoqueListaInput input)
     {
@@ -60,12 +53,7 @@ public class ExternalMovimentacaoService : IExternalMovimentacaoService, ITransi
         var resultRequest = await SendRequest(body);
         var responseString = await resultRequest.Content.ReadAsStringAsync();
         _logger.LogInformation($"Retorno movimentação de estoque: {responseString}");
-        //TODO o if abaixo é uma gambiarra pois de forma aleatoria essa request falha, então faço uma segunda chamada
-        if (!resultRequest.IsSuccessStatusCode)
-        {
-            resultRequest = await SendRequest(body);
-            responseString = await resultRequest.Content.ReadAsStringAsync();
-        }
+
         if (!resultRequest.IsSuccessStatusCode)
         {
             return new ExternalMovimentarEstoqueItemOutput
@@ -96,7 +84,7 @@ public class ExternalMovimentacaoService : IExternalMovimentacaoService, ITransi
     private async Task<HttpResponseMessage> SendRequest(string body)
     {
         var endpoint = await GetEndpoint();
-        var currentUser = await _userStore.GetUserDetailsAsync(_ambientData.GetUserId());
+        var currentUser = await _userStore.GetUserDetailsAsync(_currentUser.Id);
         
         using (var client = _httpClientFactory.CreateClient())
         {
@@ -118,9 +106,10 @@ public class ExternalMovimentacaoService : IExternalMovimentacaoService, ITransi
 
     private async Task<string> GetEndpoint()
     {
-        var gatewayUrl = _gatewayProvider.GetGatewayUri().ToString();
-        var environmentDetails = await _environmentStore.GetEnvironmentAsync( _ambientData.GetEnvironmentId());
+        var serverIp = await _tenantDbDiscoveryService.ServerIp();
+        
+        var environmentDetails = await _environmentStore.GetEnvironmentAsync(_currentEnvironment.Id.Value);
         return
-            $"{gatewayUrl}korp/services/{environmentDetails.DesktopDatabaseVersion}/Logistica/{environmentDetails.DatabaseName}/WmsService/TransferirEstoqueLista";
+            $"{serverIp}/korp/services/{environmentDetails.DesktopDatabaseVersion}/Logistica/{environmentDetails.DatabaseName}/wmsService/transferirEstoqueLista";
     }
 }

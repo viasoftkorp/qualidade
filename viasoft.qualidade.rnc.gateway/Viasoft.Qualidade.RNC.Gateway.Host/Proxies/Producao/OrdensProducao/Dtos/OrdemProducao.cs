@@ -32,7 +32,7 @@ public class OrdemProducao
     public string Lote { get; set; }
     public bool OrdemFechada { get; set; }
     public string CodigoCliente { get; set; }
-    public bool PossuiPartida { get; set; }
+
 }
 
 public class ProdutoDto

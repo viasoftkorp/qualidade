@@ -80,8 +80,7 @@ public class OrdemRetrabalhoService : IOrdemRetrabalhoService, ITransientDepende
                 Detalhamento = e.Detalhamento,
                 Horas = e.Horas,
                 Minutos = e.Minutos,
-                IdRecurso = e.IdRecurso,
-                ControlarApontamento = e.ControlarApontamento,
+                IdRecurso = e.IdRecurso
             }).ToList()
         };
         

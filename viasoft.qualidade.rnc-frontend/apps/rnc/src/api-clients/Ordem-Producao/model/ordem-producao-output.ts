@@ -13,6 +13,5 @@ export interface OrdemProducaoOutput {
   idProdutoFaturamento: string;
   numeroLote: string;
   odfFinalizada: boolean;
-  possuiPartida: boolean;
   idCliente:string;
 }

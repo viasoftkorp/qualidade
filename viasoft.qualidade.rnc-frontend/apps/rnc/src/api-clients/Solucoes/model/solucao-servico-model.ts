@@ -11,5 +11,4 @@ export class SolucaoServicoModel {
   public codigoRecurso: string;
   public descricaoRecurso: string;
   public operacaoEngenharia?: string;
-  public controlarApontamento: boolean;
 }

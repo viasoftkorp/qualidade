@@ -55,9 +55,8 @@ public class ServicoNaoConformidadeViewService : IServicoNaoConformidadeViewServ
                     DescricaoRecurso = recurso.Descricao,
                     OperacaoEngenharia = servicosSolucoes.OperacaoEngenharia,
                     Detalhamento = servicosSolucoes.Detalhamento,
-                    ControlarApontamento = servicosSolucoes.ControlarApontamento,
                     Codigo = produto.Codigo,
-                    Descricao = produto.Descricao,
+                    Descricao = produto.Descricao
                 })
             .Where(entity => entity.IdNaoConformidade.Equals(idNaoConformidade))
             .AsNoTracking()

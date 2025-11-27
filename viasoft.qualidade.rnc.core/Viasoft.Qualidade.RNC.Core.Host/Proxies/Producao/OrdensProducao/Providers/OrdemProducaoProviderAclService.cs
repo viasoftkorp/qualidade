@@ -38,8 +38,7 @@ public class OrdemProducaoProviderAclService : IOrdemProducaoProviderAclService,
                 : DateTime.ParseExact(ordemProducao.DataInicio, "dd.MM.yyyy", new CultureInfo("pt-BR")),
             Quantidade = ordemProducao.QuantidadeOrdem,
             NumeroOdfDestino = ordemProducao.OdfDestino,
-            OdfFinalizada = ordemProducao.OrdemFechada || ordemProducao.OrdemEncerrada == "S",
-            PossuiPartida = ordemProducao.PossuiPartida
+            OdfFinalizada = ordemProducao.OrdemFechada || ordemProducao.OrdemEncerrada == "S"
         }).ToList();
         
         return result;

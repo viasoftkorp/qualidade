@@ -19,7 +19,6 @@ public class OrdemProducaoOutput
     public Guid? IdProdutoFaturamento { get; set; }
     public string NumeroLote { get; set; }
     public bool OdfFinalizada { get; set; }
-    public bool PossuiPartida { get; set; }
     public Guid? IdCliente { get; set; }
 
 }

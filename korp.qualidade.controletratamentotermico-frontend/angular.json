@@ -28,19 +28,13 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "apps/controle-tratamento-termico/src/favicon.ico",
-              "apps/controle-tratamento-termico/src/assets",
-              {
-                "glob": "*",
-                "input": "node_modules/@viasoft/fontawesome-pro/webfonts",
-                "output": "webfonts"
-              }
+              "apps/controle-tratamento-termico/src/assets"
             ],
             "styles": [
               "apps/controle-tratamento-termico/src/styles.scss",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css"
             ],
             "scripts": []
           },
@@ -193,8 +187,7 @@
               "apps/controle-tratamento-termico/src/styles.scss",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/all.min.css",
-              "node_modules/@viasoft/fontawesome-pro/css/light.min.css"
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css"
             ],
             "scripts": [],
             "customWebpackConfig": {

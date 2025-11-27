@@ -11,24 +11,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NodaTime" Version="3.1.9" />
-        <PackageReference Include="Viasoft.Core.AspNetCore" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.Identity.AspNetCore" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.MultiTenancy.AspNetCore" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.FileProvider" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.FileProvider.Proxy" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.ServiceBus.AspNetCore" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.ServiceBus.PostgreSQL" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.WebHost" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.API.EmailTemplate" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.API.Reporting" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.Authentication.Proxy" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.Authorization.Proxy" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Core.Reporting" Version="4.12.52" />
-        <PackageReference Include="Viasoft.Data.Seeder" Version="4.12.52" />
-        <PackageReference Include="Viasoft.PushNotifications" Version="4.12.52" />
-        <PackageReference Include="Viasoft.PushNotifications.Abstractions" Version="4.12.52" />
-        <PackageReference Include="Viasoft.PushNotifications.AspNetCore" Version="4.12.52" />
+        <PackageReference Include="NodaTime" Version="3.1.6" />
+        <PackageReference Include="Viasoft.Core.AspNetCore" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.Identity.AspNetCore" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.MultiTenancy.AspNetCore" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.FileProvider" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.FileProvider.Proxy" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.ServiceBus.AspNetCore" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.ServiceBus.PostgreSQL" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.WebHost" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.API.EmailTemplate" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.API.Reporting" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.Authentication.Proxy" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.Authorization.Proxy" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Core.Reporting" Version="4.10.12" />
+        <PackageReference Include="Viasoft.Data.Seeder" Version="4.10.12" />
+        <PackageReference Include="Viasoft.PushNotifications" Version="4.10.12" />
+        <PackageReference Include="Viasoft.PushNotifications.Abstractions" Version="4.10.12" />
+        <PackageReference Include="Viasoft.PushNotifications.AspNetCore" Version="4.10.12" />
     </ItemGroup>
 
     <ItemGroup>

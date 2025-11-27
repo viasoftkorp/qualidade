@@ -51,7 +51,7 @@ export class EstoqueLocalService extends VsReadOnlyBaseService<EstoqueLocalOutpu
           field: 'IsLocalBloquearMovimentacao',
           operator: JQQB_OP_EQUAL.operator,
           type: 'boolean',
-          value: 'true'
+          value: 'false'
         } as JQQBRule
       ]
     } as JQQBRuleSet;

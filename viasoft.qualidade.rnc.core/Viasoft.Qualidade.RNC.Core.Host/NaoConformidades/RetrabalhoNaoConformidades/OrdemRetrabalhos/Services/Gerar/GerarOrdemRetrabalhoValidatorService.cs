@@ -203,7 +203,7 @@ public class GerarOrdemRetrabalhoValidatorService : IGerarOrdemRetrabalhoValidat
         var numeroOdf = agregacaoNaoConformidade.NaoConformidade.NumeroOdf.Value;
         var ordemProducao = await _ordemProducaoProvider.GetByNumeroOdf(numeroOdf, false);
 
-        return ordemProducao.OdfFinalizada || ordemProducao.PossuiPartida;
+        return ordemProducao.OdfFinalizada;
     }
 
     private bool HasNumeroLote(AgregacaoNaoConformidade agregacaoNaoConformidade)

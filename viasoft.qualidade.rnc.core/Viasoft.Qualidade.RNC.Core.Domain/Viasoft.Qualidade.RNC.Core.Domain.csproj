@@ -11,10 +11,10 @@
 
     <ItemGroup>
       <PackageReference Include="Npgsql" Version="6.0.4" />
-      <PackageReference Include="Viasoft.Core.DDD" Version="4.12.29" />
-      <PackageReference Include="Viasoft.Core.DDD.Application" Version="4.12.29" />
-      <PackageReference Include="Viasoft.Core.DynamicLinqQueryBuilder" Version="4.12.29" />
-      <PackageReference Include="Viasoft.Core.Legacy.Parametros" Version="4.12.29" />
+      <PackageReference Include="Viasoft.Core.DDD" Version="4.10.12" />
+      <PackageReference Include="Viasoft.Core.DDD.Application" Version="4.10.12" />
+      <PackageReference Include="Viasoft.Core.DynamicLinqQueryBuilder" Version="4.10.12" />
+      <PackageReference Include="Viasoft.Core.Legacy.Parametros" Version="4.10.12" />
     </ItemGroup>
 
     <ItemGroup>

@@ -828,71 +828,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.Migrations
                     b.ToTable("produto", (string)null);
                 });
 
-            modelBuilder.Entity("Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.ProdutosEmpresas.ProdutoEmpresa", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("creationtime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("creatorid");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("deleterid");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("deletiontime");
-
-                    b.Property<Guid>("EnvironmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("environmentid");
-
-                    b.Property<Guid>("IdCategoria")
-                        .HasColumnType("uuid")
-                        .HasColumnName("idcategoria");
-
-                    b.Property<Guid>("IdEmpresa")
-                        .HasColumnType("uuid")
-                        .HasColumnName("idempresa");
-
-                    b.Property<Guid>("IdProduto")
-                        .HasColumnType("uuid")
-                        .HasColumnName("idproduto");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isdeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("lastmodificationtime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("lastmodifierid");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenantid");
-
-                    b.HasKey("Id")
-                        .HasName("pk_produtoempresa");
-
-                    b.HasIndex("IdProduto", "IdEmpresa")
-                        .IsUnique()
-                        .HasDatabaseName("ix_produtoempresa_idproduto_idempresa");
-
-                    b.ToTable("produtoempresa", (string)null);
-                });
-
             modelBuilder.Entity("Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Recursos.Recurso", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2024,35 +1959,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.Migrations
                     b.ToTable("seedermanager", (string)null);
                 });
 
-            modelBuilder.Entity("Viasoft.Qualidade.RNC.Core.Domain.SeederManagers.SeederManagerPorEmpresa", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("companyid");
-
-                    b.Property<Guid>("EnvironmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("environmentid");
-
-                    b.Property<bool>("InserirProdutosEmpresasSeederFinalizado")
-                        .HasColumnType("boolean")
-                        .HasColumnName("inserirprodutosempresasseederfinalizado");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenantid");
-
-                    b.HasKey("Id")
-                        .HasName("pk_seedermanagerporempresa");
-
-                    b.ToTable("seedermanagerporempresa", (string)null);
-                });
-
             modelBuilder.Entity("Viasoft.Qualidade.RNC.Core.Domain.ServicoNaoConformidades.ServicoNaoConformidade", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2063,10 +1969,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid")
                         .HasColumnName("companyid");
-
-                    b.Property<bool>("ControlarApontamento")
-                        .HasColumnType("boolean")
-                        .HasColumnName("controlarapontamento");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone")

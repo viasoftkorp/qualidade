@@ -17,7 +17,7 @@
       <PackageReference Include="FluentAssertions" Version="6.8.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
       <PackageReference Include="Moq" Version="4.18.3" />
-      <PackageReference Include="Viasoft.Core.Testing" Version="4.12.52" />
+      <PackageReference Include="Viasoft.Core.Testing" Version="4.10.12" />
       <PackageReference Include="xunit" Version="2.4.2" />
       <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
       <PackageReference Include="XunitXml.TestLogger" Version="3.0.70" />

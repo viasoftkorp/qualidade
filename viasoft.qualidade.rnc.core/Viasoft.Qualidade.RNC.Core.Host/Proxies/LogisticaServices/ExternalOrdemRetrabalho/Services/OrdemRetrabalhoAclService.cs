@@ -9,7 +9,6 @@ using Viasoft.Core.MultiTenancy.Abstractions.Company;
 using Viasoft.Qualidade.RNC.Core.Domain.Extensions;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Clientes;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Produtos;
-using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.ProdutosEmpresas;
 using Viasoft.Qualidade.RNC.Core.Domain.OrdemRetrabalhoNaoConformidades;
 using Viasoft.Qualidade.RNC.Core.Host.Proxies.LegacyLogisticas.Locais.Providers;
 using Viasoft.Qualidade.RNC.Core.Host.Proxies.LegacyParametros.Providers;
@@ -29,14 +28,13 @@ public class OrdemRetrabalhoAclService : IOrdemRetrabalhoAclService, ITransientD
     private readonly IRecursosProxyService _recursosProxyService;
     private readonly IRepository<Cliente> _clientesRepository;
     private readonly IRepository<Produto> _produtosRepository;
-    private readonly IRepository<ProdutoEmpresa> _produtosEmpresasRepository;
     private readonly ILocalProvider _localProvider;
     private readonly ILegacyParametrosProvider _legacyParametrosProvider;
 
     public OrdemRetrabalhoAclService(ICurrentCompany currentCompany, 
         ICategoriaProdutoProvider categoriaProdutoProvider, IOrdemProducaoProvider ordemProducaoProvider,
         IRecursosProxyService recursosProxyService, IRepository<Cliente> clientesRepository, IRepository<Produto> produtosRepository, 
-        IRepository<ProdutoEmpresa> produtosEmpresasRepository, ILocalProvider localProvider, ILegacyParametrosProvider legacyParametrosProvider)
+        ILocalProvider localProvider, ILegacyParametrosProvider legacyParametrosProvider)
     {
         _currentCompany = currentCompany;
         _categoriaProdutoProvider = categoriaProdutoProvider;
@@ -44,7 +42,6 @@ public class OrdemRetrabalhoAclService : IOrdemRetrabalhoAclService, ITransientD
         _recursosProxyService = recursosProxyService;
         _clientesRepository = clientesRepository;
         _produtosRepository = produtosRepository;
-        _produtosEmpresasRepository = produtosEmpresasRepository;
         _localProvider = localProvider;
         _legacyParametrosProvider = legacyParametrosProvider;
     }
@@ -121,22 +118,14 @@ public class OrdemRetrabalhoAclService : IOrdemRetrabalhoAclService, ITransientD
         string codigoProduto)
     {
         var idsProdutos = input.ConvertAll(e => e.IdProduto);
-        var produtos = await _produtosRepository.AsNoTracking()
+        var produtos = await _produtosRepository
+            .AsNoTracking()
             .Where(e => idsProdutos.Contains(e.Id))
-            .Join(_produtosEmpresasRepository.AsNoTracking()
-                    .Where(produtoEmpresa => produtoEmpresa.IdEmpresa == _currentCompany.Id),
-                produto => produto.Id,
-                produtoEmpresa => produtoEmpresa.Id,
-                (produto, produtoEmpresa) => new
-                {
-                    produto.Id,
-                    produto.Codigo,
-                    produtoEmpresa.IdCategoria
-                })
             .ToListAsync();
 
         var idsCategorias = produtos
-            .Select(e => e.IdCategoria)
+            .Where(e => e.IdCategoria.HasValue)
+            .Select(e => e.IdCategoria.Value)
             .ToList();
 
         var categorias = await _categoriaProdutoProvider.GetAllCategoriasPaginando(idsCategorias);
@@ -212,7 +201,7 @@ public class OrdemRetrabalhoAclService : IOrdemRetrabalhoAclService, ITransientD
                 Nivel = 0,
                 Posicao = "",
                 ConfirmarMateriais = "N",
-                ControlarApontamento = e.ControlarApontamento ? "S" : "N"
+                ControlarApontamento = "N"
             };
         }).ToList();
         return maquinas;

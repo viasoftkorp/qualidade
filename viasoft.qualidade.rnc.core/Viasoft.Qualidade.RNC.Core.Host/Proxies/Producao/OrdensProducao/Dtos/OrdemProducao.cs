@@ -29,7 +29,6 @@ public class OrdemProducao
     public int OdfDestino { get; set; }
     public int OdfFaturamento { get; set; }
     public bool OrdemFechada { get; set; }
-    public bool PossuiPartida { get; set; }
 }
 
 public class ProdutoDto

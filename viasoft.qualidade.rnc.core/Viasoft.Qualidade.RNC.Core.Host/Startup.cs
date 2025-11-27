@@ -35,7 +35,6 @@ using Viasoft.Qualidade.RNC.Core.Host.FrontendUrls;
 using Viasoft.Qualidade.RNC.Core.Host.Seeders;
 using Viasoft.Qualidade.RNC.Core.Host.Seeders.CorrigirNaoConformidadesFechadasSemConclusaoSeeders;
 using Viasoft.Qualidade.RNC.Core.Host.Seeders.CorrigirNumeroNotaFiscalNaoConformidadesSeeder;
-using Viasoft.Qualidade.RNC.Core.Host.Seeders.InserirProdutosEmpresasSeeder;
 using Viasoft.Qualidade.RNC.Core.Host.Seeders.CorrigirUsuariosSolucoesSeeder;
 using Viasoft.Qualidade.RNC.Core.Host.Seeders.PreencherCentrosCustosSeeders;
 using Viasoft.Qualidade.RNC.Core.Host.Seeders.PreencherCodigoRecursosSeeders;
@@ -112,11 +111,6 @@ namespace Viasoft.Qualidade.RNC.Core.Host
                     typeof(PreencherIdsCausasCentrosCustosNaoConformidadesSeeder),
                     typeof(CorrigirNumeroNotaFiscalNaoConformidadesSeeder),
                     typeof(CorrigirUsuariosSolucoesSeeder)
-                })
-                .AddDataSeedersByCompany(new List<Type>
-                {
-                    typeof(AdicionaSeederManagerPorEmpresaSeeder),
-                    typeof(InserirProdutosEmpresasSeeder)
                 })
                 .AddTenantManagementApi()
                 .AddUserProfileApi();

@@ -13,7 +13,6 @@ using Viasoft.Core.Identity.Abstractions;
 using Viasoft.Core.Identity.Abstractions.Store;
 using Viasoft.Core.IoC.Abstractions;
 using Viasoft.Core.MultiTenancy.Abstractions.Company.Store;
-using Viasoft.Core.Reporting.Model;
 using Viasoft.Qualidade.RNC.Gateway.Host.Dtos;
 using Viasoft.Qualidade.RNC.Gateway.Host.Extensions;
 using Viasoft.Qualidade.RNC.Gateway.Host.NaoConformidades.AcoesPreventivasNaoConformidades.Services;
@@ -115,14 +114,8 @@ public class RelatoriosProvider : IRelatoriosProvider, ITransientDependency
 
         try
         {
-            var exportInput = new ApiReportingExportInput()
-            {
-                ReportId = RelatorioPadraoConsts.ReportId,
-                ReportingOutputType = ApiReportingOutputType.Pdf,
-                Data = relatorioInput,
-            };
-            
-            var response = await _externalReportingService.ExportAsync(exportInput);
+            var response = await _externalReportingService.ExportAsync(RelatorioPadraoConsts.ReportId,
+                ApiReportingOutputType.Pdf, relatorioInput);
 
             await using (var stream = await response.HttpResponseMessage.Content.ReadAsStreamAsync())
             {

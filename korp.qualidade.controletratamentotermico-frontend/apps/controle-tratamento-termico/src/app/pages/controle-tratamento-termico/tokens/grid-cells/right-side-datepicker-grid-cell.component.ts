@@ -41,7 +41,7 @@ export class RightSideDatepickerGridCellComponent extends VsTableCellCustomCompo
     private getFormattedValue(): string {
         let value = getValueFromObjectByName(this.data, this.fieldName);
         try {
-            return this.format ? this.format(value, this.data) : value;
+            return this.format ? this.format(value) : value;
         } catch (error) {
             console.error(error);
             return value;
