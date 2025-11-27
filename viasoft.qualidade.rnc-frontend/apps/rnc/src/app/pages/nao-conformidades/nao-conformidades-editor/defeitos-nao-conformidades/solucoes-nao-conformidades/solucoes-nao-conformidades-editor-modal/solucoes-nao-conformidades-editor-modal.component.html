@@ -1,0 +1,65 @@
+<vs-layout>
+  <vs-label title label="NaoConformidade.SolucaoEditor.Title"></vs-label>
+  <div actions>
+    <vs-button [icon]="'times'" (clickEvent)="fechar()"></vs-button>
+  </div>
+  <div content>
+    <vs-form *ngIf="loaded">
+      <form [formGroup]="form" group-3>
+        <qa-solucao-autocomplete-select
+          [formControlName]="formControls.idSolucao"
+          placeholder="NaoConformidade.SolucaoEditor.Solucao"
+          required="true"
+          (ngModelChange)="completaCadastro($event)"
+        ></qa-solucao-autocomplete-select>
+        <admin-user-autocomplete-select
+          [formControlName]="formControls.idResponsavel"
+          placeholder="NaoConformidade.SolucaoEditor.Responsavel">
+        </admin-user-autocomplete-select>
+        <admin-user-autocomplete-select
+          [formControlName]="formControls.idAuditor"
+          placeholder="NaoConformidade.SolucaoEditor.Auditor">
+        </admin-user-autocomplete-select>
+
+        <vs-datepicker [controlName]="formControls.dataAnalise" placeholder="NaoConformidade.SolucaoEditor.DataAnalise">
+        </vs-datepicker>
+        <vs-datepicker
+          [controlName]="formControls.dataPrevistaImplantacao"
+          placeholder="NaoConformidade.SolucaoEditor.DataPrevista"
+        >
+        </vs-datepicker>
+        <vs-datepicker
+          [controlName]="formControls.dataVerificacao"
+          placeholder="NaoConformidade.SolucaoEditor.DataVerificacao"
+        >
+        </vs-datepicker>
+        <vs-datepicker [controlName]="formControls.novaData" placeholder="NaoConformidade.SolucaoEditor.NovaData">
+        </vs-datepicker>
+        <vs-input [formControlName]="formControls.custoEstimado" placeholder="NaoConformidade.SolucaoEditor.CustoEstimado" [mask]="currencymask" unmask="typed">
+        </vs-input>
+
+        <br group-1 />
+        <vs-textarea
+          [formControlName]="formControls.detalhamento"
+          placeholder="NaoConformidade.SolucaoEditor.Detalhamento"
+          [rows]="5"
+        >
+        </vs-textarea>
+        <vs-checkbox [formControlName]="formControls.solucaoImediata" label="NaoConformidade.SolucaoEditor.SolucaoImediata">
+        </vs-checkbox>
+        <span></span>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="NaoConformidade.SolucaoEditor.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-layout>

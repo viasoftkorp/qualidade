@@ -1,0 +1,54 @@
+<vs-layout>
+  <vs-label title label="NaoConformidades.GerarOperacaoRetrabalhoModal.Title"></vs-label>
+
+  <div actions>
+    <vs-button
+    type="icon"
+    icon="times"
+    (clickEvent)="fecharModal()"
+    ></vs-button>
+  </div>
+
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <qa-operacao-autocomplete-select
+          [formControlName]="formControls.numeroOperacaoARetrabalhar"
+          placeholder="NaoConformidades.GerarOperacaoRetrabalhoModal.NumeroOperacaoARetrabalhar"
+          [required]="true"
+          [numeroOdf]="numeroOdf"
+          (selected)="operacaoSelected($event)"
+          [filtrarOdfNaoRetrabalho]="true"
+          [filtrarOdfsNaoFinal]="true"
+        ></qa-operacao-autocomplete-select>
+
+        <vs-input
+          [formControlName]="formControls.quantidade"
+          placeholder="NaoConformidades.GerarOperacaoRetrabalhoModal.Quantidade"
+          type="number"
+          [required]="true"
+        ></vs-input>
+
+        <vs-input
+          [formControlName]="formControls.saldoDisponivel"
+          placeholder="NaoConformidades.GerarOperacaoRetrabalhoModal.SaldoDisponivel"
+          type="number"
+        ></vs-input>
+      </form>
+    </vs-form>
+    <form class="tree-table" [formGroup]="form">
+      <vs-label title model="title" label="NaoConformidades.GerarOperacaoRetrabalhoModal.MaquinasMateriais"></vs-label>
+      <rnc-maquinas-materiais-tree-table-form></rnc-maquinas-materiais-tree-table-form>
+    </form>
+  </div>
+  <div footer>
+    <vs-button
+      [disabled]="!canSave"
+      type="save"
+      label="NaoConformidades.GerarOperacaoRetrabalhoModal.GerarOperacao"
+      (clickEvent)="gerarOperacao()"
+    ></vs-button>
+
+    <vs-spinner *ngIf="processando" diameter="25"></vs-spinner>
+  </div>
+</vs-layout>

@@ -1,0 +1,34 @@
+<vs-dialog>
+  <vs-label title label="Solucao.ProdutoEditor.Title"></vs-label>
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <qa-produto-autocomplete-select
+          [formControlName]="formControls.idProduto"
+          [required]="true"
+          placeholder= "Solucao.ProdutoEditor.Produtos">
+          >
+        </qa-produto-autocomplete-select>
+        <vs-input
+          [formControlName]="formControls.quantidade"
+          [required]="true"
+          placeholder="Solucao.ProdutoEditor.Quantidade"
+          [mask]="mascaraCampoNumerico(6)"
+          unmask="typed"
+        ></vs-input>
+        <vs-textarea
+          [required]="true"
+          [formControlName]="formControls.operacaoEngenharia"
+          placeholder="Solucao.ProdutoEditor.OpEngenharia"
+          [rows]="5"
+        ></vs-textarea>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button type="save" label="Solucao.ProdutoEditor.Salvar" [disabled]="!canSave()" (clickEvent)="save()"
+    ></vs-button>
+  </div>
+</vs-dialog>
+
+
