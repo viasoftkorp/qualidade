@@ -1,0 +1,69 @@
+<vs-dialog>
+  <vs-label title label="NaoConformidade.DefeitosModal.Title"></vs-label>
+  <div content>
+    <vs-form *ngIf="loaded">
+      <form [formGroup]="form" group-1>
+        <qa-defeito-autocomplete-select
+          [formControlName]="formControls.idDefeito"
+          required="true"
+          placeholder="NaoConformidade.DefeitosModal.Defeitos"
+          (ngModelChange)="completaCadastro($event)"
+        ></qa-defeito-autocomplete-select>
+        <vs-input
+          [formControlName]="formControls.quantidade"
+          required="true"
+          placeholder="NaoConformidade.DefeitosModal.Quantidade"
+          [mask]="mascaraCampoNumerico(6)"
+          unmask="typed">
+        </vs-input>
+        <vs-textarea
+          [rows]="5"
+          [formControlName]="formControls.detalhamento"
+          placeholder="NaoConformidade.DefeitosModal.Detalhamento"
+        ></vs-textarea>
+      </form>
+      <mat-tab-group *ngIf="isUpdate">
+        <mat-tab [label]="'NaoConformidades.NaoConformidadesEditor.Causas' | translate">
+          <ng-template matTabContent>
+            <rnc-causas-nao-conformidades [defeito]="defeito" class="fix-grid-width"></rnc-causas-nao-conformidades>
+          </ng-template>
+        </mat-tab>
+        <mat-tab [label]="'NaoConformidades.NaoConformidadesEditor.Solucoes' | translate">
+          <ng-template matTabContent>
+            <rnc-solucoes-nao-conformidades
+              [defeito]="defeito"
+              class="fix-grid-width"
+            ></rnc-solucoes-nao-conformidades>
+          </ng-template>
+        </mat-tab>
+        <mat-tab [label]="'NaoConformidades.NaoConformidadesEditor.AcoesPreventivas' | translate">
+          <ng-template matTabContent>
+            <rnc-acoes-preventivas-nao-conformidades
+              [defeito]="defeito"
+              class="fix-grid-width"
+            ></rnc-acoes-preventivas-nao-conformidades>
+          </ng-template>
+        </mat-tab>
+        <mat-tab [label]="'NaoConformidades.NaoConformidadesEditor.ImplementacaoEvitarReincidencia' | translate">
+          <ng-template matTabContent>
+            <rnc-implementacao-evitar-reincidencia-nao-conformidades
+              [defeito]="defeito"
+              class="fix-grid-width"
+            ></rnc-implementacao-evitar-reincidencia-nao-conformidades>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="NaoConformidade.DefeitosModal.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-dialog>

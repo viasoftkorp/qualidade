@@ -1,0 +1,22 @@
+<vs-dialog>
+  <vs-label title label="Configuracoes.DefeitoEditor.Title"></vs-label>
+  <div content>
+    <form [formGroup]="form" *ngIf="loaded">
+      <vs-input [formControlName]="formControls.descricao" [required]="true"
+        placeholder="Configuracoes.DefeitoEditor.Descricao"></vs-input>
+      <qa-causa-autocomplete-select [formControlName]="formControls.idCausa" placeholder="Configuracoes.DefeitoEditor.Causa">
+      </qa-causa-autocomplete-select>
+      <qa-solucao-autocomplete-select [formControlName]="formControls.idSolucao" placeholder="Configuracoes.DefeitoEditor.Solucao">
+      </qa-solucao-autocomplete-select>
+      <vs-textarea [formControlName]="formControls.detalhamento" placeholder="Configuracoes.DefeitoEditor.Detalhamento" [rows]="5">
+      </vs-textarea>
+    </form>
+  </div>
+  <div footer>
+    <vs-button type="save" label="Configuracoes.DefeitoEditor.Salvar" [disabled]="!canSave()" (clickEvent)="save()">
+    </vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-dialog>

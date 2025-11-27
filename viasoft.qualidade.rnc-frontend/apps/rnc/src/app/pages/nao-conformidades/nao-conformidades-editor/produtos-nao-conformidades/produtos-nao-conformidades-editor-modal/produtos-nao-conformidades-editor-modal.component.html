@@ -1,0 +1,43 @@
+<vs-dialog>
+  <vs-label title label="NaoConformidade.ProdutosSolucoesModal.Title"></vs-label>
+  <div content>
+    <vs-form *ngIf="loaded">
+      <form [formGroup]="form" group-1>
+        <qa-produto-autocomplete-select
+          [formControlName]="formControls.idProduto"
+          required="true"
+          placeholder="NaoConformidade.ProdutosSolucoesModal.Produtos"
+        ></qa-produto-autocomplete-select>
+        <vs-input
+          [formControlName]="formControls.quantidade"
+          placeholder="NaoConformidade.ProdutosSolucoesModal.Quantidade"
+          [mask]="mascaraCampoNumerico(6)"
+          unmask="typed"
+          required
+        ></vs-input>
+        <vs-textarea
+          [formControlName]="formControls.detalhamento"
+          placeholder="NaoConformidade.ProdutosSolucoesModal.Detalhamento"
+          [rows]="5"
+        ></vs-textarea>
+        <vs-textarea
+          [required]="true"
+          [formControlName]="formControls.operacaoEngenharia"
+          placeholder="NaoConformidade.ProdutosSolucoesModal.OpEngenharia"
+          [rows]="5"
+        ></vs-textarea>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="NaoConformidade.ProdutosSolucoesModal.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-dialog>

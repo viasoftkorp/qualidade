@@ -1,0 +1,29 @@
+<vs-tabs-view-template>
+  <vs-layout>
+    <div content>
+      <vs-form>
+        <form [formGroup]="form" *ngIf="loaded">
+          <vs-input
+            readonly
+            [formControlName]="formControls.numeroOdfRetrabalho"
+            placeholder="Retrabalho.OrdemRetrabalho.NumeroOdfRetrabalho"
+          ></vs-input>
+          <vs-input
+            readonly
+            [formControlName]="formControls.quantidade"
+            type="number"
+            placeholder="Retrabalho.OrdemRetrabalho.Quantidade"
+          ></vs-input>
+
+          <vs-input
+            readonly
+            [formControlName]="formControls.status"
+            placeholder="Retrabalho.OrdemRetrabalho.Status"
+            [ngClass]="getCorStatusClass()"
+          ></vs-input>
+        </form>
+      </vs-form>
+    </div>
+  </vs-layout>
+</vs-tabs-view-template>
+
