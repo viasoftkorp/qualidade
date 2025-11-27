@@ -1,0 +1,20 @@
+{
+  "extends": "../../eslintrc.json",
+  "plugins": [
+    "angular"
+  ],
+  "rules": {
+    "angular/directive-selector": [
+      "error",
+      "attribute",
+      "rnc",
+      "camelCase"
+    ],
+    "angular/component-selector": [
+      "error",
+      "element",
+      "rnc",
+      "kebab-case"
+    ]
+  }
+}

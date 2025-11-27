@@ -1,0 +1,50 @@
+<vs-dialog>
+  <vs-label title label="NaoConformidade.ServicosSolucoesModal.Title"></vs-label>
+  <div content>
+    <vs-form *ngIf="loaded">
+      <form [formGroup]="form" group-1>
+        <qa-recurso-autocomplete-select
+          [formControlName]="formControls.idRecurso"
+          placeholder="NaoConformidade.ServicosSolucoesModal.Recursos"
+          [required]="true"
+        ></qa-recurso-autocomplete-select>
+        <vs-input
+          [formControlName]="formControls.horas"
+          placeholder="NaoConformidade.ServicosSolucoesModal.HorasPrevistas"
+          type="number"
+        ></vs-input>
+        <vs-input
+          [formControlName]="formControls.minutos"
+          placeholder="NaoConformidade.ServicosSolucoesModal.MinutosPrevistos"
+          type="number"
+        ></vs-input>
+        <vs-textarea
+          [formControlName]="formControls.detalhamento"
+          placeholder="NaoConformidade.ServicosSolucoesModal.Detalhamento"
+          [rows]="5"
+        ></vs-textarea>
+        <vs-textarea
+          [required]="true"
+          [formControlName]="formControls.operacaoEngenharia"
+          placeholder="NaoConformidade.ServicosSolucoesModal.OperacaoEngenharia"
+          [rows]="5"
+        ></vs-textarea>
+        <vs-checkbox
+          [formControlName]="formControls.controlarApontamento"
+          label="NaoConformidade.ServicosSolucoesModal.ControlarApontamento"
+        ></vs-checkbox>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="NaoConformidade.ServicosSolucoesModal.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-dialog>
