@@ -1,0 +1,10 @@
+<vs-autocomplete-select
+  [(ngModel)]="value"
+  [get]="getAutocompleteItems"
+  [getName]="getNames"
+  [placeholder]="placeholder"
+  [required]="required"
+  [disabled]="disabled"
+  (optionSelected)="optionSelectedHandle($event)"
+  (cleared)="clearedHandle()"
+></vs-autocomplete-select>

@@ -1,0 +1,6 @@
+<vs-tabs-view-template>
+  <ng-container actions>
+    <vs-button *isGranted="policies.CreateCausa" icon="plus" (clickEvent)="novo()" label="Configuracoes.Causa.Novo"></vs-button>
+  </ng-container>
+  <vs-grid *ngIf="loaded" [options]="gridOptions"></vs-grid>
+</vs-tabs-view-template>

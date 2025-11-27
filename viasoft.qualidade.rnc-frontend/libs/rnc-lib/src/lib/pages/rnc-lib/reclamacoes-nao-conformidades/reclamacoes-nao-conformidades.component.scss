@@ -1,0 +1,25 @@
+.vertical{
+  display: inline-block;
+}
+vs-textarea {
+  margin-top: 20px;
+}
+vs-form{
+  flex: none;
+}
+.disposicao-produtos {
+  display: flex;
+  flex-direction: row;
+}
+.disposicao-produtos > div {
+  width: 90%;
+  padding-right: 5px;
+}
+.checkboxes {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+.checkboxes > vs-checkbox {
+  margin-right: 5px;
+}
