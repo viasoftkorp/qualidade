@@ -1,0 +1,319 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "libs",
+  "projects": {
+    "controle-tratamento-termico": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/controle-tratamento-termico",
+      "sourceRoot": "apps/controle-tratamento-termico/src",
+      "prefix": "controle-tratamento-termico",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "dayjs"
+            ],
+            "outputPath": "dist/controle-tratamento-termico",
+            "index": "apps/controle-tratamento-termico/src/index.html",
+            "main": "apps/controle-tratamento-termico/src/main.ts",
+            "polyfills": "apps/controle-tratamento-termico/src/polyfills.ts",
+            "tsConfig": "apps/controle-tratamento-termico/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/controle-tratamento-termico/src/favicon.ico",
+              "apps/controle-tratamento-termico/src/assets"
+            ],
+            "styles": [
+              "apps/controle-tratamento-termico/src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/controle-tratamento-termico/src/environments/environment.ts",
+                  "with": "apps/controle-tratamento-termico/src/environments/environment.prod.ts"
+                }
+              ],
+              "buildOptimizer": true,
+              "optimization": true,
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "outputHashing": "all"
+            },
+            "mock": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/controle-tratamento-termico/src/environments/environment.ts",
+                  "with": "apps/controle-tratamento-termico/src/environments/environment.mock.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "dev-env": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/controle-tratamento-termico/src/environments/environment.ts",
+                  "with": "apps/controle-tratamento-termico/src/environments/environment.dev-env.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "dev-env"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "controle-tratamento-termico:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "controle-tratamento-termico:build:production"
+            },
+            "mock": {
+              "buildTarget": "controle-tratamento-termico:build:mock"
+            },
+            "dev-env": {
+              "buildTarget": "controle-tratamento-termico:build:dev-env"
+            }
+          },
+          "defaultConfiguration": "dev-env"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "controle-tratamento-termico:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/controle-tratamento-termico/**/*.ts",
+              "apps/controle-tratamento-termico/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "controle-tratamento-termico-portal": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/controle-tratamento-termico",
+      "sourceRoot": "apps/controle-tratamento-termico/src",
+      "prefix": "controle-tratamento-termico",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "dayjs"
+            ],
+            "outputPath": "dist/controle-tratamento-termico",
+            "index": "apps/controle-tratamento-termico/src/index.html",
+            "main": "apps/controle-tratamento-termico/src/main.single-spa.ts",
+            "polyfills": "apps/controle-tratamento-termico/src/polyfills.ts",
+            "tsConfig": "apps/controle-tratamento-termico/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/controle-tratamento-termico/src/favicon.ico",
+              "apps/controle-tratamento-termico/src/assets"
+            ],
+            "styles": [
+              "apps/controle-tratamento-termico/src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@viasoft/fontawesome-pro/css/all.min.css"
+            ],
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "apps/controle-tratamento-termico/extra-webpack.config.js"
+            }
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/controle-tratamento-termico/src/environments/environment.ts",
+                  "with": "apps/controle-tratamento-termico/src/environments/environment.prod.ts"
+                }
+              ],
+              "buildOptimizer": true,
+              "optimization": true,
+              "vendorChunk": false,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "outputHashing": "none"
+            },
+            "mock": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/controle-tratamento-termico/src/environments/environment.ts",
+                  "with": "apps/controle-tratamento-termico/src/environments/environment.mock.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "dev-env": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/controle-tratamento-termico/src/environments/environment.ts",
+                  "with": "apps/controle-tratamento-termico/src/environments/environment.dev-env.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "dev-env"
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "buildTarget": "controle-tratamento-termico-portal:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "controle-tratamento-termico-portal:build:production"
+            },
+            "mock": {
+              "buildTarget": "controle-tratamento-termico:build:mock"
+            },
+            "dev-env": {
+              "buildTarget": "controle-tratamento-termico:build:dev-env"
+            }
+          },
+          "defaultConfiguration": "dev-env"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "controle-tratamento-termico-portal:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/controle-tratamento-termico/**/*.ts",
+              "apps/controle-tratamento-termico/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

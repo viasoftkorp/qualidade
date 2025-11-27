@@ -1,0 +1,19 @@
+Atenção:
+- Você DEVE ler o arquivo "/documentation-ia/main.md" **primeiro**.
+2. Ao ler o arquivo "/documentation-ia/main.md", identifique todos os arquivos referenciados e leia-os **na ordem listada**.
+3. Se algum dos arquivos referenciados também mencionar outros arquivos, siga as referências **recursivamente** até que todos os documentos tenham sido completamente analisados.
+
+Regras fundamentais:
+- **Não inicie qualquer geração de conteúdo ou tarefa antes de concluir a leitura de TODOS os arquivos de documentação necessários.**
+- **Não pule nenhuma referência mencionada em qualquer documento.**
+- A geração de resultados antes de completar a leitura de todos os arquivos referenciados será considerada uma violação das instruções.
+- Assegure que você leu os arquivos de documentação antes de executar os seguintes comandos:
+  - write_to_file
+  - replace_in_file
+  - execute_command
+
+Fluxo de execução esperado:
+1. Leia o arquivo "/documentation-ia/main.md".
+2. Para cada referência encontrada (exemplo: `pasta/arquivo.md`), leia o arquivo correspondente.
+3. Repita o processo para quaisquer novas referências encontradas nos arquivos subsequentes.
+4. Após concluir a leitura de todos os arquivos listados no `main.md` e nos seus encadeamentos, prossiga com a tarefa.

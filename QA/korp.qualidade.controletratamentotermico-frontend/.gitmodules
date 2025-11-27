@@ -1,0 +1,3 @@
+[submodule "documentation-ia"]
+	path = documentation-ia
+	url = https://bitbucket.org/viasoftkorp/korp.documentation.ia.git

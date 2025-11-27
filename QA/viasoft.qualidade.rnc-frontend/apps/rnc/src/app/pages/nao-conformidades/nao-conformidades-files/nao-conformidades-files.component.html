@@ -1,0 +1,17 @@
+<vs-layout>
+  <div actions>
+    <ng-container *ngIf="canEditArquivosNaoConformidade">
+      <vs-file-upload [allowMultiple]="true" type="file" (fileChanged)="fileChanged($event)">
+      </vs-file-upload>
+    </ng-container>
+  </div>
+
+  <div content>
+    <vs-file-upload-grid
+      [hasDeleteAction]="canEditArquivosNaoConformidade"
+      [domain]="appId"
+      [subdomain]="idNaoConformidade"
+      [refresh]="refresh"
+    ></vs-file-upload-grid>
+  </div>
+</vs-layout>

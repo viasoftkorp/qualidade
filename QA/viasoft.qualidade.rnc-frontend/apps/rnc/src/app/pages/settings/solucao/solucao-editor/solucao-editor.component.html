@@ -1,0 +1,37 @@
+<vs-tabs-view-template>
+  <ng-container actions>
+    <vs-button icon="save" type="save" label="Solucao.SolucaoEditor.Salvar" [disabled]="!canSave()" (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </ng-container>
+
+<vs-layout>
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <vs-input [formControlName]="formControls.descricao" [required]="true"
+          placeholder="Solucao.SolucaoEditor.Descricao"></vs-input>
+        <vs-textarea [formControlName]="formControls.detalhamento" placeholder="Solucao.SolucaoEditor.Detalhamento" [rows]="5">
+        </vs-textarea>
+        <vs-checkbox [formControlName]="formControls.imediata" label="Solucao.SolucaoEditor.Imediata">
+        </vs-checkbox>
+      </form>
+    </vs-form>
+
+    <mat-tab-group *ngIf="mostrarSubgruposSolucao">
+      <mat-tab label="Produtos">
+        <ng-template matTabContent>
+          <rnc-solucao-produto></rnc-solucao-produto>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Serviços">
+        <ng-template matTabContent>
+          <rnc-solucao-servico></rnc-solucao-servico>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</vs-layout>
+</vs-tabs-view-template>

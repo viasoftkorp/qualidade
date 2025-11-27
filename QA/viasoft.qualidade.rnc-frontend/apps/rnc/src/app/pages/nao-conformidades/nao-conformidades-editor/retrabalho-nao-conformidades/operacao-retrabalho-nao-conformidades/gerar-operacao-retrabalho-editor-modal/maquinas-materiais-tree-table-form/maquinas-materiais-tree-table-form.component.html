@@ -1,0 +1,16 @@
+<vs-tree-table
+  [columns]="treeTableColumns"
+  [actions]="treeTableActions"
+  [data]="treeTableData"
+  [isLoading]="false"
+  [totalRecords]="100"
+  [enableSorting]="false"
+  [fitColumns]="false"
+  [totalRecords]="totalCount"
+  [rightHeaderActions]="treeTableRightHeaderActions"
+  [enableFilter]="false"
+  (load)='onLoadTreeTableHandle($event)'
+  (select)="abrirModalEdicao($event['node']['data'])"
+>
+</vs-tree-table>
+

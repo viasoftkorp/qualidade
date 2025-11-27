@@ -1,0 +1,5 @@
+<vs-navigation-view [shortcutTemplate]="isOnPremise ? shortcutTemplate : undefined"></vs-navigation-view>
+
+<ng-template #shortcutTemplate>
+  <vs-button icon="arrow-right-from-bracket" (clickEvent)="requestSignOut()"></vs-button>
+</ng-template>
