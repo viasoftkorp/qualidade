@@ -834,8 +834,6 @@ public class AgregacaoNaoConformidade
         servicoSolucaoAAtualizar.OperacaoEngenharia =
             servicoNaoConformidadeAtualizado.Command.ServicoNaoConformidade.OperacaoEngenharia;
         servicoSolucaoAAtualizar.CompanyId = servicoNaoConformidadeAtualizado.Command.ServicoNaoConformidade.CompanyId;
-        servicoSolucaoAAtualizar.ControlarApontamento =
-            servicoNaoConformidadeAtualizado.Command.ServicoNaoConformidade.ControlarApontamento;
         ServicoAlterar.Add(servicoSolucaoAAtualizar);
     }
 
@@ -867,8 +865,7 @@ public class AgregacaoNaoConformidade
             Detalhamento = servicoNaoConformidadeInserido.ServicoNaoConformidade.ServicoNaoConformidade.Detalhamento,
             IdProduto = servicoNaoConformidadeInserido.ServicoNaoConformidade.ServicoNaoConformidade.IdProduto,
             IdNaoConformidade = servicoNaoConformidadeInserido.IdNaoConformidade,
-            CompanyId = servicoNaoConformidadeInserido.ServicoNaoConformidade.ServicoNaoConformidade.CompanyId,
-            ControlarApontamento = servicoNaoConformidadeInserido.ServicoNaoConformidade.ServicoNaoConformidade.ControlarApontamento
+            CompanyId = servicoNaoConformidadeInserido.ServicoNaoConformidade.ServicoNaoConformidade.CompanyId
         };
         ServicoInserir.Add(servicoSolucaoAInserir);
         ServicoNaoConformidades.Add(servicoSolucaoAInserir);

@@ -216,7 +216,7 @@ export class GerarRetrabalhoButtonComponent implements OnInit, OnDestroy {
     if (!ordemProducao) {
       return;
     }
-    if (ordemProducao.odfFinalizada || ordemProducao.possuiPartida) {
+    if (ordemProducao.odfFinalizada) {
       this.currentButton = 'ordemProducao';
     } else {
       this.currentButton = 'operacao';

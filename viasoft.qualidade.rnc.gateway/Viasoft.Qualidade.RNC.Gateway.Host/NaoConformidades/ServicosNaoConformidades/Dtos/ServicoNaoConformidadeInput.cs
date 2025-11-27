@@ -13,5 +13,4 @@ public class ServicoNaoConformidadeInput
     public Guid IdRecurso { get; set; }
     public string OperacaoEngenharia { get; set; }
     public string Detalhamento { get; set; }
-    public bool ControlarApontamento { get; set; }
 }

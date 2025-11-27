@@ -130,8 +130,6 @@ export class ServicosNaoConformidadesEditorModalComponent implements OnInit, OnD
       this.formBuilder.control(null, [Validators.required]));
     this.form.addControl(ServicosNaoConformidadesFormControl.detalhamento,
       this.formBuilder.control(null));
-    this.form.addControl(ServicosNaoConformidadesFormControl.controlarApontamento,
-      this.formBuilder.control(false));
   }
 
   private populateForm(servicoNaoConformidade: ServicosNaoConformidadesModel) {
@@ -149,8 +147,6 @@ export class ServicosNaoConformidadesEditorModalComponent implements OnInit, OnD
       .setValue(servicoNaoConformidade.operacaoEngenharia, { emitEvent: false });
     this.form.get(ServicosNaoConformidadesFormControl.detalhamento)
       .setValue(servicoNaoConformidade.detalhamento, { emitEvent: false });
-    this.form.get(ServicosNaoConformidadesFormControl.controlarApontamento)
-      .setValue(servicoNaoConformidade.controlarApontamento, { emitEvent: false });
     this.loaded = true;
   }
 

@@ -16,5 +16,4 @@ public class OrdemProducaoOutput
     public bool IsRetrabalho { get; set; }
     public int? NumeroOdfDestino { get; set; }
     public bool OdfFinalizada { get; set; }
-    public bool PossuiPartida { get; set; }
 }

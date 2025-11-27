@@ -14,7 +14,6 @@ public class ServicoNaoConformidadeModel : IServicoNaoConformidadeModel
     public string OperacaoEngenharia { get; set; }
     public string Detalhamento { get; set; }
     public Guid CompanyId { get; set; }
-    public bool ControlarApontamento { get; set; }
 
     public ServicoNaoConformidadeModel()
     {
@@ -32,6 +31,5 @@ public class ServicoNaoConformidadeModel : IServicoNaoConformidadeModel
         IdRecurso = model.IdRecurso;
         OperacaoEngenharia = model.OperacaoEngenharia;
         CompanyId = model.CompanyId;
-        ControlarApontamento = model.ControlarApontamento;
     }
 }

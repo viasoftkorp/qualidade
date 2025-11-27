@@ -16,5 +16,4 @@ public class ServicoNaoConformidadeViewOutput
     public string Descricao { get; set; }
     public string Codigo { get; set; }
     public string Detalhamento { get; set; }
-    public bool ControlarApontamento { get; set; }
 }

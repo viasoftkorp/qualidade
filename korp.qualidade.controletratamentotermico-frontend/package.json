@@ -36,7 +36,7 @@
     "@sentry/browser": "~7.114.0",
     "@viasoft/app-core": "9.0.0-beta.15",
     "@viasoft/authorization-management": "9.0.1",
-    "@viasoft/client-core": "9.0.0-beta.15",
+    "@viasoft/client-core": "8.0.0-beta.138",
     "@viasoft/common": "9.0.0-beta.15",
     "@viasoft/components": "9.0.0-beta.15",
     "@viasoft/datepicker": "9.0.1",

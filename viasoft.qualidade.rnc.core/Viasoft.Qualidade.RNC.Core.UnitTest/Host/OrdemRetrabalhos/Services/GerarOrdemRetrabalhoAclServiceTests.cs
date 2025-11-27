@@ -8,7 +8,6 @@ using NSubstitute;
 using Viasoft.Qualidade.RNC.Core.Domain.Extensions;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Clientes;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Produtos;
-using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.ProdutosEmpresas;
 using Viasoft.Qualidade.RNC.Core.Domain.PedidoVendas;
 using Viasoft.Qualidade.RNC.Core.Host.Proxies.LegacyLogisticas.Locais.Dtos;
 using Viasoft.Qualidade.RNC.Core.Host.Proxies.LogisticaServices.ExternalOrdemRetrabalho.Dtos;
@@ -396,40 +395,6 @@ public class GerarOrdemRetrabalhoAclServiceTests : OrdemRetrabalhoAclServiceTest
             },
         }, true);
 
-        await mocker.ProdutoEmpresaRepository.InsertRangeAsync(new List<ProdutoEmpresa>
-        {
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[0],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[0],
-                Id = TestUtils.ObjectMother.Guids[0]
-            },
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[1],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[1],
-                Id = TestUtils.ObjectMother.Guids[1]
-            },
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[2],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[2],
-                Id = TestUtils.ObjectMother.Guids[2]
-            },
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[3],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[3],
-                Id = TestUtils.ObjectMother.Guids[3]
-            },
-        }, true);
-
-        mocker.CurrentCompany.Id.Returns(TestUtils.ObjectMother.Guids[0]);
-
         var idsCategorias = await mocker.ProdutosRepository.Where(e => e.IdCategoria.HasValue)
             .Select(e => e.IdCategoria.Value).ToListAsync();
 
@@ -703,40 +668,6 @@ public class GerarOrdemRetrabalhoAclServiceTests : OrdemRetrabalhoAclServiceTest
                 Id = TestUtils.ObjectMother.Guids[3]
             },
         }, true);
-
-        await mocker.ProdutoEmpresaRepository.InsertRangeAsync(new List<ProdutoEmpresa>
-        {
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[0],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[0],
-                Id = TestUtils.ObjectMother.Guids[0]
-            },
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[1],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[1],
-                Id = TestUtils.ObjectMother.Guids[1]
-            },
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[2],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[2],
-                Id = TestUtils.ObjectMother.Guids[2]
-            },
-            new ProdutoEmpresa
-            {
-                IdCategoria = TestUtils.ObjectMother.Guids[3],
-                IdEmpresa = TestUtils.ObjectMother.Guids[0],
-                IdProduto = TestUtils.ObjectMother.Guids[3],
-                Id = TestUtils.ObjectMother.Guids[3]
-            },
-        }, true);
-
-        mocker.CurrentCompany.Id.Returns(TestUtils.ObjectMother.Guids[0]);
 
         var idsCategorias = await mocker.ProdutosRepository.Where(e => e.IdCategoria.HasValue)
             .Select(e => e.IdCategoria.Value).ToListAsync();

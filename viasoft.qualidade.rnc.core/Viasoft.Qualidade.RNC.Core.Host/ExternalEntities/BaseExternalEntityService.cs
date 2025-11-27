@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Viasoft.Core.DDD.Entities;
@@ -11,7 +10,7 @@ using Viasoft.Qualidade.RNC.Core.Host.Proxies;
 
 namespace Viasoft.Qualidade.RNC.Core.Host.ExternalEntities;
 
-public abstract class BaseExternalEntityService<TEntity, TEntityProviderOutput> : IBaseExternalEntityService<TEntity> where TEntity : Entity
+public abstract class BaseExternalEntityService<TEntity, TEntityProviderOutput> : IBaseExternalEntityService where TEntity : Entity
 {
     private readonly IRepository<TEntity> _repository;
     private readonly IBaseProxyService<TEntityProviderOutput> _provider;
@@ -38,16 +37,10 @@ public abstract class BaseExternalEntityService<TEntity, TEntityProviderOutput> 
     }
     public virtual async Task InserirSeNaoCadastrado(Guid idEntidade)
     {
-        await InserirSeNaoCadastrado(idEntidade, entidade => entidade.Id == idEntidade);
-    }
-
-    public virtual async Task InserirSeNaoCadastrado(Guid idEntidade, Expression<Func<TEntity, bool>> expressao)
-    {
         var entidadeJaInserida = await _repository
             .AsNoTracking()
-            .Where(expressao)
-            .AnyAsync();
-
+            .AnyAsync(e => e.Id == idEntidade);
+        
         if (entidadeJaInserida)
         {
             return;

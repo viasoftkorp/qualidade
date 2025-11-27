@@ -13,5 +13,4 @@ export class ServicosNaoConformidadesFormControl {
   public static descricaoRecurso = 'descricaoRecurso';
   public static operacaoEngenharia = 'operacaoEngenharia';
   public static idProduto = 'idProduto';
-  public static controlarApontamento = 'controlarApontamento';
 }

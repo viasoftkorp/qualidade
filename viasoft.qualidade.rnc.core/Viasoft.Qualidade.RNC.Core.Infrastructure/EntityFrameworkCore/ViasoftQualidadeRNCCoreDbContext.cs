@@ -16,7 +16,6 @@ using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.CentroCustos;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Clientes;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Locais;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Produtos;
-using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.ProdutosEmpresas;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Recursos;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.UnidadeMedidaProdutos;
 using Viasoft.Qualidade.RNC.Core.Domain.ExternalEntities.Usuarios;
@@ -65,7 +64,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.EntityFrameworkCore
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<OrdemRetrabalhoNaoConformidade> OrdemRetrabalhoNaoConformidades { get; set; }
         public DbSet<SeederManager> SeederManagers { get; set; }
-        public DbSet<SeederManagerPorEmpresa> SeederManagerPorEmpresas { get; set; }
         public DbSet<ConfiguracaoGeral> ConfiguracoesGerais { get; set; }
         public DbSet<ImplementacaoEvitarReincidenciaNaoConformidade> ImplementacaoEvitarReincidenciaNaoConformidades { get; set; }
         public DbSet<CentroCustoCausaNaoConformidade> CentroCustoCausaNaoConformidades { get; set; }
@@ -73,7 +71,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.EntityFrameworkCore
         public DbSet<OperacaoRetrabalhoNaoConformidade> OperacaoRetrabalhoNaoConformidades { get; set; }
         public DbSet<Operacao> Operacoes { get; set; }
         public DbSet<Local> Locais { get; set; }
-        public DbSet<ProdutoEmpresa> ProdutosEmpresas { get; set; }
 
 
         public ViasoftQualidadeRNCCoreDbContext(DbContextOptions options, ISchemaNameProvider schemaNameProvider,
@@ -184,14 +181,12 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.EntityFrameworkCore
             OrdemRetrabalhoNaoConformidadeModel(modelBuilder);
             ConfiguracaoGeralModel(modelBuilder);
             SeederManagerModel(modelBuilder);
-            SeederManagerPorEmpresaModel(modelBuilder);
             ImplementacaoEvitarReincidenciaModel(modelBuilder);
             PedidoVendaModel(modelBuilder);
             OperacaoRetrabalhoNaoConformidadeModel(modelBuilder);
             OperacaoModel(modelBuilder);
             CentroCustoModel(modelBuilder);
             LocalModel(modelBuilder);
-            ProdutoEmpresaModel(modelBuilder);
         }
         private void NaturezaModel(ModelBuilder modelBuilder)
         {
@@ -277,11 +272,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.EntityFrameworkCore
             var entity = modelBuilder.Entity<SeederManager>();
             entity.ToTable(nameof(SeederManager).ToLower());
         }
-        private void SeederManagerPorEmpresaModel(ModelBuilder modelBuilder)
-        {
-            var entity = modelBuilder.Entity<SeederManagerPorEmpresa>();
-            entity.ToTable(nameof(SeederManagerPorEmpresa).ToLower());
-        }
 
         private void PedidoVendaModel(ModelBuilder modelBuilder)
         {
@@ -321,17 +311,6 @@ namespace Viasoft.Qualidade.RNC.Core.Infrastructure.EntityFrameworkCore
         {
             var local = modelBuilder.Entity<Local>();
             local.ToTable(nameof(Local).ToLower());
-        }
-
-        private void ProdutoEmpresaModel(ModelBuilder modelBuilder)
-        {
-            var produtoEmpresa = modelBuilder.Entity<ProdutoEmpresa>();
-
-            produtoEmpresa
-                .HasIndex(produto => new { produto.IdProduto, produto.IdEmpresa })
-                .IsUnique();
-
-            produtoEmpresa.ToTable(nameof(ProdutoEmpresa).ToLower());
         }
     }
 }

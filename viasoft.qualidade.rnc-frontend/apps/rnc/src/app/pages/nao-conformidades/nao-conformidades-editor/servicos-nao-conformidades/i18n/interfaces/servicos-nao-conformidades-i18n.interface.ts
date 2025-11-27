@@ -14,10 +14,8 @@ export interface ServicosNaoConformidadeI18n extends IKeyTranslate {
       MinutosPrevistos:string,
       Recurso:string,
       OpEngenharia:string
-      ControlarApontamento: string
     }
     ServicosSolucoesModal: {
-        ControlarApontamento: string;
         Servicos: string,
         HorasPrevistas: string,
         MinutosPrevistos: string,

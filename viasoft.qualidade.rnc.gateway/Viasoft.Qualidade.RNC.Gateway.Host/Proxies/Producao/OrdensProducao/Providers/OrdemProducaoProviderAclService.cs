@@ -57,7 +57,6 @@ public class OrdemProducaoProviderAclService : IOrdemProducaoProviderAclService,
             NumeroOdfFaturamento = ordemProducao.OdfFaturamento,
             NumeroLote = ordemProducao.Lote,
             OdfFinalizada = ordemProducao.OrdemFechada || ordemProducao.OrdemEncerrada == "S",
-            PossuiPartida = ordemProducao.PossuiPartida,
             IdCliente = !string.IsNullOrWhiteSpace(ordemProducao.CodigoCliente) && ordemProducao.CodigoCliente != "000"
                 ? clientesDictionary[ordemProducao.CodigoCliente]
                 : null

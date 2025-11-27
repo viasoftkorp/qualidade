@@ -54,7 +54,6 @@ public class OperacaoOrdemProducaoProvider : IOperacaoOrdemProducaoProvider, ITr
             $"{GetBaseEndpoint(environmentDetails.DesktopDatabaseVersion)}?Skip={input.SkipCount}" +
             $"&PageSize={input.MaxResultCount}&Odf={input.NumeroOdf}" +
             $"&IdEmpresa={companyDetails.LegacyCompanyId}" +
-            $"&Partida={0}" +
             $"&advancedFilter={input.AdvancedFilter}";
 
         var headerStrategy =

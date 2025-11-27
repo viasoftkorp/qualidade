@@ -18,7 +18,6 @@ public class ServicoNaoConformidade : FullAuditedEntity, IMustHaveEnvironment, I
     public Guid EnvironmentId { get; set; }
     public Guid TenantId { get; set; }
     public Guid CompanyId { get; set; }
-    public bool ControlarApontamento { get; set; }
 
     public ServicoNaoConformidade()
     {
@@ -35,6 +34,5 @@ public class ServicoNaoConformidade : FullAuditedEntity, IMustHaveEnvironment, I
         IdRecurso = servico.IdRecurso;
         Detalhamento = servico.Detalhamento;
         OperacaoEngenharia = servico.OperacaoEngenharia;
-        ControlarApontamento = servico.ControlarApontamento;
     }
 }

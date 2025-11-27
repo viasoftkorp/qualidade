@@ -11,5 +11,4 @@ export class ServicosNaoConformidadesModel {
   public minutos?: number
   public quantidade: number
   public detalhamento: string
-  public controlarApontamento: boolean
 }

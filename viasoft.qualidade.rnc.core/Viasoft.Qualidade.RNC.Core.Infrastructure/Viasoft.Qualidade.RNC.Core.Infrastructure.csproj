@@ -15,8 +15,8 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="Viasoft.Core.EntityFrameworkCore" Version="4.12.29" />
-      <PackageReference Include="Viasoft.Core.EntityFrameworkCore.PostgreSQL" Version="4.12.29" />
+      <PackageReference Include="Viasoft.Core.EntityFrameworkCore" Version="4.12.1" />
+      <PackageReference Include="Viasoft.Core.EntityFrameworkCore.PostgreSQL" Version="4.12.1" />
     </ItemGroup>
 
     <ItemGroup>

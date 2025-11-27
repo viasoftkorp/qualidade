@@ -7,5 +7,4 @@ export interface SolucaoServicoInput {
   minutos: number;
   idRecurso: string;
   operacaoEngenharia: string;
-  controlarApontamento: boolean;
 }
