@@ -1,0 +1,60 @@
+<vs-dialog>
+  <div icon>
+    <vs-icon icon="check"></vs-icon>
+  </div>
+  <div title>
+    <vs-label label="QualidadeInspecaoSaida.InspecaoDetails.FinalizarInspecaoModal.Titulo"></vs-label>
+  </div>
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-2>
+        <vs-input formControlName="resultado" placeholder="QualidadeInspecaoSaida.InspecaoDetails.Resultado"></vs-input>
+        <vs-input formControlName="quantidadeLote" placeholder="QualidadeInspecaoSaida.InspecaoDetails.QuantidadeLote">
+        </vs-input>
+        <vs-input formControlName="quantidadeInspecao"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.QuantidadeInspecao">
+        </vs-input>
+
+        <vs-input *ngIf="utilizarReservaPedidoBool" formControlName="quantidadePedidoVenda"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.QuantidadePedidoVenda">
+        </vs-input>
+
+        <vs-input *ngIf="utilizarReservaPedidoBool" formControlName="pedidoVenda"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.PedidoVenda">
+        </vs-input>
+
+        <vs-input *ngIf="utilizarReservaPedidoBool" formControlName="odfApontada"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.Odf">
+        </vs-input>
+      </form>
+
+      <form *ngIf="formQuantidades" [formGroup]="formQuantidades" group-3>
+        <vs-input formControlName="quantidadeAprovada"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.FinalizarInspecaoModal.QuantidadeAprovada" type="number">
+        </vs-input>
+        <vs-input formControlName="quantidadeReprovada"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.FinalizarInspecaoModal.QuantidadeReprovada" type="number">
+        </vs-input>
+        <vs-input formControlName="quantidadeRetrabalhada"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.FinalizarInspecaoModal.QuantidadeRetrabalhada"
+          type="number"></vs-input>
+        <vs-select formControlName="localAprovado"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.AlocacaoPedidoVenda.LocalAprovado"
+          [options]="localAprovadoOptions"></vs-select>
+        <vs-select formControlName="localReprovado"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.AlocacaoPedidoVenda.LocalReprovado"
+          [options]="localReprovadoOptions"></vs-select>
+        <vs-select formControlName="localRetrabalho"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.AlocacaoPedidoVenda.LocalRetrabalho"
+          [options]="localRetrabalhoOptions"></vs-select>
+        <vs-label *ngIf="formCustomValidatorMessage" [label]="formCustomValidatorMessage | translate" model="error">
+        </vs-label>
+      </form>
+      <!-- <vs-grid *ngIf="utilizarReservaPedidoBool" style="height: 100%;" [options]="gridOptions"></vs-grid> Estou tirando o comportamento em grid pois sempre será para apenas um pedido, mas vou manter caso um dia precise -->
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button type="save" label="QualidadeInspecaoSaida.InspecaoDetails.FinalizarInspecao"
+      [disabled]="salvarDesabilitado" (clickEvent)="finalizarInspecao()"></vs-button>
+  </div>
+</vs-dialog>

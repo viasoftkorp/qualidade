@@ -1,0 +1,14 @@
+<vs-grid [options]="gridOptionsHeader"></vs-grid>
+
+<vs-tabs-view-template>
+  <vs-tab-group>
+    <div *vsTabLabel="{title: 'Inpeções'}">
+      <vs-grid [options]="gridOptionsItens"></vs-grid>
+    </div>
+    <ng-container>
+      <div *vsTabLabel="{title: 'Arquivos'}">
+        <inspecao-entrada-arquivos-inspecao-entrada [idNotaFiscal]="notaSelecionada?.id"></inspecao-entrada-arquivos-inspecao-entrada>
+      </div>
+    </ng-container>
+  </vs-tab-group>
+</vs-tabs-view-template>

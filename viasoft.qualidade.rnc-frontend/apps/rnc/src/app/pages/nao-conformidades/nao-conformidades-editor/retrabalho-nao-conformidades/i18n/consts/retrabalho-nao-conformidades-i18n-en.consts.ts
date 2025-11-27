@@ -1,3 +1,0 @@
-export const RETRABALHO_NAO_CONFORMIDADE_I18N_EN = {
-
-};
