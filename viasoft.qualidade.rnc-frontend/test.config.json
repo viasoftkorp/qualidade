@@ -1,9 +1,0 @@
-{
-    "folder": "cypress/integration",
-    "groups": [
-        {
-            "title": "Rnc",
-            "value": "Rnc"
-        }
-    ]
-}

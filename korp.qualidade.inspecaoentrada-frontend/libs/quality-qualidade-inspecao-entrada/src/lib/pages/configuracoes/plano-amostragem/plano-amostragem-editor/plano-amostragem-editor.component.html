@@ -1,0 +1,30 @@
+<vs-dialog>
+    <vs-label title label="Configuracoes.PlanoAmostragem.Titulo">
+    </vs-label>
+
+    <div content>
+        <vs-form>
+            <form [formGroup]="form" group-1>
+                <vs-input formControlName="quantidadeMinima"
+                    placeholder="Configuracoes.PlanoAmostragem.QuantidadeMinima" type="number">
+                </vs-input>
+
+                <vs-input formControlName="quantidadeMaxima"
+                    placeholder="Configuracoes.PlanoAmostragem.QuantidadeMaxima" type="number">
+                </vs-input>
+
+                <vs-input formControlName="quantidadeInspecionar"
+                    placeholder="Configuracoes.PlanoAmostragem.QuantidadeInspecionar" type="number">
+                </vs-input>
+
+                <vs-label *ngIf="formCustomValidatorMessage" [label]="formCustomValidatorMessage" model="error">
+                </vs-label>
+            </form>
+        </vs-form>
+    </div>
+
+    <div footer>
+        <vs-button [disabled]="!form.valid" type="save" label="Configuracoes.PlanoAmostragem.Salvar"
+            (click)="salvar()"></vs-button>
+    </div>
+</vs-dialog>
