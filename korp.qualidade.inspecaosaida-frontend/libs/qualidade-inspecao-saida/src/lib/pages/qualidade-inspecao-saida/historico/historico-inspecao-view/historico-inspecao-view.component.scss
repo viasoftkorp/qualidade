@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+vs-grid {
+  height: 50%;
+}
+
+.flex-auto {
+  display: flex;
+  flex: auto;
+}

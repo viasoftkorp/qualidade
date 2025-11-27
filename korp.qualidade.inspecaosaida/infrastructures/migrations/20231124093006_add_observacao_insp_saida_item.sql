@@ -1,0 +1,11 @@
+-- +goose Up
+-- +goose StatementBegin
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'QA_ITEM_INSPECAO_SAIDA' AND COLUMN_NAME='OBSERVACAO')
+BEGIN
+ALTER TABLE QA_ITEM_INSPECAO_SAIDA ADD OBSERVACAO VARCHAR(MAX) NULL
+END
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+-- +goose StatementEnd
