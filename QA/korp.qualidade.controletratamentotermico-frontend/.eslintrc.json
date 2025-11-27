@@ -1,0 +1,77 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@angular-eslint",
+    "@typescript-eslint",
+    "jsdoc",
+    "import",
+    "deprecation"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "rules": {
+    "@typescript-eslint/array-type": ["error", { "default": "array" }],
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "deprecation/deprecation": "warn",
+    "import/no-deprecated": "warn",
+    "import/no-internal-modules": ["error", { "allow": ["rxjs/Rx"] }],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      { "selector": "interface", "format": ["PascalCase"], "custom": { "regex": "^I[A-Z]", "match": false } }
+    ],
+    "max-classes-per-file": "off",
+    "max-len": ["error", { "code": 140 }],
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/member-ordering": [
+      "error",
+      {
+        "default": [
+          "static-field",
+          "instance-field",
+          "static-method",
+          "instance-method"
+        ]
+      }
+    ],
+    "no-multiple-empty-lines": "off",
+    "no-console": [
+      "error",
+      { "allow": ["debug", "info", "time", "timeEnd", "trace", "log"] }
+    ],
+    "no-empty": "off",
+    "@typescript-eslint/no-inferrable-types": [
+      "error",
+      { "ignoreParameters": true }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "error",
+    "jsdoc/no-types": "error",
+    "no-fallthrough": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/quotes": ["error", "single", { "avoidEscape": true }],
+    "@typescript-eslint/semi": ["error", "always"],
+    "@typescript-eslint/object-literal-sort-keys": "off",
+    "sort-imports": "off",
+    "comma-dangle": ["error", "never"],
+    "@angular-eslint/component-class-suffix": "error",
+    "@angular-eslint/contextual-lifecycle": "error",
+    "@angular-eslint/directive-class-suffix": "error",
+    "@angular-eslint/no-conflicting-lifecycle": "error",
+    "@angular-eslint/no-host-metadata-property": "error",
+    "@angular-eslint/no-input-rename": "error",
+    "@angular-eslint/no-inputs-metadata-property": "error",
+    "@angular-eslint/no-output-native": "error",
+    "@angular-eslint/no-output-on-prefix": "error",
+    "@angular-eslint/no-output-rename": "error",
+    "@angular-eslint/no-outputs-metadata-property": "error",
+    "@angular-eslint/use-lifecycle-interface": "error",
+    "@angular-eslint/use-pipe-transform-interface": "error"
+  }
+}

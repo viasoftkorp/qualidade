@@ -1,0 +1,46 @@
+<vs-layout>
+  <div actions>
+    <vs-button
+    type="icon"
+    icon="times"
+    (clickEvent)="closeModal()"
+    ></vs-button>
+  </div>
+  <vs-label title label="MaquinasMateriaisTreeTableForm.MateriaisEditorModal.Title"></vs-label>
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-1>
+        <qa-produto-autocomplete-select
+          [formControlName]="formControls.idProduto"
+          required="true"
+          placeholder="MaquinasMateriaisTreeTableForm.MateriaisEditorModal.Produto"
+          (optionSelected)="produtoModificadoHandle($event)"
+          (cleared)="produtoModificadoHandle(null)"
+        ></qa-produto-autocomplete-select>
+        <vs-input
+          [formControlName]="formControls.quantidade"
+          placeholder="MaquinasMateriaisTreeTableForm.MateriaisEditorModal.Quantidade"
+          [mask]="mascaraCampoNumerico(6)"
+          unmask="typed"
+          required
+        ></vs-input>
+        <vs-textarea
+          [formControlName]="formControls.detalhamento"
+          placeholder="MaquinasMateriaisTreeTableForm.MateriaisEditorModal.Detalhamento"
+          [rows]="5"
+        ></vs-textarea>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="MaquinasMateriaisTreeTableForm.MateriaisEditorModal.Salvar"
+      [disabled]="!canSave()"
+      (clickEvent)="save()"
+    ></vs-button>
+    <div fxFlex="auto" *ngIf="processando">
+      <vs-spinner diameter="25"></vs-spinner>
+    </div>
+  </div>
+</vs-layout>

@@ -1,0 +1,108 @@
+<vs-tabs-view-template>
+  <vs-layout>
+    <div content>
+      <vs-form *ngIf="loaded">
+        <form [formGroup]="form" group-4>
+          <vs-layout>
+            <vs-label title model="title" label="NaoConformidades.Reclamacoes.NoCasoCliente"></vs-label>
+            <div content class="vertical">
+              <vs-input
+                [formControlName]="formControls.procedentes"
+                type="number"
+                placeholder="NaoConformidades.Reclamacoes.Procedentes"
+              ></vs-input>
+              <vs-input
+                [formControlName]="formControls.improcedentes"
+                type="number"
+                placeholder="NaoConformidades.Reclamacoes.Improcedentes"
+              ></vs-input>
+            </div>
+          </vs-layout>
+          <vs-layout>
+            <vs-label title model="title" label="NaoConformidades.Reclamacoes.Quantidades"></vs-label>
+            <div content class="vertical">
+              <vs-input
+                [formControlName]="formControls.quantidadeLote"
+                type="number"
+                placeholder="NaoConformidades.Reclamacoes.QuantidadeLote"
+              ></vs-input>
+              <vs-input
+                [formControlName]="formControls.quantidadeNaoConformidade"
+                type="number"
+                placeholder="NaoConformidades.Reclamacoes.QuantidadeNaoConformidade"
+              ></vs-input>
+            </div>
+          </vs-layout>
+          <vs-layout>
+            <vs-label title model="title" label="NaoConformidades.Reclamacoes.DisposicaoProdutos"></vs-label>
+            <div content class="disposicao-produtos">
+              <div class="vertical">
+                <vs-input
+                  [formControlName]="formControls.disposicaoProdutosAprovados"
+                  type="number"
+                  placeholder="NaoConformidades.Reclamacoes.Aprovados"
+                ></vs-input>
+                <vs-input
+                  [formControlName]="formControls.disposicaoProdutosConcessao"
+                  type="number"
+                  placeholder="NaoConformidades.Reclamacoes.Concessao"
+                ></vs-input>
+              </div>
+              <div class="vertical">
+                <vs-input
+                  [formControlName]="formControls.rejeitado"
+                  type="number"
+                  placeholder="NaoConformidades.Reclamacoes.Rejeitado"
+                ></vs-input>
+                <vs-input
+                  [formControlName]="formControls.retrabalho"
+                  type="number"
+                  placeholder="NaoConformidades.Reclamacoes.Retrabalho"
+                ></vs-input>
+              </div>
+            </div>
+          </vs-layout>
+
+          <br group-2 />
+          <vs-layout>
+            <vs-label title model="title" label="NaoConformidades.Reclamacoes.DestinoPecasRejeitadas"></vs-label>
+            <div content class="checkboxes">
+              <vs-checkbox [formControlName]="formControls.recodificar" label="NaoConformidades.Reclamacoes.Recodificar">
+              </vs-checkbox>
+              <vs-checkbox [formControlName]="formControls.sucata" label="NaoConformidades.Reclamacoes.Sucata">
+              </vs-checkbox>
+            </div>
+          </vs-layout>
+
+          <vs-layout>
+            <vs-label title model="title" label="NaoConformidades.Reclamacoes.CasoReclamacaoImprocedente"></vs-label>
+            <div content class="checkboxes">
+              <vs-checkbox
+                [formControlName]="formControls.retrabalhoSemOnus"
+                label="NaoConformidades.Reclamacoes.RetrabalhoSemOnus"
+              >
+              </vs-checkbox>
+              <vs-checkbox
+                [formControlName]="formControls.retrabalhoComOnus"
+                label="NaoConformidades.Reclamacoes.RetrabalhoComOnus"
+              >
+              </vs-checkbox>
+              <vs-checkbox
+                [formControlName]="formControls.devolucaoFornecedor"
+                label="NaoConformidades.Reclamacoes.Devolucao"
+              >
+              </vs-checkbox>
+            </div>
+          </vs-layout>
+
+          <vs-textarea
+            [formControlName]="formControls.observacao"
+            placeholder="NaoConformidades.Reclamacoes.Observacao"
+            [rows]="5"
+          >
+          </vs-textarea>
+        </form>
+      </vs-form>
+    </div>
+  </vs-layout>
+</vs-tabs-view-template>

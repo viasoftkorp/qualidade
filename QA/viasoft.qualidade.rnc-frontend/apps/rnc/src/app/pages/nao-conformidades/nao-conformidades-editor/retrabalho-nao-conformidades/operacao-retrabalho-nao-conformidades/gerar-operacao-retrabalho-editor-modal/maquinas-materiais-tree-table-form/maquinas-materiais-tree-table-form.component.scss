@@ -1,0 +1,16 @@
+:host {
+  overflow: auto;
+
+  ::ng-deep{
+    vs-grid{
+      flex: auto;
+      min-height: 300px
+    }
+    mat-tab-group.mat-tab-group > div.mat-tab-body-wrapper{
+      flex: auto
+    }
+    vs-tree-table table tbody div  vs-tree-table-action-cell {
+      display: flex;
+    }
+  }
+}
