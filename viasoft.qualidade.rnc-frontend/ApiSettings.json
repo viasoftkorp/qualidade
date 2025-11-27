@@ -1,9 +1,0 @@
-{
-  "clients": [
-    {
-      "name": "@viasoft/rnc-lib",
-      "baseUrl": "http://host.docker.internal:/swagger/1.0.0.0/swagger.json",
-      "outPath": "libs/rnc-lib/src/lib/clients/rnc-lib"
-    }
-  ]
-}

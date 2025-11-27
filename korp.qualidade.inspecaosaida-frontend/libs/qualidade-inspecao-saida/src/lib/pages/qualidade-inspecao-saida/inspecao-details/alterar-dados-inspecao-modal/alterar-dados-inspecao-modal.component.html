@@ -1,0 +1,30 @@
+<vs-dialog>
+  <div icon>
+    <vs-icon icon="pen"></vs-icon>
+  </div>
+  <div title>
+    <vs-label label="QualidadeInspecaoSaida.InspecaoDetails.AlterarDadosInspecaoModal.Titulo"></vs-label>
+  </div>
+  <div content>
+    <vs-form>
+      <form [formGroup]="form" group-2>
+        <vs-input formControlName="descricao" placeholder="QualidadeInspecaoSaida.InspecaoDetails.Descricao"></vs-input>
+        <vs-select formControlName="resultado" placeholder="QualidadeInspecaoSaida.InspecaoDetails.Resultado"
+          [options]="resultadoOptions"></vs-select>
+        <vs-input formControlName="menorValor" type="number"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.MenorValor"></vs-input>
+        <vs-input formControlName="menorValorBase" type="number"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.MenorValorBase"></vs-input>
+        <vs-input formControlName="maiorValor" type="number"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.MaiorValor"></vs-input>
+        <vs-input formControlName="maiorValorBase" type="number"
+          placeholder="QualidadeInspecaoSaida.InspecaoDetails.MaiorValorBase"></vs-input>
+        <vs-textarea placeholder="QualidadeInspecaoSaida.InspecaoDetails.Observacao" formControlName="observacao" [rows]="5"></vs-textarea>
+      </form>
+    </vs-form>
+  </div>
+  <div footer>
+    <vs-button type="save" label="QualidadeInspecaoSaida.InspecaoDetails.AlterarDadosInspecaoModal.Alterar"
+      (clickEvent)="salvarAlteracoes()"></vs-button>
+  </div>
+</vs-dialog>

@@ -1,0 +1,17 @@
+<vs-layout>
+  <div actions>
+    <ng-container>
+      <vs-file-upload [allowMultiple]="true" type="file" (fileChanged)="fileChanged($event)">
+      </vs-file-upload>
+    </ng-container>
+  </div>
+
+  <div content>
+    <vs-file-upload-grid
+      [domain]="domain"
+      [refresh]="refresh"
+      [subdomain]="subdomain"
+      [gridId]="gridId"
+    ></vs-file-upload-grid>
+  </div>
+</vs-layout>

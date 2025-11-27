@@ -1,0 +1,59 @@
+<vs-dialog>
+  <div icon>
+    <vs-icon icon="box-check"></vs-icon>
+  </div>
+  <div title>
+    <ng-container *ngIf="this.inspecaoDetalhes.novaInspecao">
+      <vs-label label="QualidadeInspecaoEntrada.InspecaoDetails.NovaInspecao"></vs-label>
+    </ng-container>
+    <ng-container *ngIf="!this.inspecaoDetalhes.novaInspecao">
+      <vs-label label="QualidadeInspecaoEntrada.InspecaoDetails.EditarInspecao"></vs-label>
+    </ng-container>
+  </div>
+  <div content>
+    <vs-form>
+      <form [formGroup]="form">
+        <vs-input formControlName="notaFiscal"
+          placeholder="QualidadeInspecaoEntrada.NotaFiscal"
+        ></vs-input>
+        <vs-input formControlName="codigoProduto"
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.CodProduto"
+        ></vs-input>
+        <vs-input *ngIf="inspecaoDetalhes.novaInspecao" formControlName="quantidadeInspecionada"
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.QuantidadeInspecionada" type="number"></vs-input>
+        <vs-input *ngIf="inspecaoDetalhes.novaInspecao" formControlName="quantidadeInspecionar"
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.QuantidadeInspecionar" type="number"></vs-input>
+      </form>
+      <form [formGroup]="form" group-1>
+        <vs-input formControlName="quantidadeInspecao"
+          placeholder="QualidadeInspecaoEntrada.InspecaoDetails.QuantidadeInspecao" type="number"></vs-input>
+        <ng-container *ngIf="this.inspecaoDetalhes.novaInspecao">
+          <vs-label *ngIf="mostrarErroQuantidadeInspecao"
+            [label]="'QualidadeInspecaoEntrada.InspecaoDetails.QuantidadeInspecaoValidacao' | translate" model="error">
+          </vs-label>
+        </ng-container>
+      </form>
+    </vs-form>
+    <vs-grid *ngIf="!loadingGrid" [options]="gridOptions"></vs-grid>
+  </div>
+  <div footer>
+    <vs-button
+      type="save"
+      label="QualidadeInspecaoEntrada.InspecaoDetails.Salvar"
+      [disabled]="salvarDesabilitado"
+      (clickEvent)="salvarInspecao()"
+    ></vs-button>
+    <vs-button
+      *ngIf="!inspecaoDetalhes.novaInspecao"
+      type="save"
+      label="QualidadeInspecaoEntrada.InspecaoEntradaGrid.ExcluirInspecao"
+      (clickEvent)="excluirInspecao()"
+    ></vs-button>
+    <vs-button
+      type="save"
+      label="QualidadeInspecaoEntrada.InspecaoDetails.Finalizar"
+      [disabled]="finalizarDesabilitado"
+      (clickEvent)="finalizarInspecao()"
+    ></vs-button>
+  </div>
+</vs-dialog>

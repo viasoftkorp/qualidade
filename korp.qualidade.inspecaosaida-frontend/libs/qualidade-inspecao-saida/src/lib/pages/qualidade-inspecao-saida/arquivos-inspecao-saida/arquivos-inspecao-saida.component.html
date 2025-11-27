@@ -1,0 +1,18 @@
+<vs-layout>
+  <div actions>
+    <ng-container>
+      <vs-file-upload [disabled]="!idInspecao" [allowMultiple]="true" type="file" (fileChanged)="fileChanged($event)">
+      </vs-file-upload>
+    </ng-container>
+  </div>
+
+  <div content>
+    <vs-file-upload-grid
+      *ngIf="loaded"
+      [domain]="domainId"
+      [refresh]="refresh"
+      [subdomain]="subdomainId"
+      [gridId]="gridId"
+    ></vs-file-upload-grid>
+  </div>
+</vs-layout>

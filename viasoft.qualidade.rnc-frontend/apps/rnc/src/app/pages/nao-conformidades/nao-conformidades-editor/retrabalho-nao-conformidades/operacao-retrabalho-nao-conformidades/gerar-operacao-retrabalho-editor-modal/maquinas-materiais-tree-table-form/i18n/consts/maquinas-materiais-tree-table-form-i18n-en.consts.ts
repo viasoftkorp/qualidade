@@ -1,3 +1,0 @@
-export const MAQUINAS_MATERIAIS_TREE_TABLE_FORM_I18N_EN = {
-
-};
